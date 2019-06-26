@@ -28,6 +28,58 @@ Il trasporto ferrotramviario, di contro, vede l'utilizzo di treni dalle ridotte 
 	\caption{Schema di un tipico scenario tramviario}
 	\label{fig:tramschema}
 \end{figure}
-\subsection{Il Problema del Posizionamento}
+\section{Il Problema del Posizionamento}
 Per posizionamento ferroviario, si intende la stima della posizione di un particolare treno all'interno di una particolare traccia ferroviaria. Spesso questa stima viene espressa come progressiva chilometrica rispetto all'origine della linea, oppure pi\'u raramente come coordinata geografica.\\*
-Il problema del posizionamento sorge nel momento in cui, per ragioni di \emph{safety}, particolari sezioni di una traccia ferroviaria o ferrotramviaria, hanno caratteristiche tali da poter permettere il transito di un solo veicolo alla volta; basti pensare a una traccia 
+Il problema del posizionamento sorge nel momento in cui, per ragioni di \emph{safety}, particolari sezioni di una traccia ferroviaria o ferrotramviaria, hanno caratteristiche tali da poter permettere il transito di un solo veicolo alla volta, come nel caso di una sezione di binario condivisa fra due opposti sensi di marcia, in cui la presenza di un unico veicolo \`e fondamentale per evitare impatti catastrofici.\\*
+Gli odierni meccanismi di posizionamento si basano principalmente sull'utilizzo di strumenti installati a terra, che hanno lo scopo di rilevare il passaggio di un treno, e quindi di interagire con il sistema di \emph{interlocking} della traccia al fine di garantire con un elevato livello di confidenza, un transito sicuro dei mezzi all'interno di sezioni critiche. Per elevato livello di confidenza si intende una caratteristica quantitativa ben precisa della \emph{safety} sistema in esame: nell'ambito dei sistemi operanti in infrastrutture critiche esiste uno standard, detto \emph{Safety Integrity Level (SIL)}. Esso si articola su cinque livelli, da \texttt{SIL-0} a \texttt{SIL-4}, ed un sistema, per essere \texttt{SIL-n}, con $0\le n\le 4$, deve disporre di documentate garanzie quantitative e qualitative circa il suo \emph{Mean Time to Failure (MTTF)}, ossia il tempo medio al fallimento, e sulle conseguenze di un suo eventuale fallimento. Nei sistemi ferroviari e ferrotramviari, per loro natura, la \emph{safety} si traduce in requisiti che richiedono al sistema fallimenti \emph{fail-safe}, che si distinguono dai sistemi \emph{fail-operational}, in quanto i primi devono poter essere in grado di fallire in modo sicuro, ad esempio un treno che si ferma in campagna non provocher\`a disastri ma solamente disagi ai passeggeri, ed i secondi devono invece garantire un livello minimo di operativit\`a anche in caso di fallimenti. \`E esempio di un sistema \emph{fail-operational} un aereo che ha subito un fallimento e deve effettuare un atterragio di emergenza.
+\subsubsection{Odierne Tecniche di Posizionamento}
+I sistemi di posizionamento attualmente in uso sono basati su un'architettura distribuita composta dai seguenti blocchi:
+\begin{itemize}
+	\item Sottosistema di \emph{interlocking};
+	\item Sottosistema di comunicazione \texttt{treno-traccia};
+	\item Sottosistema semaforico.
+\end{itemize}
+Il sottosistema di \emph{interlocking} \`e la parte che si fa effettivamente carico di offrire al treno un attraversamento sicuro di una \emph{Junction Area (JA)}, ossia del confine tra una sezione non-critica e una sezione critica di una traccia.\\*
+Un sistema di \emph{interlocking} \`e composto dai seguenti elementi:
+\begin{itemize}
+	\item \emph{Switch Control Unit (UCS)}:\\*
+	Piattaforma certificata \texttt{SIL-3} che rappresenta il nucleo del sistema di \emph{interlocking} e che implementa l'intera logica di gestione di una JA. Un UCS dispone di un'interfaccia di \emph{Input/Output} (I/O) verso gli elementi di \emph{interlocking} installati a terra che ne consente un controllo sicuro in accordo allo standard \texttt{SIL-3}.
+\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/ucs}
+		\caption{UCS realizzato da Thales Italia SPA}
+		\label{fig:ucs}
+\end{figure}
+	\item Conta Assi:\\*
+	Il Conta Assi, o in inglese \emph{Axle Counter} (AC), \`e un sistema certificato \texttt{SIL-3} che ha lo scopo di rilevare la presenza del treno e fornire quindi lo stato di occupazione della sezione di traccia in cui l'AC \`e installato.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=11cm,height=3.1cm]{img/axlecounter}
+	\caption{Conta Assi}
+	\label{fig:ac}
+\end{figure}
+	\item \emph{Point Machines}:\\*
+	Le \emph{Point Machines} infine, sono degli strmvumenti certificati \texttt{SIL-3} che hanno lo scopo di direzionare le rotaie verso una determinata sezione di traccia.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/pointmachine}
+		\caption{Esempio di \emph{Point Machine} installata su una traccia ferrotramviaria}
+		\label{fig:pointmachine}
+	\end{figure}
+\end{itemize}
+Il sottosistema di comunicazione treno-traccia ha lo scopo di fornire funzionalit\`a non legate alla \emph{safety} e pertanto poco interessanti, esso viene principalmente utilizzato per monitorare lo stato del traffico ferrotramviario in una architettura di \emph{monitoring} centralizzata e si basa su comunicazioni \emph{wireless}.\\*
+Il sottosistema semaforico prende in ingresso informazioni dal sistema di \emph{interlocking} ed eventualmente, dal sistema di comunicazione treno-traccia, e gestisce i segnali luminosi da mostrare sui semafori a un macchinista che si appresta a superare una JA. Segue una tabella riassuntiva dei segnali semaforici nel contesto ferrotramviario.\\*
+\begin{tabular}{|c|c|c|}
+	\hline 
+	\textbf{Segnale} & \textbf{Descrizione} & \textbf{Significato} \\
+
+	\hline
+	\includegraphics{img/stopsemaphore}& Barra bianca orizzontale & Fermarsi \\ 
+	\hline 
+	\includegraphics{img/gosemaphore}& Barra bianca verticale  & Procedere avanti \\ 
+	\hline 
+	\includegraphics{img/rightsemaphore}& Barra bianca ruotata di 45 gradi & Procedere solo a destra \\ 
+	\hline 
+	\includegraphics{img/leftsemaphore}& Barra bianca ruotata di -45 gradi & Procedere solo a sinistra \\ 
+	\hline 
+\end{tabular} 
