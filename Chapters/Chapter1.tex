@@ -70,7 +70,8 @@ Un sistema di \emph{interlocking} \`e composto dai seguenti elementi:
 	\end{figure}
 \end{itemize}
 Il sottosistema di comunicazione treno-traccia ha lo scopo di fornire funzionalit\`a non legate alla \emph{safety} e pertanto poco interessanti, esso viene principalmente utilizzato per monitorare lo stato del traffico ferrotramviario in una architettura di \emph{monitoring} centralizzata e si basa su comunicazioni \emph{wireless}.\\*
-Il sottosistema semaforico prende in ingresso informazioni dal sistema di \emph{interlocking} ed eventualmente, dal sistema di comunicazione treno-traccia, e gestisce i segnali luminosi da mostrare sui semafori a un macchinista che si appresta a superare una JA.\\*Segue una tabella riassuntiva dei segnali semaforici nel contesto ferrotramviario.\\*\\*
+Il sottosistema semaforico prende in ingresso informazioni dal sistema di \emph{interlocking} ed eventualmente, dal sistema di comunicazione treno-traccia, e gestisce i segnali luminosi da mostrare sui semafori a un macchinista che si appresta a superare una JA.\\*In tabella \ref{tab:sem} viene riportata la lista dei segnali semaforici utilizzati nel contesto ferrotramviario.\\*\\*
+\begin{table}
 \begin{tabular}{|c|c|c|}
 	\hline 
 	\textbf{Segnale} & \textbf{Descrizione} & \textbf{Significato} \\
@@ -85,3 +86,6 @@ Il sottosistema semaforico prende in ingresso informazioni dal sistema di \emph{
 	\includegraphics{img/leftsemaphore}& Barra bianca ruotata di -45 gradi & Procedere solo a sinistra \\ 
 	\hline 
 \end{tabular} 
+\caption{Segnalazioni semaforiche ferrotramviarie}
+\label{tab:sem}
+\end{table}
