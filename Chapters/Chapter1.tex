@@ -69,8 +69,8 @@ Un sistema di \emph{interlocking} \`e composto dai seguenti elementi:
 		\label{fig:pointmachine}
 	\end{figure}
 \end{itemize}
-Il sottosistema di comunicazione treno-traccia ha lo scopo di fornire funzionalit\`a non legate alla \emph{safety} e pertanto poco interessanti, esso viene principalmente utilizzato per monitorare lo stato del traffico ferrotramviario in una architettura di \emph{monitoring} centralizzata e si basa su comunicazioni \emph{wireless}.\\*
-Il sottosistema semaforico prende in ingresso informazioni dal sistema di \emph{interlocking} ed eventualmente, dal sistema di comunicazione treno-traccia, e gestisce i segnali luminosi da mostrare sui semafori a un macchinista che si appresta a superare una JA.\\*In tabella \ref{tab:sem} viene riportata la lista dei segnali semaforici utilizzati nel contesto ferrotramviario.\\*\\*
+Il sottosistema di comunicazione treno-traccia \`e gestito da un computer installato bordo treno, ed ha lo scopo di fornire funzionalit\`a non legate alla \emph{safety} e pertanto poco interessanti. Questo sistema viene principalmente utilizzato per monitorare lo stato del traffico ferrotramviario in una architettura di \emph{monitoring} centralizzata e si basa su comunicazioni \emph{wireless}. In alcune applicazioni pu\'o comprendere una comunicazione pi\'u o meno diretta con il sistema di \emph{interlocking} allo scopo di segnalare l'avvicinamento del treno a una JA.\\*
+Il sottosistema semaforico prende in ingresso informazioni dal sistema di \emph{interlocking} ed eventualmente, dal sistema di comunicazione treno-traccia, e gestisce i segnali luminosi da mostrare sui semafori a un macchinista che si appresta a superare una JA.\\*In tabella \ref{tab:sem} viene riportata la lista dei segnali semaforici utilizzati nel contesto ferrotramviario.
 \begin{table}
 \begin{tabular}{|c|c|c|}
 	\hline 
@@ -89,3 +89,6 @@ Il sottosistema semaforico prende in ingresso informazioni dal sistema di \emph{
 \caption{Segnalazioni semaforiche ferrotramviarie}
 \label{tab:sem}
 \end{table}
+\section{Il treno come Cyber-Physical System}
+Le attuali tecniche di posizionamento richiedono un intervento trascurabile di computer installati a bordo e una grande quantit\`a di apparati installati a terra. Mentre i computer di bordo si fanno carico principalmente della comunicazione treno-traccia e forniscono in generale funzionalit\`a non legate alla \emph{safety}, gli apparati installati a terra sono costosi e hanno un impatto ambientale non trascurabile.\\*
+\`E possibile invece considerare il treno e il computer di bordo come un unico sistema, ossia il treno viene modellato come un vero e proprio \emph{Cyber-Physical System}: \`e scopo della Tesi quello di mostrare come sia possibile rendere pi\`u economico, ecologico e performante un sistema di posizionamento ferrotramviario, ponendo l'enfasi sulla capacit\`a di calcolo logico utilizzabile dal lato \emph{cyber} del treno.
