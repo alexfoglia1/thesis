@@ -89,6 +89,19 @@ Il sottosistema semaforico prende in ingresso informazioni dal sistema di \emph{
 \caption{Segnalazioni semaforiche ferrotramviarie}
 \label{tab:sem}
 \end{table}
-\section{Il treno come Cyber-Physical System}
+\subsection{Possibili Sviluppi}
 Le attuali tecniche di posizionamento richiedono un intervento trascurabile di computer installati a bordo e una grande quantit\`a di apparati installati a terra. Mentre i computer di bordo si fanno carico principalmente della comunicazione treno-traccia e forniscono in generale funzionalit\`a non legate alla \emph{safety}, gli apparati installati a terra sono costosi e hanno un impatto ambientale non trascurabile.\\*
-\`E possibile invece considerare il treno e il computer di bordo come un unico sistema, ossia il treno viene modellato come un vero e proprio \emph{Cyber-Physical System}: \`e scopo della Tesi quello di mostrare come sia possibile rendere pi\`u economico, ecologico e performante un sistema di posizionamento ferrotramviario, ponendo l'enfasi sulla capacit\`a di calcolo logico utilizzabile dal lato \emph{cyber} del treno.
+\`E possibile invece considerare il treno e il computer di bordo come un unico sistema, ossia il treno viene modellato come un vero e proprio \emph{Cyber-Physical System}.\\*
+Un \emph{Cyber-Physical System} (CPS) \`e un sistema composto da una parte \emph{fisica} e da una parte \emph{cyber}. Il sottosistema fisico \`e composto da sensori e attuatori che hanno rispettivamente lo scopo di rilevare lo stato dell'ambiente circostante e di alterarlo se necessario. Il sottosistema \emph{cyber} \`e un vero e proprio elaboratore, che dispone di processore e memoria, e delle interfaccie di I/O verso i sensori e gli attuatori. Una simile architettura di sistema, rende possibile sfruttare le capacit\`a di calcolo dei moderni processori per implementare algoritmi anche molto complessi per il \emph{processing} di grandi quantit\`a di dati provenienti dai sensori.\\*
+Lo scopo della Tesi \`e quello di mostrare come pu\`o un CPS sostituire il complesso e costoso sistema di posizionamento tuttora operante, attraverso l'uso combinato di un insieme di sensori i cui dati rilevati vengono processati da un algoritmo noto come \emph{Sensor Fusion Algorithm} (SFA).\\*
+\begin{figure}[h]
+	\centering
+	\includegraphics{img/sfaschema}
+	\caption{Schema SFA}
+	\label{fig:sfa}
+\end{figure}
+\\*
+Tale algoritmo \`e schematizzabile come una \emph{black-box} la quale, ricevuti i dati dei sensori in ingresso, fornisce in uscita la posizione del treno lungo la traccia ferroviaria (figura \ref{fig:sfa}).\\*
+Utilizzando SFA, il treno \`e in grado di auto-posizionarsi, capacit\`a che minimizza la necessit\`a di installare apparati di terra.\\*
+La necessit\`a di utilizzare un algoritmo che tenga conto delle misurazioni di un \emph{set} di sensori, in luogo di un semplice \emph{processing} di insiemi di singole misure provenienti dalla stessa sorgente, risiede nella capacit\`a che ha SFA di \emph{correggere} il rumore che disturba le singole misurazioni, realizzando cos\`i una nuova misura pi\`u accurata di quella che si avrebbe considerando i sensori come sorgenti distinte.\\*
+
