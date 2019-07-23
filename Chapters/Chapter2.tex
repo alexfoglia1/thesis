@@ -1,6 +1,6 @@
 \chapter{Sensor Fusion}
-\section{Panoramica}
 Nei sistemi in cui \`e richiesta un'alta \emph{reliability} delle misure, l'informazione fornita dai singoli sensori non \`e sufficiente. In questi casi \`e raccomandato l'utilizzo di un insieme di sensori in contemporanea.\\*
+\section{Panoramica}
 In generale, un algoritmo SFA viene utilizzato per stimare lo stato di un sistema dinamico in un ambiente caratterizzato da \emph{rumore}.
 \subsection{Sistemi Dinamici}
 Un sistema dinamico \`e una modellazione matematica di un processo che evolve nel tempo, la cui evoluzione \`e descritta attraverso un sistema di equazioni differenziali o alle differenze, nel caso esso si evolva rispettivamente a tempo continuo o a tempo discreto.\\*
@@ -40,13 +40,33 @@ Si nota immediatamente che la variazione della misura $z(t)$ data da $\varepsilo
 	\caption{Grafico dell' errore di stima della posizione con $a = 10^0, \varepsilon = 10^{-3}$}
 	\label{fig:errormeas}
 \end{figure}
+\newpage
 \section{I Filtri di Kalman}
-\noindent{}Un Filtro di Kalman, o in inglese \emph{Kalman Filter} (KF) \`e un modello di SFA progettato appositamente per risolvere o rendere trascurabile il problema del rumore nei processi di misura.\\*
-Un KF \`e essenzialmente un algoritmo che utilizza una serie di misure provenienti da $N$ sorgenti distinte, e, modellando ciascuna misura come l'osservazione del valore di una variabile casuale $X_i$ con $1\le i \le N$, cerca di produrre la stima di una \emph{distribuzione di probabilit\`a congiunta} delle variabili casuali $X_i$.
-\subsection{Kalman Filtering}
-Nell'applicare un Filtro di Kalman ad uno specifico sistema, devono essere noti i parametri del modello $\Phi,B,H$, il rumore statistico $(R,Q)$, il vettore delle condizioni iniziali $X_0$, e la sua matrice di covarianza $P_0$.\\*
-Assumendo per semplicit\`a di avere un processo evolutivo a tempo discreto,
-un Filtro di Kalman stima il vettore $X(n+1)$ che rappresenta lo stato del sistema al tempo $t+1$ con le informazioni disponibili al tempo $t$. Il filtro \`e dato da:
+Un Filtro di Kalman, o in inglese \emph{Kalman Filter} (KF), \`e un modello di SFA progettato appositamente per risolvere o rendere trascurabile il problema del rumore nei processi di misura.\\*
+Siano $X_1,\dots,X_N$ $N$ sorgenti distinte di dati.\\*
+Si definisce \emph{misurazione} del valore $j$ dall' $i-$esima sorgente l'osservazione dell'evento:
 $$
-P*_(n+1) = \Phi P_(n)\Phi^T + C
+X_i = j
 $$
+Per un opportuno $j$ e per $i = 1,\dots,N$.\\*
+Modellando ciascuna $X_i$ come una variabile casuale, si ha che ciascuna $X_i$ \`e caratterizzata da una distribuzione di probabilit\`a:
+$$
+p_{X_i} = \{p_j:P(X_i = j) = p_j\},\;\;\;\;i = 1,\dots,N
+$$
+Un KF \`e essenzialmente un algoritmo che utilizza una serie di osservazioni $X_i = j$, e cerca di produrre la stima di una \emph{distribuzione di probabilit\`a congiunta} delle variabili casuali $X_i$.
+\subsection{Filtro di Kalman Lineare}
+I KF sono comunemente basati su sistemi dinamici \emph{lineari} a tempo discreto, ossia, il modello statistico sottostante \`e una Catena di Markov a tempo discreto, o in inglese \emph{Discrete Time Markov Chain} (DTMC).\\*
+In una DTMC, la probabilit\`a che un sistema dinamico al tempo $n$ si trovi nello stato $j$, si esprime attraverso il \emph{vettore di probabilit\`a di occupazione di stato} $\Pi(n) \in \mathbb{R}^m$ dove $m$ \`e la cardinalit\`a dello spazio degli stati.\\*
+Supposto noto $\Pi(0)$ vettore di probabilit\`a iniziale, l'evoluzione del sistema ad ogni \emph{timeframe} \`e data dalla seguente operazione lineare:
+$$
+\Pi(n) = \Pi(n-1)\mathbf{F}
+$$
+La matrice $\mathbf{F} \in \mathbb{R}^{m \mathtt{x} m}$ \`e detta \emph{matrice di transizione di stato}:
+$$
+\mathbf{F} = \left(\begin{matrix}
+P(1\rightarrow1)&\dots&P(1\rightarrow m)\\
+\vdots&\vdots&\vdots\\
+P(m\rightarrow 1)&\dots&P(m\rightarrow m)
+\end{matrix}\right)
+$$
+La matrice $\mathbf{F}$ \`e tale per cui ciascun $\mathbf{F}_{ij} = P(i\rightarrow j)$ indica la probabilit\`a che ha il sistema dinamico di evolversi, in un \emph{timeframe}, dallo stato $i$ allo stato $j$.
