@@ -29,11 +29,10 @@ Il trasporto ferrotramviario, di contro, vede l'utilizzo di treni dalle ridotte 
 	\label{fig:tramschema}
 \end{figure}
 \section{Il Problema del Posizionamento}
-Per posizionamento ferroviario, si intende la stima della posizione di un particolare treno all'interno di una particolare traccia ferroviaria. Spesso questa stima viene espressa come progressiva chilometrica rispetto all'origine della linea, oppure pi\'u raramente come coordinata geografica.\\*
-Il problema del posizionamento sorge nel momento in cui, per ragioni di \emph{safety}, particolari sezioni di una traccia ferroviaria o ferrotramviaria, hanno caratteristiche tali da poter permettere il transito di un solo veicolo alla volta, come nel caso di una sezione di binario condivisa fra due opposti sensi di marcia, in cui la presenza di un unico veicolo \`e fondamentale per evitare impatti catastrofici.\\*Ogni qualvolta la \emph{safety} di un sistema risulti fondamentale, si parla di \emph{sistema critico} o \emph{safety-critical}.\\*
-Gli odierni sistemi di posizionamento sono sistemi \emph{safety-critical} e si basano principalmente sull'utilizzo di strumenti installati a terra, che hanno lo scopo di rilevare il passaggio di un treno, e quindi di interagire con il sistema di \emph{interlocking} della traccia al fine di garantire, con un elevato livello di confidenza, un transito sicuro dei mezzi.\\*
-Per elevato livello di confidenza si intendono rigorose evidenze matematiche sulla \emph{safety} del sistema di posizionamento.\\*Per quanto concerne la \emph{safety} in ambito ferroviario e ferrotramviario, esiste uno standard internazionale, il \emph{Safety Integrity Level (SIL)}. Esso si articola su cinque livelli, da \texttt{SIL-0} a \texttt{SIL-4}, ed un sistema, per essere \texttt{SIL-n}, con $0\le n\le 4$, deve disporre di documentate garanzie quantitative e qualitative circa il suo \emph{Mean Time to Failure (MTTF)}, ossia il tempo medio al fallimento, e sulle conseguenze di un suo eventuale fallimento.\\*
-I sistemi ferroviari e ferrotramviari, per loro natura, sono sistemi cosiddetti \emph{fail-safe}, i quali si distinguono dai sistemi \emph{fail-operational} in quanto i primi devono poter essere in grado di fallire in modo sicuro, ad esempio un treno che si ferma in campagna non provocher\`a disastri ma solamente disagi ai passeggeri; ed i secondi devono invece garantire un livello minimo di operativit\`a anche in caso di fallimenti.\\*\`E esempio di un sistema \emph{fail-operational} un aereo che ha subito un fallimento e deve effettuare un atterragio di emergenza.
+Per posizionamento ferroviario, si intende la stima della posizione di un treno all'interno di una traccia ferroviaria. Esso esiste tanto nel contesto ferrotramviario quanto nel contesto ferroviario classico.\\*
+Sovente questa stima viene espressa come progressiva chilometrica rispetto all'origine della linea oppure, pi\'u raramente, come coordinata geografica.\\*
+Il problema del posizionamento sorge nel momento in cui, per ragioni di rotta, un treno ha necessit\`a di spostarsi da una sezione di binario, anche detta traccia, ad un'altra. Questa operazione di scambio \`e offerta dal sistema di \emph{interlocking}. Tale sistema \`e detto \emph{safety-critical}, in quanto offre una funzionalit\`a che deve rispettare adeguati standard di sicurezza.\\*
+Gli odierni sistemi di posizionamento si basano principalmente sull'utilizzo di strumenti installati a terra, che hanno lo scopo di rilevare il passaggio di un treno, e quindi di interagire con il sistema di \emph{interlocking} della traccia al fine di garantire, con un elevato livello di confidenza, un transito sicuro dei mezzi.
 \subsubsection{Odierne Tecniche di Posizionamento}
 I sistemi di posizionamento attualmente in uso sono basati su un'architettura distribuita composta dai seguenti blocchi:
 \begin{itemize}
@@ -41,7 +40,9 @@ I sistemi di posizionamento attualmente in uso sono basati su un'architettura di
 	\item Sottosistema di comunicazione \texttt{treno-traccia};
 	\item Sottosistema semaforico.
 \end{itemize}
-Il sottosistema di \emph{interlocking} \`e la parte che si fa effettivamente carico di offrire al treno un attraversamento sicuro di una \emph{Junction Area (JA)}, ossia del confine tra una sezione non-critica e una sezione critica di una traccia.\\*
+\paragraph{Sottosistema di interlocking:}
+Il sottosistema di \emph{interlocking} \`e la parte che si fa effettivamente carico di offrire al treno un attraversamento sicuro di una \emph{Junction Area (JA)}. Una JA \`e un punto della linea ferroviara in cui il treno pu\'o cambiare direzione, e occupare una nuova traccia di binario.\\*
+La nuova traccia da occupare potrebbe avere particolari vincoli sul numero di treni contemporaneamente transitanti, ed in ogni caso lo scambio di rotaia deve essere corretto ed avvenire in sicurezza, in quanto occupare la traccia sbagliata potrebbe avere ripercussioni finanche catastrofiche.\\*
 Un sistema di \emph{interlocking} \`e composto dai seguenti elementi:
 \begin{itemize}
 	\item \emph{Switch Control Unit (UCS)}:\\*
@@ -61,7 +62,7 @@ Un sistema di \emph{interlocking} \`e composto dai seguenti elementi:
 	\label{fig:ac}
 \end{figure}
 	\item \emph{Point Machines}:\\*
-	Le \emph{Point Machines} infine, sono degli strmvumenti certificati \texttt{SIL-3} che hanno lo scopo di direzionare le rotaie verso una determinata sezione di traccia.
+	Le \emph{Point Machines} infine, sono degli strumenti certificati \texttt{SIL-3} che hanno lo scopo di direzionare le rotaie verso una determinata sezione di traccia.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\linewidth]{img/pointmachine}
@@ -69,8 +70,10 @@ Un sistema di \emph{interlocking} \`e composto dai seguenti elementi:
 		\label{fig:pointmachine}
 	\end{figure}
 \end{itemize}
-Il sottosistema di comunicazione treno-traccia \`e gestito da un computer installato bordo treno, ed ha lo scopo di fornire funzionalit\`a non legate alla \emph{safety} e pertanto poco interessanti. Questo sistema viene principalmente utilizzato per monitorare lo stato del traffico ferrotramviario in una architettura di \emph{monitoring} centralizzata e si basa su comunicazioni \emph{wireless}. In alcune applicazioni pu\'o comprendere una comunicazione pi\'u o meno diretta con il sistema di \emph{interlocking} allo scopo di segnalare l'avvicinamento del treno a una JA.\\*
-Il sottosistema semaforico prende in ingresso informazioni dal sistema di \emph{interlocking} ed eventualmente, dal sistema di comunicazione treno-traccia, e gestisce i segnali luminosi da mostrare sui semafori a un macchinista che si appresta a superare una JA.\\*In tabella \ref{tab:sem} viene riportata la lista dei segnali semaforici utilizzati nel contesto ferrotramviario.
+L'intero sistema di \emph{interlocking} viene attivato dai \emph{Track Circuit}. Questi apparati sono installati a terra prima di ciascuna JA, e segnalano al sistema di \emph{interlocking} l'avvicinamento di un treno alla successiva JA.
+\paragraph{Sottosistema di comunicazione treno-traccia:} Il sottosistema di comunicazione treno-traccia \`e gestito da un computer installato bordo treno, chiamato \emph{On Board Control Unit} (OBCU), ed ha lo scopo di fornire funzionalit\`a non legate alla \emph{safety} e pertanto poco interessanti. OBCU viene principalmente utilizzato per monitorare lo stato del traffico ferrotramviario in una architettura di \emph{monitoring} centralizzata. Il monitoring si basa su comunicazioni \emph{wireless}. In alcune applicazioni pu\'o comprendere una comunicazione pi\'u o meno diretta con il sistema di \emph{interlocking} allo scopo di segnalare l'avvicinamento del treno a una JA.
+\paragraph{Sottosistema semaforico:} 
+Il sottosistema semaforico prende in ingresso informazioni dal sistema di \emph{interlocking} ed eventualmente, da OBCU, e gestisce i segnali luminosi da mostrare sui semafori a un macchinista che si appresta a superare una JA.\\*In tabella \ref{tab:sem} viene riportata la lista dei segnali semaforici utilizzati nel contesto ferrotramviario.
 \begin{table}
 \begin{tabular}{|c|c|c|}
 	\hline 
@@ -90,9 +93,9 @@ Il sottosistema semaforico prende in ingresso informazioni dal sistema di \emph{
 \label{tab:sem}
 \end{table}
 \subsection{Possibili Sviluppi}
-Le attuali tecniche di posizionamento richiedono un intervento trascurabile di computer installati a bordo e una grande quantit\`a di apparati installati a terra. Mentre i computer di bordo si fanno carico principalmente della comunicazione treno-traccia e forniscono in generale funzionalit\`a non legate alla \emph{safety}, gli apparati installati a terra sono costosi e hanno un impatto ambientale non trascurabile.\\*
-\`E possibile invece considerare il treno e il computer di bordo come un unico sistema, ossia il treno viene modellato come un vero e proprio \emph{Cyber-Physical System}.\\*
-Un \emph{Cyber-Physical System} (CPS) \`e un sistema composto da una parte \emph{fisica} e da una parte \emph{cyber}. Il sottosistema fisico \`e composto da sensori e attuatori che hanno rispettivamente lo scopo di rilevare lo stato dell'ambiente circostante e di alterarlo se necessario. Il sottosistema \emph{cyber} \`e un vero e proprio elaboratore, che dispone di processore e memoria, e delle interfaccie di I/O verso i sensori e gli attuatori. Una simile architettura di sistema, rende possibile sfruttare le capacit\`a di calcolo dei moderni processori per implementare algoritmi anche molto complessi per il \emph{processing} di grandi quantit\`a di dati provenienti dai sensori.\\*
+Le attuali tecniche di posizionamento richiedono un intervento trascurabile di computer installati a bordo e una grande quantit\`a di apparati installati a terra. Mentre i computer di bordo non forniscono in generale funzionalit\`a legate alla \emph{safety}, gli apparati installati a terra sono costosi e hanno un impatto ambientale non trascurabile.\\*
+\`E possibile considerare il treno e il computer di bordo come un unico sistema, ossia il treno viene modellato come un \emph{Cyber-Physical System}.\\*
+Un \emph{Cyber-Physical System} (CPS) \`e un sistema composto da una parte \emph{fisica} e da una parte \emph{cyber}. Il sottosistema fisico \`e composto da sensori e attuatori che hanno rispettivamente lo scopo di rilevare lo stato dell'ambiente circostante e di alterarlo se necessario. Il sottosistema \emph{cyber} \`e essenzialmente un elaboratore, che dispone di processore, memoria, e interfacce I/O verso i sensori gli attuatori, ed eventuali operatori  umani. Una tale architettura di sistema, permette di sfruttare le capacit\`a di calcolo dei moderni processori per implementare algoritmi anche molto complessi per il \emph{processing} di grandi quantit\`a di dati provenienti dai sensori.\\*
 Lo scopo della Tesi \`e quello di mostrare come pu\`o un CPS sostituire il complesso e costoso sistema di posizionamento tuttora operante, attraverso l'uso combinato di un insieme di sensori i cui dati rilevati vengono processati da un algoritmo noto come \emph{Sensor Fusion Algorithm} (SFA).\\*
 \begin{figure}[h]
 	\centering
@@ -101,6 +104,6 @@ Lo scopo della Tesi \`e quello di mostrare come pu\`o un CPS sostituire il compl
 	\label{fig:sfa}
 \end{figure}
 \\*
-Tale algoritmo \`e schematizzabile come una \emph{black-box} la quale, ricevuti i dati dei sensori in ingresso, fornisce in uscita la posizione del treno lungo la traccia ferroviaria (figura \ref{fig:sfa}).\\*
+Tale algoritmo \`e schematizzabile come una \emph{black-box}: le misurazioni dei sensori sono l'ingresso, mentre l'uscita \`e la misura cercata, nella fattispecie, la posizione del treno lungo la traccia.
 Utilizzando SFA, il treno \`e in grado di auto-posizionarsi, capacit\`a che minimizza la necessit\`a di installare apparati di terra.\\*
-La necessit\`a di utilizzare un algoritmo che tenga conto delle misurazioni di un \emph{set} di sensori, in luogo di un semplice \emph{processing} di insiemi di singole misure provenienti dalla stessa sorgente, risiede nella capacit\`a che ha SFA di \emph{correggere} il rumore che disturba le singole misurazioni, realizzando cos\`i una nuova misura pi\`u accurata di quella che si avrebbe considerando i sensori come sorgenti distinte.
+Un algoritmo che tiene conto delle misurazioni di un \emph{set} di sensori, usato in luogo di un semplice \emph{processing} di insiemi di misure provenienti da sorgenti omologhe, permette al sistema di correggere il rumore che disturba le singole misurazioni, realizzando cos\`i una nuova misura pi\`u accurata di quella che si avrebbe considerando i sensori in maniera mutuamente esclusiva.
