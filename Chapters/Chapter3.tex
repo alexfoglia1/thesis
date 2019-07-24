@@ -15,9 +15,8 @@ Tale posizione sar\`a inviata, attraverso un modem \texttt{LTE}:
 	\item All'OBCU, per essere utilizzata attivamente all'interno del sistema di \emph{interlocking}
 	\item Ad un arbitario host che esegue un software grafico di tracciamento del treno: il \texttt{RailTrackTool} (RTT)
 \end{itemize}
-\subsection{Architettura lato treno}
-\`E possibile descrivere l'architettura di sistema lato treno a due differenti livelli: architettura a livello \emph{hardware} e architettura a livello \emph{software}.\\*
-\subsubsection{Architettura Hardware}
+\`E possibile descrivere l'architettura di sistema a due differenti livelli: architettura a livello \emph{hardware} e architettura a livello \emph{software}.\\*
+\subsection{Architettura Hardware}
 Sul treno \`e stata installata una scheda \texttt{Nvidia TX-Jetson} quale piattaforma di elaborazione dei dati. I sensori atti a campionare le misurazioni sono stati collegati alla scheda mediante appositi bus dati.\\*
 Il \emph{sensor set} utilizzato in quest'applicazione \`e composto dai seguenti sensori:
 \begin{itemize}
@@ -42,7 +41,7 @@ Il \emph{sensor set} utilizzato in quest'applicazione \`e composto dai seguenti 
 	\caption{Architettura hardware bordo treno}
 	\label{fig:tdiagram}
 \end{figure}
-\subsubsection{Architettura Software}
+\subsection{Architettura Software}
 Sulla scheda \`e installato il sistema operativo \texttt{Ubuntu 16.04 LTS}, basato su kernel \texttt{Linux}.\\*
 Un set di tre moduli software, denominati \texttt{interface-modules}, sono in esecuzione sulla scheda.\\*
 Sia MOD\_$i$ l'$i-$esimo modulo del set e SERIAL\_$i$ l'$i-$esima interfaccia seriale della scheda, per $i = 1,2,3$.\\*
@@ -68,4 +67,10 @@ Si osserva che \texttt{INPUT\_PROTOCOL} e \texttt{OUTPUT\_PROTOCOL} sono entramb
 	\caption{Architettura software bordo treno}
 	\label{fig:tdiagramint}
 \end{figure}
+\section{Gestione della trasmissione dei dati}
+Per trasmettere i dati da \texttt{interface-modules} a \texttt{listener} \`e stato implementato un protocollo di comunicazione denominato \texttt{INPUT\_PROTOCOL}.\\*
+Tale protocollo fa affidamento a livello trasporto su \texttt{UDP} per massimizzare la velocit\`a di trasmissione senza dover necessariamente rinunciare all'integrit\`a dei messaggi trasmessi, in quanto la comunicazione avviene tra processi in esecuzione sulla stessa macchina, e la probabilit\`a che un messaggio venga perso o che questo venga ricevuto con errori, \`e assolutamente trascurabile.\\*
+Il protocollo definisce il formato del \emph{payload} del pacchetto \texttt{UDP} che contiene le informazioni di IMU, Radar/Odometro, o GPS, ed \`e il seguente:
+
+
 
