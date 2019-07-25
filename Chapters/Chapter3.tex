@@ -164,4 +164,81 @@ In ricezione dovr\`a essere inviato il pacchetto \emph{ack} al mittente, ed il s
 \end{table}
 Si osserva che SFA produce la stima della posizione del treno sia in termini di progressiva chilometrica che di coordinate \texttt{ECEF}.\\*
 \texttt{ECEF} \`e acronimo di \emph{Earth Centered Earth Fixed} ed \`e uno standard che misura le coordinate geografiche di un oggetto come la terna $ P = (x,y,z)$. Ciascuna coordinata viene espressa considerando la \emph{proiezione su piano} della Terra, e prendendo come origine $O$ l'intersezione fra l'equatore e il meridiano di \emph{Greenwich}.\\*
-Le coordinate \texttt{ECEF} misurano tre lunghezze, pertanto in accordo a SI, esse sono espresse in \texttt{metri}.
+Le coordinate \texttt{ECEF} misurano tre lunghezze, pertanto in accordo a SI, esse sono espresse in \texttt{metri}.\\*
+Nella prossima sezione, viene descritto uno scenario di esempio del comportamento del sistema a \emph{runtime}.\newpage
+\section{Scenario di Esempio}
+Si suppongano le condizioni iniziali riportate in tabella \ref{tab:condinit}.\\*
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline 
+		\textbf{Velocit\`a} & \textbf{ECEF} & \textbf{Progressiva} & \textbf{IMU Sample Rate} & \textbf{ODO Sample Rate} \\ 
+		\hline 
+		$0ms^{-1}$ & $(0, 0, 0)$ m & 0 km & 100 Hz & 20 Hz \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Condizioni iniziali}
+	\label{tab:condinit}
+\end{table}
+\begin{enumerate}
+	\item $t = 0$:\\*
+	\begin{itemize}
+	\item \texttt{interface-modules} invia a \texttt{listener} il seguente pacchetto \texttt{GROUND TRUTH}:\\*\\*
+	\begin{tabular}{|c|c|c|c|}
+		\hline 
+		\textbf{SENSOR\_TYPE} & \textbf{Seq. NO} & \textbf{N\_INT} & \textbf{N\_DOUBLE} \\ 
+		\hline 
+		\texttt{0x08} & \texttt{0x00} & 0 & 5 \\ 
+		\hline 
+	\end{tabular}\\*\\*
+	E vi accoda i seguenti tre valori \texttt{double: 0.0, 0.0, 0.0} ossia le coordinate \texttt{ECEF} iniziali, il seguente valore \texttt{double: 0.0}, ossia la velocit\`a lineare iniziale, e infine il valore \texttt{double: 0.0} che rappresenta la progressiva chilometrica iniziale.
+	\item \texttt{listener} riceve il pacchetto e inizializza SFA con:
+	\begin{itemize}
+		\item \texttt{ECEF} iniziali: $(0, 0, 0)$
+		\item Velocit\`a lineare iniziale: $0.0$
+		\item Progressiva chilometrica iniziale: $0.0$
+	\end{itemize}
+	\end{itemize}
+	\item $t=t_0$:\\*
+	\begin{itemize}
+	\item IMU campiona il seguente vettore accelerazione:
+	$$
+	\mathbf{a} = (0.0001, -0.0001, -9.8100)
+	$$
+	Assieme al seguente vettore velocit\`a angolare:
+	$$
+	\mathbf{v_{ang}} = (0.0003, -0.0001, 0.0002)
+	$$
+	E lo invia tramite \texttt{SERIAL\_1} a \texttt{MOD\_1} di \texttt{interface-modules}.
+	\item \texttt{MOD\_1} invia a \texttt{listener} il seguente pacchetto \texttt{IMU}:\\*\\*
+		\begin{tabular}{|c|c|c|c|}
+		\hline 
+		\textbf{SENSOR\_TYPE} & \textbf{Seq. NO} & \textbf{N\_INT} & \textbf{N\_DOUBLE} \\ 
+		\hline 
+		\texttt{0x01} & \texttt{0x01} & 0 & 6 \\ 
+		\hline 
+	\end{tabular}\\*\\*
+	Accodandovi nell'ordine il vettore accelerazione, e il vettore velocit\`a angolare.
+	\item \texttt{listener} riceve il pacchetto e crea e invia a SFA la seguente variabile \texttt{IMU\_POD}:
+	\begin{itemize}
+		\item \texttt{Seq.NO = 1}
+		\item \texttt{Epoch = $t_0$}
+		\item \texttt{ACC\_X = 0.0001}
+		\item \texttt{ACC\_Y = -0.0001}
+		\item \texttt{ACC\_Z = -9.8100}
+		\item \texttt{GYRO\_X = 0.0003}
+		\item \texttt{GYRO\_Y = -0.0001}
+		\item \texttt{GYRO\_Z = 0.0002}
+	\end{itemize}
+\item SFA elabora il pacchetto e inizia una computazione parallela per fornire a \texttt{listener} una variabile \texttt{SFA\_OUTPUT\_POD} della forma:
+	\begin{itemize}
+		\item \texttt{Seq.NO = 0}
+		\item \texttt{ECEF\_X = }$E_X$
+		\item \texttt{ECEF\_Y = }$E_Y$
+		\item \texttt{ECEF\_Z = }$E_Z$
+		\item \texttt{FU\_ARC\_LEN = }$P_{KM}$
+	\end{itemize}
+	\end{itemize}
+	\item $t_0 < t < t_0 + \frac{1}{ODO\_SAMPLE\_RATE}$\\*
+	Fintantoch\'e l'odometro non campiona il suo primo valore di velocit\`a, si ripetono le operazioni viste al passo precedente per ogni campionamento di \texttt{IMU}.
+\end{enumerate}
