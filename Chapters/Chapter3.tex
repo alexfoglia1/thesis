@@ -78,6 +78,7 @@ Per trasmettere i dati da \texttt{interface-modules} a \texttt{listener}, e dunq
 Tale protocollo fa affidamento a livello trasporto su \texttt{UDP} per massimizzare la velocit\`a di trasmissione senza dover necessariamente rinunciare all'integrit\`a dei messaggi trasmessi, in quanto la comunicazione avviene tra processi in esecuzione sulla stessa macchina, e la probabilit\`a che un messaggio venga perso o che questo venga ricevuto con errori, \`e assolutamente trascurabile.\\*
 Il protocollo definisce il formato del \emph{payload} del pacchetto \texttt{UDP} che contiene le informazioni di IMU, Radar/Odometro, o GPS, ed \`e descritto in tabella \ref{tab:protoin}.\\*
 \begin{table}[h]
+			\centering
 \begin{tabular}{|c|c|c|c|}
 	\hline 
 	\textbf{Campo} & \textbf{Descrizione} & \textbf{Indici di bit} & \textbf{Tipo} \\ 
@@ -91,11 +92,12 @@ Il protocollo definisce il formato del \emph{payload} del pacchetto \texttt{UDP}
 	\texttt{N\_DOUBLE} & Numero di double trasmessi & 31-38 & \texttt{uint8\_t} \\ 
 	\hline 
 \end{tabular} 
-\caption{Protocollo di comunicazione sensori-SFA}
+\caption{Protocollo di comunicazione in entrata}
 \label{tab:protoin}
 \end{table}\newpage
 A discrezione del valore del campo \texttt{SENSOR\_TYPE} si distingue il tipo di informazione trasportata dal pacchetto, come descritto in tabella \ref{tab:sensors}.\\*
 \begin{table}[h]
+		\centering
 	\begin{tabular}{|c|c|}
 		\hline 
 		\textbf{Valore di SENSOR\_TYPE} & \textbf{Sorgente del pacchetto} \\ 
@@ -123,10 +125,43 @@ Alla ricezione di un pacchetto, \texttt{listener} legge il valore del campo\\*\t
 Il corretto ordinamento dei pacchetti trasmessi a SFA \`e garantito attraverso l'esplicito utilizzo di un buffer, codificato all'interno di \texttt{listener}, in cui i pacchetti vengono temporaneamente salvati prima di essere inviati a SFA, ed eventualmente ordinati sulla base del valore del campo \texttt{Seq.NO}.\\*
 Si osservi che se l'integrit\`a non \`e minacciata dall'utilizzo di \texttt{UDP} quale protocollo di trasporto fra processi all'interno della stessa macchina fisica, altrettanto non si pu\`o dire dell'ordinamento dei messaggi. Questi potrebbero subire dei ritardi casuali in base allo stato del sistema operativo, in particolare lo \emph{scheduling} dei processi pu\`o avere influenze determinanti sullo scorretto ordinamento dei messaggi trasmessi. Utilizzando \texttt{TCP} si ovvierebbe a questa problematica, ma l'overhead insito nel protocollo stesso causerebbe un notevole degrado delle performance di SFA.
 \subsection{Trasmissione in uscita}
-La trasmissione dei dati in uscita da SFA avviene tra \texttt{listener} e OBCU, o comunque, tra \texttt{listener} e qualunque host arbitrario che intenda ricevere le informazioni in uscita, come ad esempio un \texttt{PC} sul quale viene eseguito RTT.\\*
-Come specificato, la comunicazione \`e posta in essere, a livello fisico, attraverso il protocollo \texttt{LTE}, ossia un un protocollo \emph{wireless}; mentre a livello trasporto si \`e scelto di continuare a usare \texttt{UDP} in luogo di \texttt{TCP}, col fine di massimizzare le \emph{performance} del sistema. Il rischio di ricevere alcune informazioni in maniera errata, o non riceverle del tutto, \`e nettamente pi\`u elevato rispetto allo scenario precedente, nel caso in cui lo spazio fisico attraverso cui si propaga il segnale \texttt{LTE} \`e tale per cui quest'ultimo venga disturbato da sorgenti esterne. Gli effetti deleteri di questa condizione sono particolarmente osservabili in alcuni tratti della linea ferrotramviaria, dove possono essere presenti numerose abitazioni e mezzi di trasporto in strada che si interpongono fisicamente tra la scheda \texttt{NVidia TX-Jetson} su cui esegue SFA e l'arbitrario host su cui viene eseguito RTT. Occorre tuttavia osservare che il tracciamento del treno tramite RTT non \`e in alcun modo legato alla \emph{safety} del sistema, in quanto le funzionalit\`a \emph{safety-critical} riguardano la comunicazione tra la scheda e OBCU, ossia tra la scheda e il sistema di \emph{interlocking}.\\*
-Questa problematica \`e risolta attraverso l'esplicito utilizzo di un meccanismo di \texttt{acknowledgment} simile a quello utilizzato da \texttt{TCP}: ciascun pacchetto in uscita da SFA viene indicizzato con un \emph{sequence number} e, in ricezione, viene inviato ogni secondo un \emph{ack} replicante l'ultimo numero di sequenza correttamente ricevuto. Solo quando il mittente riceve l'ack $i$ dal destinatario invier\`a il messaggio contenente l'uscita indicizzata con \emph{sequence number} $i+1$.
-
-
-
-
+La trasmissione dei dati in uscita da SFA avviene, in accordo al protocollo \texttt{OUTPUT\_PROTOCOL} tra \texttt{listener} e OBCU, o comunque, tra \texttt{listener} e qualunque host arbitrario che intenda ricevere le informazioni in uscita, come ad esempio un \texttt{PC} sul quale viene eseguito RTT.\\*
+Come specificato, la comunicazione \`e posta in essere, a livello fisico, attraverso il protocollo \texttt{LTE}, ossia un un protocollo \emph{wireless}; mentre a livello trasporto si \`e scelto di continuare a usare \texttt{UDP} in luogo di \texttt{TCP}, col fine di massimizzare le \emph{performance} del sistema.\\*Il rischio di ricevere alcune informazioni in maniera errata, o non riceverle del tutto, \`e nettamente pi\`u elevato rispetto allo scenario precedente, nel caso in cui lo spazio fisico attraverso cui si propaga il segnale \texttt{LTE} \`e tale per cui quest'ultimo venga disturbato da sorgenti esterne.\\* Gli effetti deleteri di questa condizione sono particolarmente osservabili in alcuni tratti della linea ferrotramviaria, dove possono essere presenti numerose abitazioni e mezzi di trasporto in strada che si interpongono fisicamente tra la scheda \texttt{NVidia TX-Jetson} su cui esegue SFA e l'arbitrario host su cui viene eseguito RTT.\\*Occorre tuttavia osservare che il tracciamento del treno tramite RTT non \`e in alcun modo legato alla \emph{safety} del sistema, in quanto le funzionalit\`a \emph{safety-critical} riguardano la comunicazione tra la scheda e OBCU, ossia tra la scheda e il sistema di \emph{interlocking}.\\*
+Questa problematica \`e risolta attraverso l'esplicito utilizzo di un meccanismo di \texttt{acknowledgment} simile a quello utilizzato da \texttt{TCP}: ciascun pacchetto in uscita da SFA viene indicizzato con un \emph{sequence number} e, in ricezione, viene inviato ogni secondo un \emph{ack} replicante l'ultimo numero di sequenza correttamente ricevuto. Solo quando il mittente riceve l'ack $i$ dal destinatario invier\`a il messaggio contenente l'uscita indicizzata con \emph{sequence number} $i+1$.\\*
+Anche in questo caso, il protocollo definisce il formato del \emph{payload} del pacchetto \texttt{UDP} inviato da \texttt{listener}, ed \`e riportato in tabella \ref{tab:protoout}.\\*\newpage
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+		\hline 
+		\textbf{Campo} & \textbf{Descrizione} & \textbf{Indici di bit} & \textbf{Tipo} \\ 
+		\hline
+		\texttt{Seq.NO} & Numero di sequenza & 0-15 & \texttt{uint16\_t} \\ 
+		\hline 
+		\texttt{ECEF\_X} & Coordinata X del treno & 16-79 & \texttt{double} \\ 
+		\hline 
+		\texttt{ECEF\_Y} & Coordinata Y del treno & 80-143 & \texttt{double} \\ 
+		\hline 
+		\texttt{ECEF\_Z} & Coordinata Z del treno & 144-207 & \texttt{double} \\ 
+		\hline 
+		\texttt{FU\_ARC\_LEN} & Progressiva chilometrica & 208-271 & \texttt{double} \\ 
+		\hline 
+	\end{tabular} 
+\caption{Protocollo di comunicazione in uscita}
+\label{tab:protoout}
+\end{table}
+In ricezione dovr\`a essere inviato il pacchetto \emph{ack} al mittente, ed il suo formato \`e descritto in tabella \ref{tab:ack}.
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+	\hline 
+	\textbf{Campo} & \textbf{Descrizione} & \textbf{Indici di bit} & \textbf{Tipo} \\ 
+	\hline
+	\texttt{ACK} & Ultimo \texttt{Seq.NO} & 0-15 & \texttt{uint16\_t} \\ 
+	\hline
+\end{tabular}
+\caption{Formato del pacchetto di \emph{ack}}
+\label{tab:ack}
+\end{table}
+Si osserva che SFA produce la stima della posizione del treno sia in termini di progressiva chilometrica che di coordinate \texttt{ECEF}.\\*
+\texttt{ECEF} \`e acronimo di \emph{Earth Centered Earth Fixed} ed \`e uno standard che misura le coordinate geografiche di un oggetto come la terna $ P = (x,y,z)$. Ciascuna coordinata viene espressa considerando la \emph{proiezione su piano} della Terra, e prendendo come origine $O$ l'intersezione fra l'equatore e il meridiano di \emph{Greenwich}.\\*
+Le coordinate \texttt{ECEF} misurano tre lunghezze, pertanto in accordo a SI, esse sono espresse in \texttt{metri}.
