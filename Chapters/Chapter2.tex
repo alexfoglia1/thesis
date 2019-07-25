@@ -54,8 +54,58 @@ $$
 p_{X_i} = \{p_j:P(X_i = j) = p_j\},\;\;\;\;i = 1,\dots,N
 $$
 Un KF \`e essenzialmente un algoritmo che utilizza una serie di osservazioni $X_i = j$, e cerca di produrre la stima di una \emph{distribuzione di probabilit\`a congiunta} delle variabili casuali $X_i$.
+\subsection{Premesse statistiche}
+\`E opportuno fissare la notazione che sar\`a usata nelle discussioni che seguiranno.\\*
+Per una data distribuzione di probabilit\`a $p_X$ si definisce la \emph{media}, o \emph{valore atteso}, di $p_X$ come:
+$$
+\mathbb{E}(p_X) = \sum_{i=1}^{+\infty} X_i p_{X_i} = \mu_X
+$$
+Si definisce \emph{varianza} di $p_X$, la quantit\`a:
+$$
+Var(p_X) = \mathbb{E}[(p_X-\mu_X)]^2 = \sum_{i=1}^{+\infty} (X_i - \mu_X)^2p_{X_i} = \sigma^2_X
+$$
+Date due variabili casuali, siano esse $X$ e $Y$, definite sullo stesso insieme di cardinalit\`a $M$, si chiama \emph{covarianza} di $x,y$ la seguente quantit\`a:
+$$
+cov(X,Y) = \frac{1}{M}\sum_{i=1}^M (X-\mathbb{E}(X))(Y-\mathbb{E}(Y)) = \sigma_{XY}
+$$
+Si osservi che 
+$$
+cov(X,X) =  \frac{1}{M}\sum_{i=1}^M (X-\mathbb{E}(X))(X-\mathbb{E}(X)) =  \frac{1}{M}\sum_{i=1}^M (X-\mathbb{E}(X))^2 = \sigma^2_X
+$$
+Per una variabile aleatoria multivariata, quale una distribuzione di probabilit\`a congiunta su $N$ variabili casuali, siano esse $X_1,\dots,X_N$, si definisce la matrice di \emph{varianza-covarianza}, o semplicemente matrice di \emph{covarianza}, la seguente matrice quadrata $N$\texttt{x}$N$:
+$$
+\Sigma = \left(\begin{matrix}
+cov(X_1,X_1) && cov(X_1,X_2) && \dots && cov(X_1,X_N) \\
+\vdots && \vdots && \vdots \\
+cov(X_N,X_1) && cov(X_N, X_2) && \dots && cov(X_N,X_N)
+\end{matrix}\right) 
+$$
+$$
+ = \left(\begin{matrix}
+\sigma^2_{X_1} && \sigma_{X_1,X_2} && \dots && \sigma_{X_1,X_N} \\
+\vdots && \vdots && \vdots \\
+\sigma_{X_N,X_1} && \sigma_{X_N, X_2} && \dots && \sigma^2_{X_N}
+\end{matrix}\right)
+$$
+
 \subsection{Classificazioni}
 I KF sono comunemente basati su sistemi dinamici \emph{lineari} a tempo discreto, tuttavia i fenomeni reali sono raramente lineari. Un modello lineare \`e spesso un'approssimazione di un modello pi\`u complesso.\\*
 Nel dominio applicativo in cui si colloca la Tesi, ossia quello del posizionamento ferroviario, occorre basare il Filtro di Kalman su un modello non-lineare.
 \subsection{Filtri di Kalman Estesi}
+I Filtri di Kalman Estesi, in inglese \emph{Extended Kalman Filter} (EKF), sono una generalizzazione al caso non-lineare dei classici Filtri di Kalman lineari.\\*
+Il funzionamento base di un EKF coinvolge la stima dello stato di un sistema dinamico \emph{discreto} non lineare:
+$$
+\mathbf{x}_{k+1} = F(\mathbf{x}_k,\mathbf{v}_k)
+$$
+$$
+\mathbf{y}_k\;=\;H(\mathbf{x}_k,\mathbf{n}_k)
+$$
+Dove
+\begin{itemize}
+	\item $\mathbf{x}_k$ rappresenta lo stato non osservato del sistema;
+	\item $\mathbf{y}_k$ rappresenta l'unica misura osservata;
+	\item $\mathbf{v}_k$ rappresenta il \emph{rumore di processo};
+	\item $\mathbf{n}_k$ rappresenta il \emph{rumore di misura}.
+\end{itemize}
+Si suppongono infine note le funzioni $F,H$ che descrivono la dinamica del modello.
 \subsubsection{Filtri di Kalman Unscented}

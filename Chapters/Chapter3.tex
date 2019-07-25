@@ -24,7 +24,7 @@ Il \emph{sensor set} utilizzato in quest'applicazione \`e composto dai seguenti 
 	Sensore incaricato di misurare i vettori \texttt{accelerazione} ($\mathbf{a}$) e \texttt{velocit\`a angolare} ($\mathbf{v_{ang}}$) attraverso l'uso combinato di un accelerometro e un giroscopio. Le misure di IMU sono prese rispetto a un sistema inerziale solidale con il binario e sono espresse in unit\`a stabilite dallo standard internazionale (SI):
 	$$
 	\mathbf{a}\;\left[\frac{m}{s^2}\right]\;\;\;\;\mathbf{v_{ang}}\;\left[ \frac{rad}{s} \right]
-	$$Si tratta del sensore principale su cui si basa l'esecuzione di SFA.\newpage
+	$$Si tratta del sensore principale su cui si basa l'esecuzione di SFA, ed \`e caratterizzato da un \emph{drift}, il quale fa discostare il valore di accelerazione misurato da quello reale, in una quantit\`a che \`e funzione del tempo.\newpage
 	\item Odometro:\\*
 	Per realizzare l'odometro \`e stato installato un rilevatore radar su una ruota del treno. Il radar misura il tempo impiegato dalla ruota a compiere un giro completo, e determina la velocit\`a angolare della ruota $\varphi'(t) = \frac{2\pi}{tempo} \left[ \frac{rad}{s}\right]$.\\*
 	Noto il raggio $r\;[m]$ della ruota, \`e possibile determinare la velocit\`a lineare alla circonferenza della ruota  $x'(t)$ attraverso la relazione cinematica $x'(t) = r\varphi'(t) \left[ \frac{m\;rad}{s}\right] = r\varphi'(t) \left[ \frac{m}{s} \right]$.\\*
@@ -70,8 +70,8 @@ Uno schema dell'architettura software \`e quello mostrato in figura \ref{fig:tdi
 \section{Gestione della trasmissione dei dati}
 Nella precedente sezione sono stati brevemente introdotti i protocolli di comunicazione implementati per gestire la comunicazione \texttt{UDP}:
 \begin{itemize}
-	\item Tra \texttt{interface-modules} e \texttt{listener} (\texttt{INPUT\_PROTOCOL})
-	\item Tra \texttt{listener} e OBCU/RTT (\texttt{OUTPUT\_PROTOCOL})
+	\item In entrata, tra \texttt{interface-modules} e \texttt{listener} (\texttt{INPUT\_PROTOCOL});
+	\item In uscita, tra \texttt{listener} e OBCU/RTT (\texttt{OUTPUT\_PROTOCOL}).
 \end{itemize}
 \subsection{Trasmissione in entrata}
 Per trasmettere i dati da \texttt{interface-modules} a \texttt{listener}, e dunque dai sensori al modulo software che implementa SFA, \`e stato realizzato un protocollo di comunicazione denominato \texttt{INPUT\_PROTOCOL}.\\*
@@ -209,7 +209,7 @@ Si suppongano le condizioni iniziali riportate in tabella \ref{tab:condinit}.\\*
 	$$
 	\mathbf{v_{ang}} = (0.0003, -0.0001, 0.0002)
 	$$
-	E lo invia tramite \texttt{SERIAL\_1} a \texttt{MOD\_1} di \texttt{interface-modules}.
+	E lo invia, tramite \texttt{SERIAL\_1}, a \texttt{MOD\_1} di \texttt{interface-modules}.
 	\item \texttt{MOD\_1} invia a \texttt{listener} il seguente pacchetto \texttt{IMU}:\\*\\*
 		\begin{tabular}{|c|c|c|c|}
 		\hline 
@@ -219,7 +219,7 @@ Si suppongano le condizioni iniziali riportate in tabella \ref{tab:condinit}.\\*
 		\hline 
 	\end{tabular}\\*\\*
 	Accodandovi nell'ordine il vettore accelerazione, e il vettore velocit\`a angolare.
-	\item \texttt{listener} riceve il pacchetto e crea e invia a SFA la seguente variabile \texttt{IMU\_POD}:
+	\item \texttt{listener} riceve il pacchetto, crea e invia a SFA la seguente variabile \texttt{IMU\_POD}:
 	\begin{itemize}
 		\item \texttt{Seq.NO = 1}
 		\item \texttt{Epoch = $t_0$}
@@ -239,6 +239,122 @@ Si suppongano le condizioni iniziali riportate in tabella \ref{tab:condinit}.\\*
 		\item \texttt{FU\_ARC\_LEN = }$P_{KM}$
 	\end{itemize}
 	\end{itemize}
-	\item $t_0 < t < t_0 + \frac{1}{ODO\_SAMPLE\_RATE}$\\*
+	\item $t_0 < t < t_0 + \frac{1}{ODO\_SAMPLE\_RATE} = t_0 + \frac{1}{20}$\\*
 	Fintantoch\'e l'odometro non campiona il suo primo valore di velocit\`a, si ripetono le operazioni viste al passo precedente per ogni campionamento di \texttt{IMU}.
+	\item $t = t_0 + \frac{1}{20}$\\*
+		\begin{itemize}
+		\item Odometro campiona il seguente valore di velocit\`a:
+		$$
+		\mathbf{a} = (1.0010)
+		$$
+		E lo invia, tramite \texttt{SERIAL\_2}, a \texttt{MOD\_2} di \texttt{interface-modules}.
+		\item \texttt{MOD\_2} invia a \texttt{listener} il seguente pacchetto \texttt{ODOMETRO}:\\*\\*
+		\begin{tabular}{|c|c|c|c|}
+			\hline 
+			\textbf{SENSOR\_TYPE} & \textbf{Seq. NO} & \textbf{N\_INT} & \textbf{N\_DOUBLE} \\ 
+			\hline 
+			\texttt{0x02} & \texttt{Seq\_{NO}} & 0 & 2 \\ 
+			\hline 
+		\end{tabular}\\*\\*
+		Accodandovi nell'ordine il valore di velocit`a rilevato, e il valore dello scarto quadratico medio della sorgente, noto a priori, in quanto caratteristica tecnica intrinseca dello strumento di misura, il radar; sia esso \texttt{SIGMA\_{RADAR}}.\\*
+		\item \texttt{listener} riceve il pacchetto, crea e invia a SFA la seguente variabile \texttt{ODO\_POD}:
+		\begin{itemize}
+			\item \texttt{Seq.NO = Seq\_{NO}}
+			\item \texttt{Epoch = $t_0 + \frac{1}{20}$}
+			\item \texttt{vel = 1.0010}
+			\item \texttt{sigma = SIGMA\_{RADAR}}
+		\end{itemize}
+		\item SFA elabora il pacchetto e utilizza la rilevazione di velocit\`a in maniera utile a correggere il \emph{drift} di IMU, al fine di produrre una stima della posizione pi\`u accurata.
+		\end{itemize}
+	\item $t = n\;t_0\;\;\;\;\;\;\;n \in \mathbb{N}^+$\\*
+	Ogni secondo, il modulo \texttt{STROBE} di \texttt{interface-modules}, invia a \texttt{listener} un pacchetto della forma:
+	\\*\\*
+	\begin{tabular}{|c|c|c|c|}
+		\hline 
+		\textbf{SENSOR\_TYPE} & \textbf{Seq. NO} & \textbf{N\_INT} & \textbf{N\_DOUBLE} \\ 
+		\hline 
+		\texttt{0x09} & \texttt{Seq\_{NO}} & 0 & 1 \\ 
+		\hline 
+	\end{tabular}\\*\\*
+Accondandovi un \emph{timestamp} che \texttt{listener} inoltra a SFA per scopi di sincronizzazione.
 \end{enumerate}
+Quanto elencato viene ripetuto per ciascun campionamento successivo di IMU e odometro.\\*
+Nonappena un' uscita di SFA si rende disponibile a \texttt{listener} questo si comporta come segue:
+\begin{itemize}
+	\item \texttt{listener} riceve la variabile \texttt{SFA\_OUTPUT\_POD}, da SFA;
+	\item \texttt{listener} costruisce il seguente pacchetto da inviare a OBCU, o a RTT:
+		\begin{itemize}
+		\item \texttt{Seq.NO = 0x00}
+		\item \texttt{ECEF\_X = } \texttt{SFA\_OUTPUT\_POD.}$E_X$
+		\item \texttt{ECEF\_Y = } \texttt{SFA\_OUTPUT\_POD.}$E_Y$
+		\item \texttt{ECEF\_Z = } \texttt{SFA\_OUTPUT\_POD.}$E_Z$
+		\item \texttt{FU\_ARC\_LEN = } \texttt{SFA\_OUTPUT\_POD.}$P_{KM}$
+	\end{itemize}
+	\item OBCU, o RTT, riceve il pacchetto e invia a \texttt{listener} l'\emph{ack} \texttt{0x00}.
+\end{itemize}
+\subsection{Nota sui numeri di sequenza}
+Il conteggio del numero di sequenza dei pacchetti in entrata \`e gestito dai moduli \texttt{interface\_modules}. Questi moduli sono processi concorrenti che condividono un'area di memoria in cui viene caricata una variabile intera. Questa variabile viene incrementata in maniera mutuamente esclusiva ogniqualvolta un modulo riceva un pacchetto, e il suo valore sar\`a il valore del campo \texttt{Seq.NO} inviato a \texttt{listener}.\\*
+Per quanto concerne l'indicizzazione dei pacchetti in uscita, questa \`e invece gestita da \texttt{listener}, attraverso una variabile contatore incrementata ogni qualvolta SFA invii a \texttt{listener} un'uscita.\\*
+Il valore di tale contatore sar\`a pertanto il numero di sequenza del pacchetto \texttt{SFA\_OUTPUT\_POD} da inviare a OBCU o a RTT.\newpage
+\section{Possibili sviluppi}
+Il sistema, cos\'i come \`e stato descritto, rappresenta essenzialmente un \emph{core} minimale di un sistema di posizionamento basato su SFA, limitato rispetto alle potenzialit\`a dell'algoritmo e comunque non esente da vulnerabilit\`a legate alla \emph{security}. In questa sezione verranno discusse le principali problematiche della soluzione descritta, in che modo queste possono essere risolte, e quali tecniche possono essere usate per migliorare l'usabilit\`a del sistema.
+\subsection{Problematiche legate alla security}
+Per \emph{security} si intende un insieme di tecniche che hanno come scopo la protezione dei dati, siano essi stoccati in un sistema informatico, oppure transitanti attraverso un sistema di telecomunicazione.\\*
+Tale protezione viene assicurata contro specifiche \emph{minacce}, le quali sfruttano opportune \emph{vulnerabilit\`a}.\\*
+La \emph{security} viene garantita attraverso l'uso di appropriate \emph{tecniche preventive}, oppure \emph{contromisure} applicabili in caso di violazioni alle principali \emph{misure} della \emph{security}:
+\begin{itemize}
+	\item Integrit\`a
+	\item Confidenzialit\`a
+	\item Autenticazione
+\end{itemize}
+In un sistema \emph{safety-critical} come quello descritto, una violazione di \emph{security} potrebbe portare a una violazione di \emph{safety}, pertanto \`e fondamentale ridurre al massimo le vulnerabilit\`a del sistema.
+Nella fattispecie descritta in questa Tesi, tuttavia, la confidenzialit\`a non \`e una misura fondamentale, mentre lo sono l'integrit\`a e l'autenticazione.
+\subsubsection{Minacce all'integrit\`a}
+\`E stato gi\`a discusso che l'utilizzo del protocollo \texttt{UDP} a livello di trasporto, non garantisce affatto che i messaggi ricevuti da OBCU siano corretti e ordinati.\\*
+Per ovviare al problema dell'ordinamento \`e stato implementato il gi\`a descritto meccanismo di \texttt{acknowledgment}, tuttavia esso fa l'implicita assunzione che se si \`e in grado di leggere correttamente il numero di sequenza del pacchetto ricevuto, questo non sia stato alterato.\\*
+Si consideri il seguente scenario:
+\begin{itemize}
+	\item \texttt{listener} invia a OBCU il seguente pacchetto:
+	\begin{itemize}
+		\item \texttt{Seq.NO = 0x17}
+		\item \texttt{ECEF\_X = } \texttt{SFA\_OUTPUT\_POD.}$E_X$
+		\item \texttt{ECEF\_Y = } \texttt{SFA\_OUTPUT\_POD.}$E_Y$
+		\item \texttt{ECEF\_Z = } \texttt{SFA\_OUTPUT\_POD.}$E_Z$
+		\item \texttt{FU\_ARC\_LEN = } \texttt{SFA\_OUTPUT\_POD.}$P_{KM}$
+	\end{itemize}
+	\item OBCU riceve il seguente pacchetto:
+\begin{itemize}
+	\item \texttt{Seq.NO = 0x25}
+	\item \texttt{ECEF\_X = } \texttt{SFA\_OUTPUT\_POD.}$E_X$
+	\item \texttt{ECEF\_Y = } \texttt{SFA\_OUTPUT\_POD.}$E_Y$
+	\item \texttt{ECEF\_Z = } \texttt{SFA\_OUTPUT\_POD.}$E_Z$
+	\item \texttt{FU\_ARC\_LEN = } \texttt{SFA\_OUTPUT\_POD.}$P_{KM}$
+\end{itemize}
+\end{itemize}
+Per come \`e stato descritto il protocollo, OBCU accetta passivamente che il numero di sequenza ricevuto sia \texttt{0x25}, anche se prima di questo era stato letto il valore \texttt{0x16}, ed invier\`a a \texttt{listener} l'\emph{ack} \texttt{0x25}.\\*
+In questo caso, OBCU dovrebbe essere progettato in maniera tale da controllare sempre di ricevere un numero di sequenza pari all'ultimo ricevuto $+1$. Dal momento che, viste le caratteristiche intrinseche del protocollo, \`e impossibile che \texttt{listener} abbia inviato il pacchetto con numero di sequenza \texttt{0x25} se l'ultimo ack ricevuto non era \texttt{0x24}, \`e probabile che, attraversando il canale, il pacchetto abbia subito alterazioni casuali in tutti i suoi bit, e quindi anche l'informazione di posizione potrebbe essere alterata.\\*
+Per ovviare definitivamente alla problematica dell'integrit\`a, \`e opportuno integrare nel protocollo l'uso di una \emph{funzione hash}. Il protocollo verrebbe modificato come segue:
+\begin{itemize}
+	\item \texttt{listener} prepara il pacchetto contenente le informazioni di\\* \texttt{SFA\_OUTPUT\_POD};
+	\item \texttt{listener} calcola \texttt{H(SFA\_OUTPUT\_POD) = y};
+	\item \texttt{listener} invia la coppia \texttt{(SFA\_OUTPUT\_POD,y)}
+\end{itemize}
+In ricezione, OBCU ricalcola \texttt{H(SFA\_OUTPUT\_POD) = y'}, e accetta il messaggio solo se \texttt{y' = y}. Infatti, grazie alla propriet\`a delle funzioni \emph{hash}, una minima variazione del messaggio $m$ causa una grande variazione del \emph{digest} $H(m)$, quindi \`e altamente improbabile che un'alterazione casuale dei bit trasmessi, sia essa \texttt{(SFA\_OUTPUT\_POD\_WRONG, Y\_WRONG)}, mantenga la propriet\`a \texttt{H(SFA\_OUTPUT\_POD\_WRONG) = Y\_WRONG}.
+\subsubsection{Minacce all'autenticazione}
+Si consideri il caso in cui un malintenzionato sia in grado di inviare messaggi a OBCU e abbia interesse nel non segnalare al sistema di \emph{interlocking} l'avvicinamento del treno alla JA.\\*
+L'attaccante si comporta come segue:
+\begin{itemize}
+	\item Intercetta il messaggio \texttt{(SFA\_OUTPUT\_POD,H(SFA\_OUTPUT\_POD))}
+	\item Modifica la posizione del treno ponendola lontano da una JA, forgiando un nuovo messaggio, sia esso \texttt{SFA\_OUTPUT\_POD\_DANGEROUS}
+	\item Calcola \texttt{H(SFA\_OUTPUT\_POD\_DANGEROUS) = Y\_DANGEROUS}
+	\item Invia a OBCU la coppia \texttt{(SFA\_OUTPUT\_POD\_DANGEROUS, Y\_DANGEROUS)}
+\end{itemize}
+Per ovviare a questa problematica si potrebbero usare le seguenti tecniche:
+\begin{enumerate}
+	\item Cifratura del \emph{digest} della funzione \emph{hash} con una chiave simmetrica condivisa tra \texttt{listener} e OBCU;
+	\item Cifratura del \emph{digest} della funzione \emph{hash} con la chiave privata di \texttt{listener} (Firma Digitale \texttt{DSA});
+	\item Uso di una funzione \emph{hash} che prende in ingresso sia il messaggio che una chiave simmetrica condivisa tra \texttt{listener} e OBCU (\texttt{HMAC});
+	\item Accodare un segreto condiviso tra \texttt{listener} e OBCU al messaggio prima di calcolarne il \emph{digest}.
+\end{enumerate}
+In ciascuno di questi scenari, fatta assunzione di propriet\`a di \emph{strong collision resistance} della funzione \emph{hash} utilizzata, si garantisce che il messaggio pu\`o essere stato inviato solo da \texttt{listener}, in quanto un attaccante non avrebbe modo di modificare il messaggio e calcolare un \emph{digest} valido. La soluzione meno dispendiosa in termini di complessit\`a computazionale e pi\`u adatta a un simile scenario \`e la soluzione 4, in quanto non \`e necessario garantire anche la \emph{non-ripudiabilit\`a} ma solo l'autenticazione e l'integrit\`a.
+\subsection{Miglioramenti al servizio fornito}
