@@ -7,18 +7,18 @@ Un sistema dinamico \`e una modellazione matematica di un processo che evolve ne
 Sia $S$ l'insieme dei possibili stati che il sistema pu\`o assumere, e sia $m = |S|$ la dimensione dello spazio degli stati.\\*
 Senza perdere in generalit\`a, si possono formalizzare questi due tipi di sistemi dinamici come:
 $$
-y'(t) = f(t,y(t)),\;t\ge 0
+y'(t) = f(t,y(t)),\;t\ge 0\;\;\;\;(1)
 $$
 Con $y(0) \in \mathbb{R}^m$ condizione iniziale nota, e:
 $$
-y_{n+1} = f(n,y_n),\;n = 0,1,\dots
+y_{n+1} = f(n,y_n),\;n = 0,1,\dots\;\;\;\;(2)
 $$
 con al solito $y_0 \in \mathbb{R}^m$ condizione iniziale nota.\\*
 Ricavare lo stato del sistema dinamico per un certo istante $t$, o $n$, equivale a risolvere le equazioni cui sopra e valutarne la traiettoria soluzione in $t$ o in $n$.\\*
-Un semplice sistema dinamico \`e rappresentato da un punto materiale che si muove con una accelerazione costante $$\vec{a} = a\vec{k}$$ dove $\vec{k}$ \`e un qualunque versore della base canonica di $\mathbb{R}^3$.\\*
-Supponendo che il punto si muova con velocit\`a iniziale $\vec{z'}(0) = v_0\vec{k}$ nota e inizi il moto da una coordinata $\vec z(0) = z_0\vec{k}$ nota, si ha:
+Un semplice sistema dinamico \`e rappresentato da un punto materiale che si muove con una accelerazione costante $$\mathbf{a} = a\mathbf{k}$$ dove $\mathbf{k}$ \`e un qualunque versore della base canonica di $\mathbb{R}^3$.\\*
+Supponendo che il punto si muova con velocit\`a iniziale $\mathbf{z'}(0) = v_0\mathbf{k}$ nota e inizi il moto da una coordinata $\mathbf z(0) = z_0\mathbf{k}$ nota, si ha:
 $$
-z''(t) = a
+z''(t) = a\;\;\;\;(3)
 $$
 $$
 z'(t) = \int{a dt} = a t + v_0
@@ -39,36 +39,33 @@ Si nota immediatamente che la variazione della misura $z(t)$ data da $\varepsilo
 	\includegraphics[scale=0.5]{img/errormeas}
 	\caption{Grafico dell' errore di stima della posizione con $a = 10^0, \varepsilon = 10^{-3}$}
 	\label{fig:errormeas}
-\end{figure}
+\end{figure}\newpage
+Il sistema dinamico individuato in $(3)$, \`e una tipologia di sistema dinamico caratterizzato da assenza di \emph{rumore di processo}: fatta assunzione di conoscere esattamente il valore di $a$, la doppia integrazione di $(3)$ rispetto al tempo fornisce una descrizione esatta e deterministica della dinamica del sistema: la traiettoria sar\`a \emph{esattamente} quella individuata dalla soluzione.\\*
+Alcuni processi tuttavia evolvono in parte stocasticamente per loro natura, e questa natura stocastica insita nel processo viene chiamata \emph{rumore di processo}. Si conclude pertanto che non solamente le misurazioni sono affette da rumore, ma anche il processo evolutivo stesso pu\`o essere affetto da rumore stocastico intrinseco.
 \newpage
 \section{I Filtri di Kalman}
-Un Filtro di Kalman, o in inglese \emph{Kalman Filter} (KF), \`e un modello di SFA progettato appositamente per risolvere o rendere trascurabile il problema del rumore nei processi di misura.\\*
-Siano $X_1,\dots,X_N$ $N$ sorgenti distinte di dati.\\*
-Si definisce \emph{misurazione} del valore $j$ dall' $i-$esima sorgente l'osservazione dell'evento:
-$$
-X_i = j
-$$
-Per un opportuno $j$ e per $i = 1,\dots,N$.\\*
-Modellando ciascuna $X_i$ come una variabile casuale, si ha che ciascuna $X_i$ \`e caratterizzata da una distribuzione di probabilit\`a:
+Un Filtro di Kalman, o in inglese \emph{Kalman Filter} (KF), \`e un modello di SFA progettato appositamente per risolvere o rendere trascurabile il problema del rumore.\\*
+Esso \`e, da un punto di vista statistico, uno \emph{stimatore} dello stato di un sistema dinamico caratterizzato da rumore.
+\subsection{Premesse statistiche}
+\`E opportuno fissare la notazione che sar\`a usata nelle discussioni che seguiranno.\\*
+Siano $X_1,\dots,X_N$ $N$ variabili casuali.\\*
+Si ha che ciascuna $X_i$ \`e caratterizzata da una distribuzione di probabilit\`a:
 $$
 p_{X_i} = \{p_j:P(X_i = j) = p_j\},\;\;\;\;i = 1,\dots,N
 $$
-Un KF \`e essenzialmente un algoritmo che utilizza una serie di osservazioni $X_i = j$, e cerca di produrre la stima di una \emph{distribuzione di probabilit\`a congiunta} delle variabili casuali $X_i$.
-\subsection{Premesse statistiche}
-\`E opportuno fissare la notazione che sar\`a usata nelle discussioni che seguiranno.\\*
-Per una data distribuzione di probabilit\`a $p_X$ si definisce la \emph{media}, o \emph{valore atteso}, di $p_X$ come:
+Per una data variabile casuale $X$, con distribuzione di probabilit\`a $p_X$, si definisce la \emph{media}, o \emph{valore atteso}, di $X$ come:
 $$
-\mathbb{E}(p_X) = \sum_{i=1}^{+\infty} X_i p_{X_i} = \mu_X
+\mathbb{E}(X) = \sum_{i=1}^{+\infty} X_i p_{X_i} = \mu_X
 $$
-Si definisce \emph{varianza} di $p_X$, la quantit\`a:
+Si definisce \emph{varianza} di $X$, la quantit\`a:
 $$
-Var(p_X) = \mathbb{E}[(p_X-\mu_X)]^2 = \sum_{i=1}^{+\infty} (X_i - \mu_X)^2p_{X_i} = \sigma^2_X
+Var(X) = \mathbb{E}[(X-\mu_X)]^2 = \sum_{i=1}^{+\infty} (X_i - \mu_X)^2p_{X_i} = \sigma^2_X
 $$
-Date due variabili casuali, siano esse $X$ e $Y$, definite sullo stesso insieme di cardinalit\`a $M$, si chiama \emph{covarianza} di $x,y$ la seguente quantit\`a:
+Date due variabili casuali, siano esse $X$ e $Y$, definite sullo stesso insieme di cardinalit\`a $M$, si chiama \emph{covarianza} di $X,Y$ la seguente quantit\`a:
 $$
 cov(X,Y) = \frac{1}{M}\sum_{i=1}^M (X-\mathbb{E}(X))(Y-\mathbb{E}(Y)) = \sigma_{XY}
 $$
-Si osservi che 
+Si osservi che :
 $$
 cov(X,X) =  \frac{1}{M}\sum_{i=1}^M (X-\mathbb{E}(X))(X-\mathbb{E}(X)) =  \frac{1}{M}\sum_{i=1}^M (X-\mathbb{E}(X))^2 = \sigma^2_X
 $$
@@ -87,25 +84,24 @@ $$
 \sigma_{X_N,X_1} && \sigma_{X_N, X_2} && \dots && \sigma^2_{X_N}
 \end{matrix}\right)
 $$
-
-\subsection{Classificazioni}
+Si osserva che $\Sigma$ \`e una matrice \emph{simmetrica} per la propriet\`a commutativa del prodotto:
+$$
+cov(X,Y) = \frac{1}{M}\sum_{i=1}^M (X-\mathbb{E}(X))(Y-\mathbb{E}(Y)) = 
+$$
+$$
+ = \frac{1}{M}\sum_{i=1}^M (Y-\mathbb{E}(Y))(X-\mathbb{E}(X)) = cov(Y,X)
+$$
+\subsection{Filtro di Kalman Lineare}
 I KF sono comunemente basati su sistemi dinamici \emph{lineari} a tempo discreto, tuttavia i fenomeni reali sono raramente lineari. Un modello lineare \`e spesso un'approssimazione di un modello pi\`u complesso.\\*
-Nel dominio applicativo in cui si colloca la Tesi, ossia quello del posizionamento ferroviario, occorre basare il Filtro di Kalman su un modello non-lineare.
-\subsection{Filtri di Kalman Estesi}
-I Filtri di Kalman Estesi, in inglese \emph{Extended Kalman Filter} (EKF), sono una generalizzazione al caso non-lineare dei classici Filtri di Kalman lineari.\\*
-Il funzionamento base di un EKF coinvolge la stima dello stato di un sistema dinamico \emph{discreto} non lineare:
+Nel dominio applicativo in cui si colloca la Tesi, ossia quello del posizionamento ferroviario, occorre basare il Filtro di Kalman su un modello non-lineare, tuttavia, per ragioni di semplicit\`a, viene esposto il principio base del funzionamento di un semplice KF llineare.
+\subsubsection{Definizione del problema}
+Si consideri il seguente sistema dinamico lineare discreto:
 $$
-\mathbf{x}_{k+1} = F(\mathbf{x}_k,\mathbf{v}_k)
+\begin{cases}
+\mathbf x_k = A \mathbf x_{k-1} + B \mathbf u_k + \mathbf w_k \\
+\mathbf y_k = C \mathbf x_k + \mathbf v_k
+\end{cases}
 $$
-$$
-\mathbf{y}_k\;=\;H(\mathbf{x}_k,\mathbf{n}_k)
-$$
-Dove
-\begin{itemize}
-	\item $\mathbf{x}_k$ rappresenta lo stato non osservato del sistema;
-	\item $\mathbf{y}_k$ rappresenta l'unica misura osservata;
-	\item $\mathbf{v}_k$ rappresenta il \emph{rumore di processo};
-	\item $\mathbf{n}_k$ rappresenta il \emph{rumore di misura}.
-\end{itemize}
-Si suppongono infine note le funzioni $F,H$ che descrivono la dinamica del modello.
-\subsubsection{Filtri di Kalman Unscented}
+In cui i vettori $\mathbf w_k$ e $\mathbf v_k$ rappresentano rispettivamente il rumore di processo e il rumore di misura. Si assumono \emph{congiuntamente gaussiani}, indipendenti e con matrici di covarianza $Q,R$ rispettivamente.\\*
+Il vettore $\mathbf y_k$ rappresenta il vettore di misurazioni campionate all'istante $k$, mentre il vettore $\mathbf x_k$ rappresenta lo stato del sistema all'istante $k$.\\*
+Le matrici $A$ e $B$ descrivono la dinamica del modello e si assumono note a priori, pena l'introduzione di errori sistematici, mentre la matrice $C$ descrive la dinamica del processo di misura.
