@@ -1,13 +1,14 @@
 \chapter{Applicazione di SFA: La Tramvia di Firenze}
 In questo capitolo verr\`a analizzata una particolare applicazione di SFA al problema del posizionamento ferrotramviario.\\*
 Nell'ambito di un progetto di ricerca finanziato dall'Unione Europea, si \`e voluto studiare l'usabilit\`a di SFA come sistema di posizionamento ferrotramviario alternativo a quello descritto nel Capitolo 1, il quale fa un largo uso di apparati installati a terra, fatto che si vorrebbe minimizzare.\\*
-La linea ferrotramviaria scelta come ambiente di prova \`e la linea \texttt{T1} della Tramvia di Firenze, che collega la stazione di \emph{Villa Costanza}, sita nel comune di Scandicci all'altezza dell'omonimo parcheggio di interscambio dell'autostrada \texttt{A1}, all'ospedale di \emph{Careggi}, sito quest'ultimo nel comune di Firenze.
+La linea ferrotramviaria scelta come ambiente di prova \`e la linea \texttt{T1} della Tramvia di Firenze, che collega la stazione di \emph{Villa Costanza}, sita nel comune di Scandicci, all'ospedale di \emph{Careggi}, sito quest'ultimo nel comune di Firenze. La linea \`e mostrata in figura \ref{fig:t1}.\\*
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\linewidth]{img/t1}
 	\caption{Tramvia di Firenze - Linea \texttt{T1}}
 	\label{fig:t1}
 \end{figure}
+L'idea di base \`e quella di utilizzare un \emph{accelerometro} per misurare i valori di accelerazione a istanti di tempo sufficientemente ravvicinati e determinare, tramite essi, la posizione del treno lungo la traccia. Per quanto esposto nel Capitolo 2, non \`e accettabile, in un contesto \emph{safety-critical}, l'utilizzo esclusivo dell'accelerometro con doppia integrazione rispetto al tempo; in quanto il rumore nel processo di misura rende sempre meno affidabili le misurazioni con il passare del tempo.
 \section{Architettura di Sistema}
 Il sistema progettato ha lo scopo di eseguire SFA su una piattaforma hardware installata bordo treno, la quale riceve i dati \emph{raw} dai sensori e li elabora al fine di stimare la progressiva chilometrica del treno in ciascun istante di tempo.\\*
 Tale posizione sar\`a inviata, attraverso un modem \texttt{LTE}:
@@ -21,10 +22,10 @@ Sul treno \`e stata installata una scheda \texttt{Nvidia TX-Jetson} quale piatta
 Il \emph{sensor set} utilizzato in quest'applicazione \`e composto dai seguenti sensori:
 \begin{itemize}
 	\item \emph{Inertial Measurement Unit} (IMU):\\*
-	Sensore incaricato di misurare i vettori \texttt{accelerazione} ($\mathbf{a}$) e \texttt{velocit\`a angolare} ($\mathbf{v_{ang}}$) attraverso l'uso combinato di un accelerometro e un giroscopio. Le misure di IMU sono prese rispetto a un sistema inerziale solidale con il binario e sono espresse in unit\`a stabilite dallo standard internazionale (SI):
+	Sensore incaricato di misurare i vettori \texttt{accelerazione} ($\mathbf{a}$) e \texttt{velocit\`a angolare} ($\mathbf{v_{ang}}$) attraverso l'uso combinato di un accelerometro e un giroscopio. Le misure di IMU sono prese rispetto alla Terra\footnote{Approssimata come un \emph{sistema inerziale}.} e sono espresse in unit\`a stabilite dallo standard internazionale (SI):
 	$$
 	\mathbf{a}\;\left[\frac{m}{s^2}\right]\;\;\;\;\mathbf{v_{ang}}\;\left[ \frac{rad}{s} \right]
-	$$Si tratta del sensore principale su cui si basa l'esecuzione di SFA, ed \`e caratterizzato da un \emph{drift}, il quale fa discostare il valore di accelerazione misurato da quello reale, in una quantit\`a che \`e funzione del tempo.\newpage
+	$$Si tratta del sensore principale su cui si basa l'esecuzione di SFA, ed \`e caratterizzato da un \emph{drift}, il quale fa discostare il valore di accelerazione misurato da quello reale, in una quantit\`a che \`e funzione del tempo.
 	\item Odometro:\\*
 	Per realizzare l'odometro \`e stato installato un rilevatore radar su una ruota del treno. Il radar misura il tempo impiegato dalla ruota a compiere un giro completo, e determina la velocit\`a angolare della ruota $\varphi'(t) = \frac{2\pi}{tempo} \left[ \frac{rad}{s}\right]$.\\*
 	Noto il raggio $r\;[m]$ della ruota, \`e possibile determinare la velocit\`a lineare alla circonferenza della ruota  $x'(t)$ attraverso la relazione cinematica $x'(t) = r\varphi'(t) \left[ \frac{m\;rad}{s}\right] = r\varphi'(t) \left[ \frac{m}{s} \right]$.\\*
@@ -45,7 +46,7 @@ Il \emph{sensor set} utilizzato in quest'applicazione \`e composto dai seguenti 
 Sulla scheda \`e installato il sistema operativo \texttt{Ubuntu 16.04 LTS}, basato su kernel \texttt{Linux}.\\*Qualunque software menzionato in questa Tesi \`e stato sviluppato in linguaggio \texttt{C++}.\\*
 Un set di tre moduli software, denominati \texttt{interface-modules}, sono in esecuzione sulla scheda.\\*
 Sia MOD\_$i$ l'$i-$esimo modulo software del set e SERIAL\_$i$ l'$i-$esima interfaccia seriale della scheda, per $i = 1,2,3$.\\*
-Il funzionamento di \texttt{interface-modules} \`e il seguente:\newpage
+Il funzionamento di \texttt{interface-modules} \`e il seguente:
 \begin{itemize}
 	\item IMU invia la coppia \texttt{(accelerazione,velocit\`a angolare)} a SERIAL\_1, MOD\_1 legge i valori da SERIAL\_1 e li invia a un secondo modulo software, denominato \texttt{listener}, attraverso l'interfaccia di rete \texttt{loopback}, in quanto \texttt{listener} esegue anch'esso sulla scheda;
 	\item Odometro invia il valore di \texttt{velocit\`a lineare} a SERIAL\_2, MOD\_2 legge i valori da SERIAL\_2 e li invia a \texttt{listener};
@@ -66,7 +67,7 @@ Uno schema dell'architettura software \`e quello mostrato in figura \ref{fig:tdi
 	\includegraphics[width=\linewidth]{img/InternalTrainSchema}
 	\caption{Architettura software bordo treno}
 	\label{fig:tdiagramint}
-\end{figure}\newpage
+\end{figure}
 \section{Gestione della trasmissione dei dati}
 Nella precedente sezione sono stati brevemente introdotti i protocolli di comunicazione implementati per gestire la comunicazione \texttt{UDP}:
 \begin{itemize}
@@ -94,7 +95,7 @@ Il protocollo definisce il formato del \emph{payload} del pacchetto \texttt{UDP}
 \end{tabular} 
 \caption{Protocollo di comunicazione in entrata}
 \label{tab:protoin}
-\end{table}\newpage
+\end{table}
 A discrezione del valore del campo \texttt{SENSOR\_TYPE} si distingue il tipo di informazione trasportata dal pacchetto, come descritto in tabella \ref{tab:sensors}.\\*
 \begin{table}[h]
 		\centering
@@ -128,7 +129,7 @@ Si osservi che se l'integrit\`a non \`e minacciata dall'utilizzo di \texttt{UDP}
 La trasmissione dei dati in uscita da SFA avviene, in accordo al protocollo \texttt{OUTPUT\_PROTOCOL} tra \texttt{listener} e OBCU, o comunque, tra \texttt{listener} e qualunque host arbitrario che intenda ricevere le informazioni in uscita, come ad esempio un \texttt{PC} sul quale viene eseguito RTT.\\*
 Come specificato, la comunicazione \`e posta in essere, a livello fisico, attraverso il protocollo \texttt{LTE}, ossia un un protocollo \emph{wireless}; mentre a livello trasporto si \`e scelto di continuare a usare \texttt{UDP} in luogo di \texttt{TCP}, col fine di massimizzare le \emph{performance} del sistema.\\*Il rischio di ricevere alcune informazioni in maniera errata, o non riceverle del tutto, \`e nettamente pi\`u elevato rispetto allo scenario precedente, nel caso in cui lo spazio fisico attraverso cui si propaga il segnale \texttt{LTE} \`e tale per cui quest'ultimo venga disturbato da sorgenti esterne.\\* Gli effetti deleteri di questa condizione sono particolarmente osservabili in alcuni tratti della linea ferrotramviaria, dove possono essere presenti numerose abitazioni e mezzi di trasporto in strada che si interpongono fisicamente tra la scheda \texttt{NVidia TX-Jetson} su cui esegue SFA e l'arbitrario host su cui viene eseguito RTT.\\*Occorre tuttavia osservare che il tracciamento del treno tramite RTT non \`e in alcun modo legato alla \emph{safety} del sistema, in quanto le funzionalit\`a \emph{safety-critical} riguardano la comunicazione tra la scheda e OBCU, ossia tra la scheda e il sistema di \emph{interlocking}.\\*
 Questa problematica \`e risolta attraverso l'esplicito utilizzo di un meccanismo di \texttt{acknowledgment} simile a quello utilizzato da \texttt{TCP}: ciascun pacchetto in uscita da SFA viene indicizzato con un \emph{sequence number} e, in ricezione, viene inviato ogni secondo un \emph{ack} replicante l'ultimo numero di sequenza correttamente ricevuto. Solo quando il mittente riceve l'ack $i$ dal destinatario invier\`a il messaggio contenente l'uscita indicizzata con \emph{sequence number} $i+1$.\\*
-Anche in questo caso, il protocollo definisce il formato del \emph{payload} del pacchetto \texttt{UDP} inviato da \texttt{listener}, ed \`e riportato in tabella \ref{tab:protoout}.\\*\newpage
+Anche in questo caso, il protocollo definisce il formato del \emph{payload} del pacchetto \texttt{UDP} inviato da \texttt{listener}, ed \`e riportato in tabella \ref{tab:protoout}.\\*
 \begin{table}[h]
 	\centering
 	\begin{tabular}{|c|c|c|c|}
@@ -165,7 +166,7 @@ In ricezione dovr\`a essere inviato il pacchetto \emph{ack} al mittente, ed il s
 Si osserva che SFA produce la stima della posizione del treno sia in termini di progressiva chilometrica che di coordinate \texttt{ECEF}.\\*
 \texttt{ECEF} \`e acronimo di \emph{Earth Centered Earth Fixed} ed \`e uno standard che misura le coordinate geografiche di un oggetto come la terna $ P = (x,y,z)$. Ciascuna coordinata viene espressa considerando la \emph{proiezione su piano} della Terra, e prendendo come origine $O$ l'intersezione fra l'equatore e il meridiano di \emph{Greenwich}.\\*
 Le coordinate \texttt{ECEF} misurano tre lunghezze, pertanto in accordo a SI, esse sono espresse in \texttt{metri}.\\*
-Nella prossima sezione, viene descritto uno scenario di esempio del comportamento del sistema a \emph{runtime}.\newpage
+Nella prossima sezione, viene descritto uno scenario di esempio del comportamento del sistema a \emph{runtime}.
 \section{Scenario di Esempio}
 Si suppongano le condizioni iniziali riportate in tabella \ref{tab:condinit}.\\*
 \begin{table}[h]
@@ -292,10 +293,6 @@ Nonappena un' uscita di SFA si rende disponibile a \texttt{listener} questo si c
 	\end{itemize}
 	\item OBCU, o RTT, riceve il pacchetto e invia a \texttt{listener} l'\emph{ack} \texttt{0x00}.
 \end{itemize}
-\subsection{Nota sui numeri di sequenza}
-Il conteggio del numero di sequenza dei pacchetti in entrata \`e gestito dai moduli \texttt{interface\_modules}. Questi moduli sono processi concorrenti che condividono un'area di memoria in cui viene caricata una variabile intera. Questa variabile viene incrementata in maniera mutuamente esclusiva ogniqualvolta un modulo riceva un pacchetto, e il suo valore sar\`a il valore del campo \texttt{Seq.NO} inviato a \texttt{listener}.\\*
-Per quanto concerne l'indicizzazione dei pacchetti in uscita, questa \`e invece gestita da \texttt{listener}, attraverso una variabile contatore incrementata ogni qualvolta SFA invii a \texttt{listener} un'uscita.\\*
-Il valore di tale contatore sar\`a pertanto il numero di sequenza del pacchetto \texttt{SFA\_OUTPUT\_POD} da inviare a OBCU o a RTT.\newpage
 \section{Possibili sviluppi}
 Il sistema, cos\'i come \`e stato descritto, rappresenta essenzialmente un \emph{core} minimale di un sistema di posizionamento basato su SFA, limitato rispetto alle potenzialit\`a dell'algoritmo e comunque non esente da vulnerabilit\`a legate alla \emph{security}. In questa sezione verranno discusse le principali problematiche della soluzione descritta, in che modo queste possono essere risolte, e quali tecniche possono essere usate per migliorare l'usabilit\`a del sistema.
 \subsection{Problematiche legate alla security}
@@ -307,7 +304,7 @@ La \emph{security} viene garantita attraverso l'uso di appropriate \emph{tecnich
 	\item Confidenzialit\`a
 	\item Autenticazione
 \end{itemize}
-In un sistema \emph{safety-critical} come quello descritto, una violazione di \emph{security} potrebbe portare a una violazione di \emph{safety}, pertanto \`e fondamentale ridurre al massimo le vulnerabilit\`a del sistema.
+In un sistema \emph{safety-critical} come quello descritto, una violazione di \emph{security} potrebbe portare a una violazione di \emph{safety}, pertanto \`e fondamentale ridurre al minimo le vulnerabilit\`a del sistema.
 Nella fattispecie descritta in questa Tesi, tuttavia, la confidenzialit\`a non \`e una misura fondamentale, mentre lo sono l'integrit\`a e l'autenticazione.
 \subsubsection{Minacce all'integrit\`a}
 \`E stato gi\`a discusso che l'utilizzo del protocollo \texttt{UDP} a livello di trasporto, non garantisce affatto che i messaggi ricevuti da OBCU siano corretti e ordinati.\\*
@@ -332,7 +329,7 @@ Si consideri il seguente scenario:
 \end{itemize}
 \end{itemize}
 Per come \`e stato descritto il protocollo, OBCU accetta passivamente che il numero di sequenza ricevuto sia \texttt{0x25}, anche se prima di questo era stato letto il valore \texttt{0x16}, ed invier\`a a \texttt{listener} l'\emph{ack} \texttt{0x25}.\\*
-In questo caso, OBCU dovrebbe essere progettato in maniera tale da controllare sempre di ricevere un numero di sequenza pari all'ultimo ricevuto $+1$. Dal momento che, viste le caratteristiche intrinseche del protocollo, \`e impossibile che \texttt{listener} abbia inviato il pacchetto con numero di sequenza \texttt{0x25} se l'ultimo ack ricevuto non era \texttt{0x24}, \`e probabile che, attraversando il canale, il pacchetto abbia subito alterazioni casuali in tutti i suoi bit, e quindi anche l'informazione di posizione potrebbe essere alterata.\\*
+In questo caso, OBCU dovrebbe essere progettato in maniera tale da controllare sempre di ricevere un numero di sequenza pari all'ultimo ricevuto $+1$. Dal momento che, viste le caratteristiche intrinseche del protocollo, \`e impossibile che \texttt{listener} abbia inviato il pacchetto con numero di sequenza \texttt{0x25} se l'ultimo \emph{ack} ricevuto non era \texttt{0x24}, \`e probabile che, attraversando il canale, il pacchetto abbia subito alterazioni casuali in tutti i suoi bit, e quindi anche l'informazione di posizione potrebbe essere alterata.\\*
 Per ovviare definitivamente alla problematica dell'integrit\`a, \`e opportuno integrare nel protocollo l'uso di una \emph{funzione hash}. Il protocollo verrebbe modificato come segue:
 \begin{itemize}
 	\item \texttt{listener} prepara il pacchetto contenente le informazioni di\\* \texttt{SFA\_OUTPUT\_POD};
