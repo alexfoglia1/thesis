@@ -290,21 +290,22 @@ Si riporta in questa sezione il codice risolutivo del problema individuato.
 \newpage
 \subsubsection{Risultati}
 Nelle figure \ref{fig:predspeed}, \ref{fig:predheight} viene mostrato il grafico che compara i valori stimati di velocit\`a e posizione con i veri valori delle medesime grandezze; infatti tali valori sono determinabili analiticamente come soluzioni esplicite della $(3)$.\\*
+Tali grafici danno un'idea immediata della capacit\`a che ha l'algoritmo di stimare la posizione e la velocit\`a in maniera affidabile anche in presenza di un processo di misura affetto da rumore.\\*
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.45]{img/predspeed}
+	\includegraphics[scale=0.7]{img/predspeed}
 	\caption{Stima della velocit\`a del corpo in caduta}
 	\label{fig:predspeed}
 \end{figure}
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.45]{img/predheight}
+	\includegraphics[scale=0.7]{img/predheight}
 	\caption{Stima della posizione del corpo in caduta}
 	\label{fig:predheight}
 \end{figure}
 \newpage
 In tabella \ref{tab:syntex} viene riportata una sintesi dei dati prodotti dall'esecuzione dell'algoritmo.\\*
-Si osserva che KF \`e in grado di stimare la posizione e la velocit\`a in maniera affidabile anche in presenza di un processo di misura affetto da rumore.
+
 \begin{table}[h]
 	\begin{tabular}{|c|c|c|c|c|c|}
 		\hline 
@@ -334,3 +335,77 @@ Si osserva che KF \`e in grado di stimare la posizione e la velocit\`a in manier
 	\caption{Misurazioni di esempio del corpo in caduta libera}
 	\label{tab:syntex}
 \end{table}
+Nelle tabelle \ref{tab:errors} e \ref{tab:errorsmeas} \`e mostrato un paragone fra l'errore a posteriori $(\mathbf x_k - \mathbf{\tilde{x}}_k)$ e l'errore della misura rispetto alla posizione reale.\\*
+\begin{table}[h]
+	\begin{tabular}{|c|c|c|c|}
+		\hline 
+		$\mathbf{t}\;(s)$ & $\mathbf{\hat{x}}_k$ & $\mathbf x_k$ & $\mathbf x_k - \mathbf{\hat{x}}_k$ \\ 
+		\hline 
+		$1$&$(99.833,-0.83333)$&$(99.5,-1)$  & $(-0.333333,-0.166667)$
+		   \\ 
+		\hline 
+		$2$&$(97.9167,-2.0333)$ & $(98,-2)$ & $(0.083333,0.033333)$
+		
+		   \\ 
+		\hline 
+		$3$& $(94.9545,-3.1636)$ & $(95.5,-3)$ & $(0.545455,0.163636)$
+		
+		  \\ 
+		\hline 
+		$4$&  $(92.6611,-3.8444)$ & $(92,-4)$ &$(-0.661111,-0.155556)$
+		
+		  \\ 
+		\hline 
+		$5$&$(87.3074,-5.037)$  & $(87.5,-5)$ &  $(0.192593,0.037037)$
+		  \\ 
+		\hline 
+		$6$& $(81.3184,-6.1105)$ & $(82,-6)$ &  $(0.681579,0.110526)$
+		  \\ 
+		\hline 
+		$7$&  $(75.7941,-6.9588)$ & $(75.5,-7)$ &  $(-0.294118,-0.041176)$
+		  \\ 
+		\hline 
+		$8$& $(67.5076,-8.0606)$ & $(68,-8)$ &  $(0.492424,0.060606)$
+		  \\ 
+		\hline 
+		$9$&  $(59.174,-9.0358)$ & $(59.5,-9)$ &  $(0.326024,0.035783)$
+		  \\ 
+		\hline 
+		$10$& $(51.0892,-9.8922)$ & $(50,-10)$ & $(-1.089216,-0.107843)$
+		  \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Errori a posteriori}
+	\label{tab:errors}
+\end{table}
+\begin{table}[h]
+	\begin{tabular}{|c|l|r|}
+		\hline 
+		$\mathbf{t}\;(s)$ & \textbf{Errore a posteriori (pos.) (m)} & $\Delta \mathbf{(pos,misura)}$ \textbf{(m)} \\ 
+		\hline 
+		$1$ & $-0.333333$ & $(99.500 - 100) =-0.5$ \\ 
+		\hline 
+		$2$ & $0.083333$ & $(98 - 97.9) = 0.1$ \\ 
+		\hline 
+		$3$ & $0.545455$ & $(95.5-94.9) = 0.6$ \\ 
+		\hline 
+		$4$ & $-0.661111$ & $(92 - 92.7) = -0.7$ \\ 
+		\hline 
+		$5$ &  $0.192593$ & $(87.5 - 87.3) = 0.2$ \\ 
+		\hline 
+		$6$ & $0.681579$ & $(82 - 81.3) = 0.7$ \\ 
+		\hline 
+		$7$ & $-0.294118$ & $(75.5 - 75.8) = -0.3$ \\ 
+		\hline 
+		$8$ & $0.492424$ & $(68 - 67.5) = 0.5$ \\ 
+		\hline 
+		$9$ & $0.326024$ & $(59.5 - 59.17) = 0.33$ \\ 
+		\hline 
+		$10$ & $-1.089216$ & $(50-51.1) = -1.1$ \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Confronto tra errore a posteriori sulla posizione, e distanza fra valori reali di posizione e misure di posizione}
+	\label{tab:errorsmeas}
+\end{table}
+Si noti che per ciascun istante $t$, l'errore a posteriori sul valore di posizione \`e minore, in valore assoluto, della distanza fra la misura osservata e la posizione reale del corpo.\\*
+Questo porta alla conclusione che l'utilizzo di KF ha permesso di ottenere misure sempre pi\`u affidabili rispetto a quelle ottenute dalla sorgente.\\*
