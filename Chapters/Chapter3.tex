@@ -1,14 +1,7 @@
 \chapter{Applicazione di SFA: La Tramvia di Firenze}
 In questo capitolo verr\`a analizzata una particolare applicazione di SFA al problema del posizionamento ferrotramviario.\\*
 Nell'ambito di un progetto di ricerca finanziato dall'Unione Europea, si \`e voluto studiare l'usabilit\`a di SFA come sistema di posizionamento ferrotramviario alternativo a quello descritto nel Capitolo 1, il quale fa un largo uso di apparati installati a terra, fatto che si vorrebbe minimizzare.\\*
-La linea ferrotramviaria scelta come ambiente di prova \`e la linea \texttt{T1} della Tramvia di Firenze, che collega la stazione di \emph{Villa Costanza}, sita nel comune di Scandicci, all'ospedale di \emph{Careggi}, sito quest'ultimo nel comune di Firenze. La linea \`e mostrata in figura \ref{fig:t1}.\\*
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\linewidth]{img/t1}
-	\caption{Tramvia di Firenze - Linea \texttt{T1}}
-	\label{fig:t1}
-\end{figure}
-L'idea di base \`e quella di utilizzare un \emph{accelerometro} per misurare i valori di accelerazione a istanti di tempo sufficientemente ravvicinati e determinare, tramite essi, la posizione del treno lungo la traccia. Per quanto esposto nel Capitolo 2, non \`e accettabile, in un contesto \emph{safety-critical}, l'utilizzo esclusivo dell'accelerometro con doppia integrazione rispetto al tempo; in quanto il rumore nel processo di misura rende sempre meno affidabili le misurazioni con il passare del tempo.
+L'idea di base \`e quella di utilizzare UKF per stimare la posizione del treno attraverso misure di accelerazione, velocit\`a angolare, velocit\`a lineare e posizione. La rilevazione di tali grandezze, per quanto esposto nel Capitolo 2, \`e caratterizzata da rumore, UKF combina queste informazioni per stimare la posizione del treno al netto dei rumori di processo e dei rumori di misura.
 \section{Architettura di Sistema}
 Il sistema progettato ha lo scopo di eseguire SFA su una piattaforma hardware installata bordo treno, la quale riceve i dati \emph{raw} dai sensori e li elabora al fine di stimare la progressiva chilometrica del treno in ciascun istante di tempo.\\*
 Tale posizione sar\`a inviata, attraverso un modem \texttt{LTE}:
@@ -25,17 +18,25 @@ Il \emph{sensor set} utilizzato in quest'applicazione \`e composto dai seguenti 
 	Sensore incaricato di misurare i vettori \texttt{accelerazione} ($\mathbf{a}$) e \texttt{velocit\`a angolare} ($\mathbf{v_{ang}}$) attraverso l'uso combinato di un accelerometro e un giroscopio. Le misure di IMU sono prese rispetto alla Terra\footnote{Approssimata come un \emph{sistema inerziale}.} e sono espresse in unit\`a stabilite dallo standard internazionale (SI):
 	$$
 	\mathbf{a}\;\left[\frac{m}{s^2}\right]\;\;\;\;\mathbf{v_{ang}}\;\left[ \frac{rad}{s} \right]
-	$$Si tratta del sensore principale su cui si basa l'esecuzione di SFA, ed \`e caratterizzato da un \emph{drift}, il quale fa discostare il valore di accelerazione misurato da quello reale, in una quantit\`a che \`e funzione del tempo.
+	$$Si tratta del sensore principale su cui si basa l'esecuzione di SFA.\\*
+	IMU \`e caratterizzato da un rumore di misura tale per cui, se venisse utilizzato esclusivamente come sorgente di aggiornamento del filtro,
+	la stima della posizione risulta caratterizzata da un \emph{drift lineare}, il quale fa discostare il valore di posizione stimata da quello reale, in una quantit\`a che \`e funzione lineare del tempo.\\*
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\linewidth]{img/imu}
+		\caption{\emph{Inertial Measurment Unit}}
+		\label{fig:imu}
+	\end{figure}
 	\item Odometro:\\*
 	Per realizzare l'odometro \`e stato installato un rilevatore radar su una ruota del treno. Il radar misura il tempo impiegato dalla ruota a compiere un giro completo, e determina la velocit\`a angolare della ruota $\varphi'(t) = \frac{2\pi}{tempo} \left[ \frac{rad}{s}\right]$.\\*
-	Noto il raggio $r\;[m]$ della ruota, \`e possibile determinare la velocit\`a lineare alla circonferenza della ruota  $x'(t)$ attraverso la relazione cinematica $x'(t) = r\varphi'(t) \left[ \frac{m\;rad}{s}\right] = r\varphi'(t) \left[ \frac{m}{s} \right]$.\\*
+	Noto il raggio $r\;[m]$ della ruota, \`e possibile determinare la velocit\`a lineare alla circonferenza della ruota  $x'(t)$ attraverso la relazione cinematica $x'(t) = -r\varphi'(t) \left[ \frac{m\;rad}{s}\right] = -r\varphi'(t) \left[ \frac{m}{s} \right]$.\\*
 	Approssimando il treno come un \emph{corpo rigido}, questa sar\`a la velocit\`a lineare con cui il treno si sta muovendo.
 	\item Global Positioning System (GPS):\\*
 	Sensore che riceve i dati di posizione attraverso il sistema satellitare GPS.\\*
 	Le misure di GPS sono riportate in formato standard come tripla di coordinate \texttt{(latitudine, longitudine, altitudine)}, rispettivamente espresse in gradi \texttt{N-S}, in gradi \texttt{E-O} e in \texttt{metri}.\\*
 	In generale queste misure sono le meno affidabili in quanto la \emph{varianza} della variabile aleatoria che modella tale sorgente \`e la pi\`u significativa.
 \end{itemize}
- Ad una data frequenza, i sensori inviano dati verso la scheda; quest'ultima, dopo aver eseguito un'iterazione di SFA, invia a OBCU (e/o a RTT) la stima della posizione del treno attraverso apposita modulazione di segnale elettromagnetico, in accordo con il protcollo \texttt{LTE}. Lo schema riportato in figura \ref{fig:tdiagram} mostra un diagramma dell'architettura hardware appena descritta.
+ Ad una data frequenza, i sensori inviano dati verso la scheda; quest'ultima, dopo aver eseguito un'iterazione di SFA\footnote{Ossia, un \emph{aggiornamento} di UKF}, invia a OBCU (e/o a RTT) la stima della posizione del treno attraverso apposita modulazione di segnale elettromagnetico, in accordo con il protcollo \texttt{LTE}. Lo schema riportato in figura \ref{fig:tdiagram} mostra un diagramma dell'architettura hardware appena descritta.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/TrainDiagram}
@@ -165,7 +166,7 @@ In ricezione dovr\`a essere inviato il pacchetto \emph{ack} al mittente, ed il s
 \end{table}
 Si osserva che SFA produce la stima della posizione del treno sia in termini di progressiva chilometrica che di coordinate \texttt{ECEF}.\\*
 \texttt{ECEF} \`e acronimo di \emph{Earth Centered Earth Fixed} ed \`e uno standard che misura le coordinate geografiche di un oggetto come la terna $ P = (x,y,z)$. Ciascuna coordinata viene espressa considerando la \emph{proiezione su piano} della Terra, e prendendo come origine $O$ l'intersezione fra l'equatore e il meridiano di \emph{Greenwich}.\\*
-Le coordinate \texttt{ECEF} misurano tre lunghezze, pertanto in accordo a SI, esse sono espresse in \texttt{metri}.\\*
+Le coordinate \texttt{ECEF} misurano tre lunghezze, pertanto, in accordo a SI, esse sono espresse in \texttt{metri}.\\*
 Nella prossima sezione, viene descritto uno scenario di esempio del comportamento del sistema a \emph{runtime}.
 \section{Scenario di Esempio}
 Si suppongano le condizioni iniziali riportate in tabella \ref{tab:condinit}.\\*
@@ -354,4 +355,14 @@ Per ovviare a questa problematica si potrebbero usare le seguenti tecniche:
 	\item Accodare un segreto condiviso tra \texttt{listener} e OBCU al messaggio prima di calcolarne il \emph{digest}.
 \end{enumerate}
 In ciascuno di questi scenari, fatta assunzione di propriet\`a di \emph{strong collision resistance} della funzione \emph{hash} utilizzata, si garantisce che il messaggio pu\`o essere stato inviato solo da \texttt{listener}, in quanto un attaccante non avrebbe modo di modificare il messaggio e calcolare un \emph{digest} valido. La soluzione meno dispendiosa in termini di complessit\`a computazionale e pi\`u adatta a un simile scenario \`e la soluzione 4, in quanto non \`e necessario garantire anche la \emph{non-ripudiabilit\`a} ma solo l'autenticazione e l'integrit\`a.
-\subsection{Miglioramenti al servizio fornito}
+\subsection{Miglioramenti al protocollo in uscita}
+Il sistema realizzato esegue una versione di SFA basata su un UKF.\\*
+Ad ogni campionamento di IMU, Odometro, o GPS, viene eseguita la fase di \emph{aggiornamento} del filtro che comprende la valutazione di quantit\`a interessanti dal punto di vista di valutazione delle \emph{performance} dell'algoritmo. In particolare, si potrebbe analizzare il comportamento di SFA al variare di parametri come:
+\begin{itemize}
+	\item La frequenza di aggiornamento;
+	\item Il tipo di misure con cui viene effettivamente aggiornato il filtro.
+\end{itemize}
+Nel classico scenario di utilizzo, che comprende la comunicazione con OBCU, l'unica informazione effettivamente utile \`e la progressiva chilometrica.\\* In uno scenario di \emph{acceptance test}, naturalmente preliminare al rilascio del sistema, potrebbe essere utile fornire a RTT, oltre alle informazioni sulla posizione, anche i valori in entrata all'algoritmo che hanno prodotto il risultato di posizione.\\*
+Inoltre, se fosse trasmessa anche la matrice di covarianza della stima a posteriori, verrebbero fornite indicazioni importanti sul comportamento qualitativo dell'algoritmo.\\*
+Queste modifiche comporterebbero una minima variazione di\\*\texttt{OUTPUT\_PROTOCOL} in quanto occorrerebbe semplicemente prevedere dei campi aggiuntivi al formato del pacchetto, che si aggiungerebbero ai campi relativi alle coordinate ECEF e alla progressiva chilometrica.
+
