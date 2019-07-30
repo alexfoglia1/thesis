@@ -1,7 +1,7 @@
 \chapter{Sensor Fusion}
-Nei sistemi in cui \`e richiesta un'alta \emph{reliability} delle misure, l'informazione fornita dai singoli sensori non \`e sufficiente. In questi casi \`e raccomandato l'utilizzo di un insieme di sensori in contemporanea.
+Nei sistemi in cui \`e richiesta un'alta \emph{reliability} delle misure, l'informazione fornita dai singoli sensori non \`e sufficiente. In questi casi \`e raccomandato l'utilizzo di un insieme di sensori in contemporanea. \cite{sfarailway}
 \section{Panoramica}
-In generale, un algoritmo SFA viene utilizzato per stimare lo stato di un sistema dinamico in un ambiente caratterizzato da \emph{rumore}.
+In generale, un algoritmo SFA viene utilizzato per stimare lo stato di un sistema dinamico in un ambiente caratterizzato da \emph{rumore}. \cite{kfbook}
 \subsection{Sistemi Dinamici}
 Un sistema dinamico \`e una modellazione matematica di un processo che evolve nel tempo, la cui evoluzione \`e descritta attraverso un sistema di equazioni differenziali o alle differenze, nel caso esso si evolva rispettivamente a tempo continuo o a tempo discreto.\\*
 Sia $S$ l'insieme dei possibili stati che il sistema pu\`o assumere, e sia $m = |S|$ la dimensione dello spazio degli stati.\\*
@@ -13,7 +13,7 @@ Con $y(0) \in \mathbb{R}^m$ condizione iniziale nota, e:
 $$
 y_{n+1} = f(n,y_n),\;n = 0,1,\dots\;\;\;\;(2)
 $$
-con al solito $y_0 \in \mathbb{R}^m$ condizione iniziale nota.\\*
+con al solito $y_0 \in \mathbb{R}^m$ condizione iniziale nota\;\cite{gigi}.\\*
 Ricavare lo stato del sistema dinamico per un certo istante $t$, o $n$, equivale a risolvere le equazioni cui sopra e valutarne la traiettoria soluzione in $t$ o in $n$.\\*
 Un semplice sistema dinamico \`e rappresentato da un punto materiale che si muove con una accelerazione costante $$\mathbf{a} = a\mathbf{k}$$ dove $\mathbf{k}$ \`e un qualunque versore della base canonica di $\mathbb{R}^3$.\\*
 Supponendo che il punto si muova con velocit\`a iniziale $\mathbf{z'}(0) = v_0\mathbf{k}$ nota e inizi il moto da una coordinata $\mathbf z(0) = z_0\mathbf{k}$ nota, si ha:
@@ -27,9 +27,14 @@ $$
 z(t) = \int(a t + v_0)dt = \frac{1}{2} at^2 +  v_0 t + z_0
 $$
 L'equazione $z(t)$ descrive completamente la traiettoria di moto del punto materiale, mentre $z'(t)$ descrive completamente la traiettoria della velocit\`a del punto durante il suo moto.
+\subsubsection{Nota su sistemi dinamici continui e discreti}
+Con l'introduzione del calcolatore come strumento di supporto al matematico applicato, sono stati sviluppati efficienti \emph{metodi numerici di approssimazione} che permettono di modellare un sistema dinamico continuo attraverso una sua \emph{controparte discreta}. Tale processo di discretizzazione \`e mirato alla definizione di un sistema dinamico che si comporti in maniera \emph{simile} al modello continuo che si intende studiare, dove per simile si intende che ne preservi il comportamento quantitativo e le caratteristiche asintotiche di stabilit\`a delle soluzioni.\\*
+L'\emph{aritmetica finita} in cui lavora qualsiasi calcolatore rende indispensabile la discretizzazione dei modelli continui, ma d'altro lato l'esistenza dei metodi di approssimazione permette di restringere le discussioni che seguiranno considerando esclusivamente sistemi dinamici \emph{discreti}. \cite{gigi}
 \subsection{Misure e Rumore}
-In questo semplice esempio, viene fatta l'assunzione di conoscere a priori il valore esatto di $a$, di $v_0$ e di $z_0$.\\*
-Nella pratica, per misurare l'accelerazione $a$ \`e necessario uno strumento denominato \emph{accelerometro}, il quale produrr\`a delle misure giocoforza affette da errori casuali. Si supponga di sostituire $a$ nell'equazione $z(t)$ con una sua perturbazione $\tilde{a} = a + \varepsilon$ dove $\varepsilon$ \`e una variazione casuale della misura data dal \emph{rumore} che caratterizza qualsiasi processo di misura. Si pu\'o supporre $Var(\varepsilon) = 0$ e considerare, ai fini di questa trattazione, $\varepsilon$ come un valore costante; in realt\`a $\varepsilon$ \`e una variable casuale a varianza generalmente non nulla. Si suppongano inoltre $v_0 = z_0 = 0$ per comodit\`a di calcolo:
+Si consideri il sistema dinamico individuato dalla $(3)$.\\*
+Le soluzioni esplicite della traiettoria del punto materiale sono valide, fatta assunzione di conoscere a priori il valore esatto di $a$, di $v_0$ e di $z_0$.\\*
+Nella pratica, per misurare qualsiasi grandezza fisica \`e necessario uno strumento di misura, il quale produrr\`a delle misure affette da errori casuali.\\*
+Si supponga di sostituire $a$ nell'equazione $z(t)$ con una sua perturbazione $\tilde{a} = a + \varepsilon$ dove $\varepsilon$ \`e una variazione casuale della misura data dal \emph{rumore} che caratterizza qualsiasi processo di misura. Si pu\'o supporre $Var(\varepsilon) = 0$ e considerare, ai fini di questa trattazione, $\varepsilon$ come un valore costante; in realt\`a $\varepsilon$ \`e una variable casuale a varianza generalmente non nulla. Si suppongano inoltre $v_0 = z_0 = 0$ per comodit\`a di calcolo:
 $$
 z(t) = \frac{1}{2} \tilde{a} t^2 = \frac{1}{2}(a + \varepsilon) t^2 = \frac{1}{2} \left(at^2 + \varepsilon t^2\right)
 $$
@@ -40,8 +45,10 @@ Si nota immediatamente che la variazione della misura $z(t)$ data da $\varepsilo
 	\caption{Grafico dell' errore di stima della posizione con $a = 10^0, \varepsilon = 10^{-3}$}
 	\label{fig:errormeas}
 \end{figure}\newpage
-Il sistema dinamico individuato in $(3)$, \`e una tipologia di sistema dinamico caratterizzato da assenza di \emph{rumore di processo}: fatta assunzione di conoscere esattamente il valore di $a$, la doppia integrazione di $(3)$ rispetto al tempo fornisce una descrizione esatta e deterministica della dinamica del sistema: la traiettoria sar\`a \emph{esattamente} quella individuata dalla soluzione.\\*
-Alcuni processi tuttavia evolvono in parte stocasticamente per loro natura, e questa natura stocastica insita nel processo viene chiamata \emph{rumore di processo}. Si conclude pertanto che non solamente le misurazioni sono affette da rumore, ma anche il processo evolutivo stesso pu\`o essere affetto da rumore stocastico intrinseco. La conseguenza \`e che la forma esplicita delle equazioni $(1)$ e $(2)$ contiene un termine casuale individuato da una variabile aleatoria.\\*
+Il moto di un punto materiale soggetto a un' accelerazione nota, \`e una tipologia di sistema dinamico caratterizzato da assenza di \emph{rumore di processo}: fatta assunzione di conoscere esattamente il valore di $a$, la doppia integrazione di $(3)$ rispetto al tempo fornisce una descrizione esatta e deterministica della dinamica del sistema: la traiettoria sar\`a \emph{esattamente} quella individuata dalla soluzione.\\*
+Alcuni processi tuttavia evolvono in parte stocasticamente per loro natura, e questa natura stocastica insita nel processo viene chiamata \emph{rumore di processo}. \cite{kfbook}\\*
+Si consideri ad esempio il caso in cui la traiettoria di moto del punto materiale descritta dalle soluzioni della $(3)$ venga disturbata dall'azione di forze casuali, quali ad esempio improvvise raffiche di vento.\\*
+La conclusione \`e che in molte applicazioni reali, non solamente le misurazioni sono affette da rumore, ma anche il processo evolutivo stesso pu\`o essere affetto da rumore stocastico intrinseco. La conseguenza \`e che la forma esplicita delle equazioni $(1)$ e $(2)$ contiene un termine casuale individuato da una variabile aleatoria.\\*
 Uno schema di un processo caratterizzato da \emph{rumore} \`e mostrato in figura \ref{fig:mimo1}.
 \begin{figure}[h]
 	\centering
@@ -50,7 +57,7 @@ Uno schema di un processo caratterizzato da \emph{rumore} \`e mostrato in figura
 	\label{fig:mimo1}
 \end{figure}
 \section{I Filtri di Kalman}
-Un Filtro di Kalman, o in inglese \emph{Kalman Filter} (KF), \`e, da un punto di vista statistico, uno \emph{stimatore} dello stato di un sistema dinamico caratterizzato da rumore. L'algoritmo individuato dalla formulazione matematica di un KF \`e un caso particolare di SFA.
+Un Filtro di Kalman, o in inglese \emph{Kalman Filter} (KF), \`e uno \emph{stimatore} dello stato di un sistema dinamico caratterizzato da rumore. L'algoritmo individuato dalla formulazione matematica di un KF pu\`o essere usato come SFA.
 \subsection{Premesse statistiche}
 Un insieme di $N$ sorgenti di misurazioni viene modellato come un insieme di $N$ variabili casuali.\\*
 Siano $X_1,\dots,X_N$ $N$ variabili casuali a valori in un insieme finito non vuoto $\mathbb{X}$, e sia $X,Y$ una qualsiasi coppia presa tra le $N$ variabili casuali.\\*
@@ -83,8 +90,8 @@ Y = \sum_{i=1}^N \alpha_iX_i\;\;\alpha_i \in \mathbb{R}
 $$
 Ha distribuzione di probabilit\`a \emph{gaussiana}.
 \subsection{Filtro di Kalman Lineare}
-I KF sono comunemente basati su sistemi dinamici \emph{lineari} a tempo discreto, tuttavia i fenomeni reali sono raramente lineari. Un modello lineare \`e spesso un'approssimazione di un modello pi\`u complesso.\\*
-Nel dominio applicativo in cui si colloca la Tesi, ossia quello del posizionamento ferroviario, occorre utilizzare una generalizzazione al caso non-lineare dei Filtri di Kalman standard: il Filtro di Kalman Esteso (CITARE PAPER QUA). Per ragioni di semplicit\`a, in questo capitolo viene esposto il principio base del funzionamento di un semplice KF llineare.
+I KF sono comunemente basati su sistemi dinamici \emph{lineari} a tempo discreto.\\*
+In questa sezione viene esposto il principio base del funzionamento di un semplice KF lineare, avente lo scopo di stimare lo stato di un sistema dinamico lineare in presenza di rumore di processo e rumore di misura.
 \subsubsection{Definizione del problema}
 Si consideri il seguente sistema dinamico lineare discreto:
 $$
@@ -95,7 +102,7 @@ $$
 $$
 In cui i vettori $\mathbf w_k$ e $\mathbf v_k$ rappresentano rispettivamente il rumore di processo e il rumore di misura. Si assumono \emph{congiuntamente gaussiani}, indipendenti e con matrici di covarianza $Q,R$ rispettivamente.\\*
 Il vettore $\mathbf y_k$ rappresenta il vettore di misurazioni campionate all'istante $k$, mentre il vettore $\mathbf x_k$ rappresenta lo stato del sistema all'istante $k$.\\*
-Le matrici $A$ e $B$ descrivono la dinamica del modello e si assumono note a priori, pena l'introduzione di errori sistematici, mentre la matrice $C$ descrive la dinamica del processo di misura. Il vettore $\mathbf u_k$ rappresenta l' informazione data in ingresso al sistema al tempo $k$.\\*Uno schema della $(4)$ ad ogni istante di tempo $k$ \`e riportato in figura \ref{fig:mimo2}.\\*
+Le matrici $A$ e $B$ descrivono la dinamica del modello e si assumono note a priori, pena l'introduzione di errori sistematici, mentre la matrice $C$ descrive la dinamica del processo di misura. Il vettore $\mathbf u_k$ rappresenta l' informazione data in ingresso al sistema al tempo $k$. \cite{lkf}\\*Uno schema della $(4)$ ad ogni istante di tempo $k$ \`e riportato in figura \ref{fig:mimo2}.\\*
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=\linewidth]{img/mimo2}
@@ -125,8 +132,9 @@ $
 \item $ P_k = (I-L_kC)P^-_k
 $
 \end{enumerate}
-In cui le equazioni $1$ e $2$ vengono dette \emph{equazioni di predizione} e proiettano lo stato e la covarianza
-dell'errore di stima a priori all'istante temporale $k-1$, in avanti all'istante $k$; mentre le equazioni $3$, $4$, $5$, vengono dette \emph{equazioni di aggiornamento}:
+In cui le equazioni $1$ e $2$ vengono dette \emph{equazioni di predizione}. Esse proiettano lo stato del sistema al tempo $k-1$ e la covarianza
+dell'errore di stima a priori al tempo $k-1$, in avanti all'istante $k$.\\*
+Le equazioni $3$, $4$, $5$, vengono dette \emph{equazioni di aggiornamento}, e costituiscono il modello del meccanismo di \emph{retroazione} con cui il filtro corregge la proprie stime, sulla base delle misurazioni fornite:
 \begin{itemize}
 	\item Viene prima calcolata $L_k$, ossia la \emph{matrice dei guadagni di Kalman};
 	\item Le misure $\mathbf y_k$ vengono usate per determinare una \emph{stima a posteriori} dello stato del sistema all'istante $k$;
@@ -140,17 +148,17 @@ In figura \ref{fig:kf}, \`e riportato uno schema del funzionamento logico di un 
 	\label{fig:kf}
 \end{figure}
 KF \`e un \emph{filtro ricorsivo}, in quanto la stima $\hat{\mathbf{x}}_k$ dello stato del sistema all'istante $k$ viene determinata combinando le informazioni date dal vettore di misurazioni $\mathbf y_k$ campionate all'istante $k$ con la stima dello stato del sistema all'istante $k-1$\footnote{Supposto noto lo stato iniziale $\mathbf x_0$.}.\\*
-KF \`e uno \emph{stimatore ottimo}, dove ottimo significa che minimizza la covarianza dell'errore di stima a posteriori, se tutti i rumori hanno distribuzione normale multivariata. 
+KF \`e uno \emph{stimatore ottimo}, dove ottimo significa che minimizza la covarianza dell'errore di stima a posteriori, se tutti i rumori hanno distribuzione normale multivariata. \cite{kfbook}
 \newpage
 \subsection{Esempio applicativo}
-Si supponga di voler determinare posizione e velocit\`a nel sistema dinamico individuato dalla $(3)$. Valgono le seguenti ipotesi:
+Si supponga di voler stimare i valori di posizione e velocit\`a nel sistema dinamico individuato dalla $(3)$. Valgono le seguenti ipotesi:
 \begin{itemize}
 	\item Il corpo, modellato come puntiforme, viene lasciato cadere da una quota $z(0) = z_0$ assegnata, con velocit\`a iniziale $v_0$;
 	\item La sola accelerazione a cui \`e soggetto il corpo \`e l'accelerazione gravitazionale $-g$;
 	\item Il sistema non \`e caratterizzato da rumore di processo;
 	\item Un osservatore \`e in grado di misurare la quota dell'oggetto mediante uno strumento di misura $X$ 
 	distribuito come una normale univariata con varianza $R$;
-	\item Il sistema viene osservato ogni secondo per un intervallo di tempo lungo $t_{M}\;s$
+	\item Il sistema viene osservato ogni secondo per un intervallo di tempo lungo $t_{M}\;s$.
 \end{itemize}
 Valori numerici:
 \begin{itemize}
@@ -335,6 +343,8 @@ In tabella \ref{tab:syntex} viene riportata una sintesi dei dati prodotti dall'e
 	\label{tab:syntex}
 \end{table}
 Nelle tabelle \ref{tab:errors} e \ref{tab:errorsmeas} \`e mostrato un paragone fra l'errore a posteriori $(\mathbf x_k - \mathbf{\tilde{x}}_k)$ e l'errore della misura rispetto alla posizione reale.\\*
+Si noti che per ciascun istante $t$, l'errore a posteriori sul valore di posizione \`e minore, in valore assoluto, della distanza fra la misura osservata e la posizione reale del corpo.\\*
+Questo porta alla conclusione che l'utilizzo di KF ha permesso di ottenere misure sempre pi\`u affidabili rispetto a quelle ottenute dalla sorgente.
 \begin{table}[h]
 	\begin{tabular}{|c|c|c|c|}
 		\hline 
@@ -406,5 +416,23 @@ Nelle tabelle \ref{tab:errors} e \ref{tab:errorsmeas} \`e mostrato un paragone f
 	\caption{Confronto tra errore a posteriori sulla posizione, e distanza fra valori reali di posizione e misure di posizione}
 	\label{tab:errorsmeas}
 \end{table}
-Si noti che per ciascun istante $t$, l'errore a posteriori sul valore di posizione \`e minore, in valore assoluto, della distanza fra la misura osservata e la posizione reale del corpo.\\*
-Questo porta alla conclusione che l'utilizzo di KF ha permesso di ottenere misure sempre pi\`u affidabili rispetto a quelle ottenute dalla sorgente.\\*
+\clearpage
+\subsection{Filtri di Kalman non Lineari}
+I fenomeni reali sono raramente lineari. Un modello lineare \`e spesso un'approssimazione di un modello pi\`u complesso. \cite{gigi}\\*
+Nel dominio applicativo in cui si colloca la Tesi, ossia quello del posizionamento ferroviario, occorre utilizzare una generalizzazione al caso non-lineare dei KF standard.\\*
+Si pu\`o modellare un sistema dinamico discreto non lineare, caratterizzato da rumore, come:
+$$
+\begin{cases}
+\mathbf{x}_k = F(\mathbf{x}_k,\mathbf{w}_k) \\
+\mathbf{y}_k = H(\mathbf{x}_k,\mathbf{v}_k)
+\end{cases}
+$$
+In cui, in analogia con il caso lineare:
+\begin{itemize}
+	\item $\mathbf x_k$ rappresenta lo stato del sistema all'istante $k$
+	\item $\mathbf w_k$ rappresenta il rumore di processo all'istante $k$
+	\item $\mathbf y_k$ rappresenta il vettore di misurazioni campionate all'istante $k$
+	\item $\mathbf v_k$ rappresenta il rumore di misura all'istante $k$
+\end{itemize}
+A differenza del modello lineare, le funzioni $F,H$ che descrivono le dinamiche del processo evolutivo e del processo di misura, non sono in generale lineari. \cite{ukffne}\\*
+Esistono diverse forme di KF non lineari, nel seguito della Tesi l'implementazione di SFA cui verr\`a fatto riferimento, \`e basata sull'utilizzo di un \emph{Unscented Kalman Filter} (UKF).
