@@ -290,11 +290,11 @@ Supponendo di effettuare, attraverso lo strumento $X$, le misure riportate in ta
 \end{table}
 \subsubsection{Codice Soluzione}
 Si riporta in questa sezione il codice risolutivo del problema individuato.
-\lstinputlisting[language=MATLAB, firstline=1, lastline=7, caption ={Definizione delle variabili del problema}]{Models/kalmanexample.m}
+\lstinputlisting[language=MATLAB, firstline=1, lastline=7,morekeywords=endfor,caption ={Definizione delle variabili del problema}]{Models/kalmanexample.m}
 
-\lstinputlisting[language=MATLAB, firstline=11, lastline=20, caption ={Inizializzazione del Filtro di Kalman}]{Models/kalmanexample.m}
+\lstinputlisting[language=MATLAB, firstline=11, lastline=20,morekeywords=cell,caption ={Inizializzazione del Filtro di Kalman}]{Models/kalmanexample.m}
 \newpage
-\lstinputlisting[language=MATLAB, firstline=22, lastline=38, caption ={Algoritmo individuato dalle Equazioni di KF}]{Models/kalmanexample.m}
+\lstinputlisting[language=MATLAB, firstline=22, lastline=38,morekeywords=endfor,  caption ={Algoritmo individuato dalle Equazioni di KF}]{Models/kalmanexample.m}
 \newpage
 \subsubsection{Risultati}
 Nelle figure \ref{fig:predspeed}, \ref{fig:predheight} viene mostrato il grafico che compara i valori stimati di velocit\`a e posizione con i veri valori delle medesime grandezze; infatti tali valori sono determinabili analiticamente come soluzioni esplicite della $(3)$.\\*
