@@ -97,13 +97,6 @@ Le attuali tecniche di posizionamento richiedono un intervento trascurabile di c
 \`E possibile considerare il treno e il computer di bordo come un unico sistema, ossia il treno viene modellato come un \emph{Cyber-Physical System}.\\*
 Un \emph{Cyber-Physical System} (CPS) \`e un sistema composto da una parte \emph{fisica} e da una parte \emph{cyber}. Il sottosistema fisico \`e composto da sensori e attuatori che hanno rispettivamente lo scopo di rilevare lo stato dell'ambiente circostante e di alterarlo se necessario. Il sottosistema \emph{cyber} \`e essenzialmente un elaboratore, che dispone di processore, memoria, e interfacce I/O verso i sensori gli attuatori, ed eventuali operatori  umani. Una tale architettura di sistema, permette di sfruttare le capacit\`a di calcolo dei moderni processori per implementare algoritmi anche molto complessi per il \emph{processing} di grandi quantit\`a di dati provenienti dai sensori.\\*
 Lo scopo della Tesi \`e quello di mostrare il funzionamento di un possibile sistema di posizionamento alternativo al sistema tuttora operante, che sfrutti l'uso combinato di un insieme di sensori i cui dati rilevati vengono processati da un algoritmo noto come \emph{Sensor Fusion Algorithm} (SFA).\\*
-\begin{figure}[h]
-	\centering
-	\includegraphics{img/sfaschema}
-	\caption{Schema SFA}
-	\label{fig:sfa}
-\end{figure}
-\\*
-Tale algoritmo \`e schematizzabile come una \emph{black-box}: le misurazioni dei sensori sono l'ingresso, mentre l'uscita \`e la misura cercata, nella fattispecie, la posizione del treno lungo la traccia.
+ le misurazioni dei sensori sono l'ingresso, mentre l'uscita \`e la misura cercata, nella fattispecie, la posizione del treno lungo la traccia.
 Utilizzando SFA, il treno \`e in grado di auto-posizionarsi, capacit\`a che minimizza la necessit\`a di installare apparati di terra.\\*
 Un algoritmo che tiene conto delle misurazioni di un \emph{set} di sensori, usato in luogo di un semplice \emph{processing} di insiemi di misure provenienti da sorgenti omologhe, permette al sistema di correggere il rumore che disturba le singole misurazioni, realizzando cos\`i una nuova misura pi\`u accurata di quella che si avrebbe considerando i sensori in maniera mutuamente esclusiva.

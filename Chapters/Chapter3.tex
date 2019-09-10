@@ -13,29 +13,6 @@ Tale posizione sar\`a inviata, attraverso un modem \texttt{LTE}:
 \subsection{Architettura Hardware}
 Sul treno \`e stata installata una scheda \texttt{Nvidia TX-Jetson} quale piattaforma di elaborazione dei dati. I sensori atti a campionare le misurazioni sono stati collegati alla scheda mediante appositi bus dati.\\*
 Il \emph{sensor set} utilizzato in quest'applicazione \`e composto dai seguenti sensori:
-\begin{itemize}
-	\item \emph{Inertial Measurement Unit} (IMU):\\*
-	Sensore incaricato di misurare i vettori \texttt{accelerazione} ($\mathbf{a}$) e \texttt{velocit\`a angolare} ($\mathbf{v_{ang}}$) attraverso l'uso combinato di un accelerometro e un giroscopio. Le misure di IMU sono prese rispetto alla Terra\footnote{Approssimata come un \emph{sistema inerziale}.} e sono espresse in unit\`a stabilite dallo standard internazionale (SI):
-	$$
-	\mathbf{a}\;\left[\frac{m}{s^2}\right]\;\;\;\;\mathbf{v_{ang}}\;\left[ \frac{rad}{s} \right]
-	$$Si tratta del sensore principale su cui si basa l'esecuzione di SFA.\\*
-	IMU \`e caratterizzato da un rumore di misura tale per cui, se venisse utilizzato esclusivamente come sorgente di aggiornamento del filtro,
-	la stima della posizione risulta caratterizzata da un \emph{drift lineare}, il quale fa discostare il valore di posizione stimata da quello reale, in una quantit\`a che \`e funzione lineare del tempo.\\*
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=\linewidth]{img/imu}
-		\caption{\emph{Inertial Measurment Unit}}
-		\label{fig:imu}
-	\end{figure}
-	\item Odometro:\\*
-	Per realizzare l'odometro \`e stato installato un rilevatore radar su una ruota del treno. Il radar misura il tempo impiegato dalla ruota a compiere un giro completo, e determina la velocit\`a angolare della ruota $\varphi'(t) = \frac{2\pi}{tempo} \left[ \frac{rad}{s}\right]$.\\*
-	Noto il raggio $r\;[m]$ della ruota, \`e possibile determinare la velocit\`a lineare alla circonferenza della ruota  $x'(t)$ attraverso la relazione cinematica $x'(t) = -r\varphi'(t) \left[ \frac{m\;rad}{s}\right] = -r\varphi'(t) \left[ \frac{m}{s} \right]$.\\*
-	Approssimando il treno come un \emph{corpo rigido}, questa sar\`a la velocit\`a lineare con cui il treno si sta muovendo.
-	\item Global Positioning System (GPS):\\*
-	Sensore che riceve i dati di posizione attraverso il sistema satellitare GPS.\\*
-	Le misure di GPS sono riportate in formato standard come tripla di coordinate \texttt{(latitudine, longitudine, altitudine)}, rispettivamente espresse in gradi \texttt{N-S}, in gradi \texttt{E-O} e in \texttt{metri}.\\*
-	In generale queste misure sono le meno affidabili in quanto la \emph{varianza} della variabile aleatoria che modella tale sorgente \`e la pi\`u significativa.
-\end{itemize}
  Ad una data frequenza, i sensori inviano dati verso la scheda; quest'ultima, dopo aver eseguito un'iterazione di SFA\footnote{Ossia, un \emph{aggiornamento} di UKF}, invia a OBCU (e/o a RTT) la stima della posizione del treno attraverso apposita modulazione di segnale elettromagnetico, in accordo con il protcollo \texttt{LTE}. Lo schema riportato in figura \ref{fig:tdiagram} mostra un diagramma dell'architettura hardware appena descritta.
 \begin{figure}[h]
 	\centering
