@@ -1,11 +1,11 @@
 \chapter{Architettura di Sistema}
-In questo capitolo viene descritta l'architettura \emph{hardware} del CPS in esame, in particolare, ne vengono evidenziati i \emph{Constituent System} e loro interfacce di comunicazione.
+In questo capitolo viene descritta l'architettura \emph{hardware} del CPS in esame, in particolare, ne vengono evidenziati i \emph{Constituent System} (CS) e loro interfacce di comunicazione.
 \section{Descrizione generale}
-Lo scopo del sistema \`e quello di implementare un meccanismo di posizionamento sfruttando SFA.\\*
+Lo scopo del sistema \`e quello di implementare un meccanismo di posizionamento basato su SFA.\\*
 Tale algoritmo \`e schematizzabile come una \emph{black-box} (figura \ref{fig:sfa}) la quale prende in ingresso un certo insieme di misure, e fornisce in uscita una stima affidabile della posizione del treno lungo la traccia.\\*
 \begin{figure}[h]
 	\centering
-	\includegraphics{img/sfaschema}
+	\includegraphics[scale=0.75]{img/sfaschema}
 	\caption{Schema SFA}
 	\label{fig:sfa}
 \end{figure}
@@ -20,7 +20,7 @@ Le grandezze fisiche che dovranno essere misurate e fornite a SFA sono:
 \end{itemize}
 SFA utilizzer\`a queste informazioni in combinazione con un'apposita digitalizzazione della traccia tramviaria su cui si trova il treno monitorato. Queste informazioni si suppongono note a priori ed accedibili tramite un \emph{database} caricato in memoria centrale.
 \section{Constituent Systems}
-Il sistema studiato si compone dei seguenti \emph{Constituent Systems}:
+Il sistema studiato si compone dei seguenti CS:
 \begin{itemize}
 	\item \emph{Sensor Set}, ossia un insieme di sensori atto a campionare le misure di interesse per il sistema. Il \emph{Sensor Set} \`e composto dai seguenti strumenti di misura:
 	\begin{itemize}
@@ -45,7 +45,7 @@ Le misure di GPS sono riportate in formato standard come tripla di coordinate \t
 	\item Piattaforma di elaborazione dati. Consiste di una scheda \texttt{Nvidia TX-Jetson} su cui viene eseguito SFA.
 	\item \emph{On Board Control Unit} (OBCU). Computer di bordo del treno. Esso non svolge alcun ruolo attivo nel sistema di posizionamento, tuttavia la progressiva chilometrica, stimata da SFA, dovr\'a essere trasmessa a OBCU al fine di poter utilizzare questa informazione all'interno del sistema di \emph{interlocking} della traccia.
 \end{itemize}
-	\section{RUMI e RUPI}
+	\section{Interfacce}
 	Il CPS interagisce con l'ambiente attraverso le RUPI dei sensori. Queste interfacce acquisiscono, a diverse frequenze, i dati sul moto del treno che verranno elaborati dal resto del sistema di posizionamento.\\*
 	Si distinguono due differenti RUMI alle quali avvengono le principali interazioni fra i CS:
 	\begin{itemize}
@@ -59,3 +59,4 @@ Le misure di GPS sono riportate in formato standard come tripla di coordinate \t
 		\caption{Architettura hardware bordo treno}
 		\label{fig:tdiagram}
 	\end{figure}
+	
