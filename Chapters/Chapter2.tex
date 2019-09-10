@@ -1,5 +1,5 @@
 \chapter{Architettura di Sistema}
-In questo capitolo viene descritta l'architettura \emph{hardware} del CPS in esame, in particolare, ne vengono evidenziati i \emph{Constituent System} (CS) e loro interfacce di comunicazione.
+In questo capitolo viene descritta l'architettura \emph{hardware} del CPS in esame, in particolare, ne vengono evidenziati i \emph{Constituent System} (CS) e le loro interfacce di comunicazione. Vengono infine descritte le interazioni alle particolari interfacce del sistema.
 \section{Descrizione generale}
 Lo scopo del sistema \`e quello di implementare un meccanismo di posizionamento basato su SFA.\\*
 Tale algoritmo \`e schematizzabile come una \emph{black-box} (figura \ref{fig:sfa}) la quale prende in ingresso un certo insieme di misure, e fornisce in uscita una stima affidabile della posizione del treno lungo la traccia.\\*
@@ -22,14 +22,14 @@ SFA utilizzer\`a queste informazioni in combinazione con un'apposita digitalizza
 \section{Constituent Systems}
 Il sistema studiato si compone dei seguenti CS:
 \begin{itemize}
-	\item \emph{Sensor Set}, ossia un insieme di sensori atto a campionare le misure di interesse per il sistema. Il \emph{Sensor Set} \`e composto dai seguenti strumenti di misura:
+	\item \emph{Sensor Set}, ossia un insieme di sensori atto a campionare le misure di interesse per il sistema. Il \emph{Sensor Set} \`e composto dai seguenti moduli:
 	\begin{itemize}
 		\item \emph{Inertial Measurement Unit} (IMU):\\*
-		Sensore incaricato di misurare i vettori \texttt{accelerazione} ($\mathbf{a}$) e \texttt{velocit\`a angolare} ($\mathbf{v_{ang}}$) attraverso l'uso combinato di un accelerometro e un giroscopio. Le misure di IMU sono prese rispetto alla Terra e sono espresse in unit\`a stabilite dallo standard internazionale (SI):
+		Unit\`a incaricata di trasmettere al sistema i vettori \texttt{accelerazione} ($\mathbf{a}$) e \texttt{velocit\`a angolare} ($\mathbf{v_{ang}}$). Le misure di IMU sono prese rispetto alla Terra e sono espresse in unit\`a stabilite dallo standard internazionale (SI):
 		$$
 		\mathbf{a}\;\left[\frac{m}{s^2}\right]\;\;\;\;\mathbf{v_{ang}}\;\left[ \frac{rad}{s} \right]
 		$$
-		Si tratta del sensore principale, infatti, date le caratteristiche intrinseche del particolare SFA utilizzato, il sistema potrebbe funzionare anche senza i rimanenti sensori; si apprezzerebbe tuttavia un calo delle performance in termini di errore commesso sulla stima della progressiva chilometrica della vettura.
+		Esso \'e il sensore principale. Date le caratteristiche intrinseche del particolare SFA utilizzato, ossia un \emph{Filtro di Kalman}, il sistema potrebbe funzionare anche senza i rimanenti sensori. Si osserverebbe tuttavia un calo delle performance in termini di errore commesso sulla stima della posizione del treno. \cite{partialmeas}
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width=\linewidth]{img/imu}
@@ -37,17 +37,45 @@ Il sistema studiato si compone dei seguenti CS:
 			\label{fig:imu}
 		\end{figure}
 		\item Odometro:\\*
-		Sistema composto da un emettitore e da un ricevitore radar, che fornisce al sistema le misure di velocit\`a lineare del treno attraverso il tempo impiegato da una ruota a compiere un giro completo.
-		\item Ricevitore GPS:
-		\\*Hardware in grado di ricevere informazioni sulle coordinate geografiche del treno. Fornisce le misure di posizione al sistema.\\*
+		Unit\`a incaricata di fornire al sistema i campionamenti dei valori di velocit\`a lineare del treno, espressi in $\frac{m}{s}$.
+		\item GPS:
+		\\*Unit\`a che fornisce al sistema le misure di posizione del treno.\\*
 Le misure di GPS sono riportate in formato standard come tripla di coordinate \texttt{(latitudine, longitudine, altitudine)}, rispettivamente espresse in gradi \texttt{N-S}, in gradi \texttt{E-O} e in \texttt{metri} sul livello del mare.\\*
 	\end{itemize}
 	\item Piattaforma di elaborazione dati. Consiste di una scheda \texttt{Nvidia TX-Jetson} su cui viene eseguito SFA.
 	\item \emph{On Board Control Unit} (OBCU). Computer di bordo del treno. Esso non svolge alcun ruolo attivo nel sistema di posizionamento, tuttavia la progressiva chilometrica, stimata da SFA, dovr\'a essere trasmessa a OBCU al fine di poter utilizzare questa informazione all'interno del sistema di \emph{interlocking} della traccia.
 \end{itemize}
-	\section{Interfacce}
-	Il CPS interagisce con l'ambiente attraverso le RUPI dei sensori. Queste interfacce acquisiscono, a diverse frequenze, i dati sul moto del treno che verranno elaborati dal resto del sistema di posizionamento.\\*
-	Si distinguono due differenti RUMI alle quali avvengono le principali interazioni fra i CS:
+	\section{Specifica delle Interfacce}
+	\subsection{Relied Upon Interfaces}
+	Le interfacce sono definite come punti di interazione, tra un CS e l'ambiente oppure tra un CS e un altro.\\*
+	In questa sezione si evidenziano le principali interfacce del sistema, alle quali si osservano le interazioni fondamentali che avvengono al suo interno.\\*
+	Tali interfacce prendono il nome di \emph{Relied Upon Interfaces} (RUI). Le RUI si dividono in:
+	\begin{itemize}
+		\item \emph{Relied Upon Physical Interfaces} (RUPI), in cui l'interazione avviene tramite osservazione diretta di una grandezza fisica;
+		\item \emph{Relied Upon Message Interfaces} (RUMI), dove l'interazione \`e rappresentata da uno scambio di messaggi a livello \emph{cyber}.
+	\end{itemize}
+	La specifica delle RUI \`e di particolare importanza poich\'e qualunque struttura del sistema, responsabile del comportamento osservato, pu\'o essere ridotta alla specifica delle interfacce del sistema. \cite{interfacespec}.\\*  
+	Il CPS interagisce con l'ambiente attraverso le RUPI del \emph{Sensor Set}, ossia gli strumenti di misura che esso integra. Queste interfacce acquisiscono, a diverse frequenze, i dati sul moto del treno che verranno elaborati dal resto del sistema di posizionamento (tabella \ref{tab:rupi}).\\*
+	\begin{table}[h]
+	\centering
+	\begin{tabular}{|c|c|c|}
+		\hline 
+		\textbf{RUPI} & \textbf{Grandezza Campionata}  & \textbf{Parti interagenti} \\ 
+		\hline 
+		Accelerometro & Accelerazione & Ambiente - IMU \\ 
+		\hline 
+		Giroscopio & Velocit\`a angolare & Ambiente - IMU  \\ 
+		\hline 
+		Radar & Velocit\`a lineare & Ambiente - Odometro \\ 
+		\hline 
+		Ricevitore GPS & Coordinate geografiche& Ambiente - GPS \\ 
+		\hline 
+	\end{tabular}
+	\caption{Specifica delle RUPI del sistema}
+	\label{tab:rupi}
+	\end{table}
+	\clearpage
+	Per quanto concerne le RUMI, se ne osservano di due tipi:
 	\begin{itemize}
 		\item Tre bus dati, che collegano il \emph{Sensor Set} alla scheda \texttt{Nvidia TX-Jetson}. Su ciascuno di essi, \emph{Sensor Set} invia rispettivamente messaggi contenenti i dati campionati da IMU, Odometro e GPS.
 		\item Interfaccia LTE. Essa permette di realizzare una \emph{rete wireless ad hoc} fra la scheda e OBCU.\\*
@@ -56,7 +84,29 @@ Le misure di GPS sono riportate in formato standard come tripla di coordinate \t
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\linewidth]{img/TrainDiagram}
-		\caption{Architettura hardware bordo treno}
+		\caption{RUMI}
 		\label{fig:tdiagram}
 	\end{figure}
+	\subsection{Altre Interfacce}
+	Oltre alle RUI, descritte in 2.3.1, esistono altre interfacce che hanno lo scopo di rendere il sistema osservabile e manutenibile, e sono le seguenti:	\cite{cecca}
+	\begin{itemize}
+		\item \emph{Time Synchronization Interfaces} (TSI). Le TSI permettono al CPS di effettuare una sincronizzazione col tempo fisico al fine di stabilire una \emph{global timebase} \cite{clock}.
+		\item \emph{Utility Interfaces} (UI). Interfacce dei CS che ne consentono la configurazione, il controllo, e l'osservazione non intrusiva del suo comportamento \cite{monitoring}.
+	\end{itemize}
+	Come verr\`a approfondito nel successivo capitolo, sia le TSI che le UI sono nella fattispecie interfacce \emph{software}.\\*
+	\section{Interazioni}
+	In questa sezione vengono descritte le interazioni osservabili alle interfacce del sistema.
+	\subsection{Acquisizione dei dati}
+	L'acquisizione dei dati si divide in due differenti interazioni: la prima, con l'ambiente, avviene alle RUPI del \emph{Sensor Set}, mentre la seconda avviene alle RUMI di tipo bus dati che collegano il \emph{Sensor Set} alla piattaforma di elaborazione dati.
+	I moduli che compongono il \emph{Sensor Set} campionano ad una data frequenza le grandezze fisiche che descrivono il moto del treno. Ciascun campionamento fisico \`e seguito dall'invio dei valori letti alla piattaforma di elaborazione dati. I moduli del \emph{Sensor Set} sono tra di loro indipendenti.\\* 
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/seqdiag}
+		\caption{Sequenza di acquisizione dati}
+		\label{fig:seqdiag}
+	\end{figure}
+\clearpage
+	In figura \ref{fig:seqdiag} viene riportata una sequenza esempio di campionamento e invio dei dati. I protocolli di comunicazione tra \emph{Sensor Set} e la piattaforma di elaborazione dati sono definiti a livello \emph{software}, e saranno descritti nel prossimo capitolo.
+	Questa tipologia di interazione \`e detta \emph{time-triggered}, in quanto \`e determinata unicamente dallo scorrere del tempo. \cite{timetriggered} \cite{evttimetriggered}
+	\subsection{Trasmissione della posizione}
 	
