@@ -1,8 +1,8 @@
 \chapter{Architettura di Sistema}
 In questo capitolo viene descritta l'architettura \emph{hardware} del CPS in esame, in particolare, ne vengono evidenziati i \emph{Constituent System} (CS) e le loro interfacce di comunicazione. Vengono infine descritte le interazioni alle particolari interfacce del sistema.
 \section{Descrizione generale}
-Lo scopo del sistema \`e quello di implementare un meccanismo di posizionamento basato su SFA.\\*
-Tale algoritmo \`e schematizzabile come una \emph{black-box} (figura \ref{fig:sfa}) la quale prende in ingresso un certo insieme di misure, e fornisce in uscita una stima affidabile della posizione del treno lungo la traccia.\\*
+Lo scopo del sistema \`e quello di implementare un meccanismo di posizionamento basato su SFA.\cite{sfarailway}\\*
+Il software che esegue tale algoritmo \`e schematizzabile come una \emph{black-box} (figura \ref{fig:sfa}), la quale prende in ingresso un certo insieme di misure, e fornisce in uscita una stima affidabile della posizione del treno lungo la traccia.\\*
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.75]{img/sfaschema}
@@ -32,7 +32,7 @@ Il sistema studiato si compone dei seguenti CS:
 		Esso \'e il sensore principale. Date le caratteristiche intrinseche del particolare SFA utilizzato, ossia un \emph{Filtro di Kalman}, il sistema potrebbe funzionare anche senza i rimanenti sensori. Si osserverebbe tuttavia un calo delle performance in termini di errore commesso sulla stima della posizione del treno. \cite{partialmeas}
 		\begin{figure}[h]
 			\centering
-			\includegraphics[width=\linewidth]{img/imu}
+			\includegraphics[scale=0.5]{img/imu}
 			\caption{\emph{Inertial Measurment Unit}}
 			\label{fig:imu}
 		\end{figure}
@@ -40,9 +40,22 @@ Il sistema studiato si compone dei seguenti CS:
 		Unit\`a incaricata di fornire al sistema i campionamenti dei valori di velocit\`a lineare del treno, espressi in $\frac{m}{s}$.
 		\item GPS:
 		\\*Unit\`a che fornisce al sistema le misure di posizione del treno.\\*
-Le misure di GPS sono riportate in formato standard come tripla di coordinate \texttt{(latitudine, longitudine, altitudine)}, rispettivamente espresse in gradi \texttt{N-S}, in gradi \texttt{E-O} e in \texttt{metri} sul livello del mare.\\*
+Le misure di GPS sono riportate in formato standard come tripla di coordinate \texttt{(latitudine, longitudine, altitudine)}, rispettivamente espresse in gradi \texttt{N-S}, in gradi \texttt{E-O} e in \texttt{metri} sul livello del mare.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{img/gpsublox}
+	\caption{Ricevitore \texttt{GPS ublox EVK-M8T}}
+	\label{fig:gpsublox}
+\end{figure}
+\clearpage
 	\end{itemize}
 	\item Piattaforma di elaborazione dati. Consiste di una scheda \texttt{Nvidia TX-Jetson} su cui viene eseguito SFA.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/nvidia}
+		\caption{\texttt{Nvidia TX-Jetson}}
+		\label{fig:nvidia}
+	\end{figure}
 	\item \emph{On Board Control Unit} (OBCU). Computer di bordo del treno. Esso non svolge alcun ruolo attivo nel sistema di posizionamento, tuttavia la progressiva chilometrica, stimata da SFA, dovr\'a essere trasmessa a OBCU al fine di poter utilizzare questa informazione all'interno del sistema di \emph{interlocking} della traccia.
 \end{itemize}
 	\section{Specifica delle Interfacce}
@@ -74,12 +87,17 @@ Le misure di GPS sono riportate in formato standard come tripla di coordinate \t
 	\caption{Specifica delle RUPI del sistema}
 	\label{tab:rupi}
 	\end{table}
-	\clearpage
 	Per quanto concerne le RUMI, se ne osservano di due tipi:
 	\begin{itemize}
 		\item Tre bus dati, che collegano il \emph{Sensor Set} alla scheda \texttt{Nvidia TX-Jetson}. Su ciascuno di essi, \emph{Sensor Set} invia rispettivamente messaggi contenenti i dati campionati da IMU, Odometro e GPS.
 		\item Interfaccia LTE. Essa permette di realizzare una \emph{rete wireless ad hoc} fra la scheda e OBCU.\\*
 		All'interno di tale rete vengono instradati datagrammi \texttt{IP} contenenti le informazioni sulla progressiva chilometrica stimata da SFA, ed eventualmente messaggi di \emph{acknowledgment} di OBCU verso la scheda.
+		\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.40]{img/lte}
+			\caption{Modem \texttt{TP-LINK M7350 LTE-4G}}
+			\label{fig:lte}
+		\end{figure}
 	\end{itemize}
 	\begin{figure}[h]
 		\centering
@@ -87,13 +105,14 @@ Le misure di GPS sono riportate in formato standard come tripla di coordinate \t
 		\caption{RUMI}
 		\label{fig:tdiagram}
 	\end{figure}
+	
 	\subsection{Altre Interfacce}
 	Oltre alle RUI, descritte in 2.3.1, esistono altre interfacce che hanno lo scopo di rendere il sistema osservabile e manutenibile, e sono le seguenti:	\cite{cecca}
 	\begin{itemize}
 		\item \emph{Time Synchronization Interfaces} (TSI). Le TSI permettono al CPS di effettuare una sincronizzazione col tempo fisico al fine di stabilire una \emph{global timebase} \cite{clock}.
 		\item \emph{Utility Interfaces} (UI). Interfacce dei CS che ne consentono la configurazione, il controllo, e l'osservazione non intrusiva del suo comportamento \cite{monitoring}.
 	\end{itemize}
-	Come verr\`a approfondito nel successivo capitolo, sia le TSI che le UI sono nella fattispecie interfacce \emph{software}.\\*
+	Come verr\`a approfondito nel successivo capitolo, sia le TSI che le UI sono nella fattispecie interfacce \emph{software}.
 	\section{Interazioni}
 	In questa sezione vengono descritte le interazioni osservabili alle interfacce del sistema.
 	\subsection{Acquisizione dei dati}
@@ -105,8 +124,10 @@ Le misure di GPS sono riportate in formato standard come tripla di coordinate \t
 		\caption{Sequenza di acquisizione dati}
 		\label{fig:seqdiag}
 	\end{figure}
-\clearpage
 	In figura \ref{fig:seqdiag} viene riportata una sequenza esempio di campionamento e invio dei dati. I protocolli di comunicazione tra \emph{Sensor Set} e la piattaforma di elaborazione dati sono definiti a livello \emph{software}, e saranno descritti nel prossimo capitolo.
 	Questa tipologia di interazione \`e detta \emph{time-triggered}, in quanto \`e determinata unicamente dallo scorrere del tempo. \cite{timetriggered} \cite{evttimetriggered}
 	\subsection{Trasmissione della posizione}
-	
+	La piattaforma di elaborazione dati esegue SFA durante l'intero moto del treno. Le misure fornite dai sensori vengono elaborate al fine di aggiornare continuamente la stima della posizione del treno.\\*
+	Ogniqualvolta un'aggiornamento di SFA viene completato, avviene un'interazione all'interfaccia LTE. Tale interazione consiste nell'invio di un messaggio contenente la posizione del treno, dalla piattaforma di elaborazione dati verso OBCU, e nella trasmissione di un messaggio di \emph{acknowledgment} nel senso opposto.\\*
+	La tipologia di scambio dei messaggi esposta \`e detta \emph{event-triggered} \cite{evttimetriggered} in quanto le tempistiche di interazione non sono note a priori, ma dipendono dal tempo impiegato da SFA a compiere un'iterazione per aggiornare la stima prodotta.\\*
+	LTE \`e a tutti gli effetti una regolare interfaccia di rete. A livello di trasporto, il messaggio trasmesso \`e contenuto nel \emph{payload} di un datagramma \texttt{UDP}; in accordo al modello di rete \texttt{ISO-OSI}. \cite{libroreti} La specifica del messaggio a livello applicazione sar\`a descritta nel prossimo capitolo.
