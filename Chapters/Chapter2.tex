@@ -2,7 +2,7 @@
 In questo capitolo viene descritta l'architettura \emph{hardware} del CPS in esame, in particolare, ne vengono evidenziati i \emph{Constituent System} (CS) e le loro interfacce di comunicazione. Vengono infine descritte le interazioni alle particolari interfacce del sistema.
 \section{Descrizione generale}
 Lo scopo del sistema \`e quello di implementare un meccanismo di posizionamento basato su SFA.\\*
-Il software che esegue tale algoritmo \`e schematizzabile come una \emph{black-box} (figura \ref{fig:sfa}), la quale prende in ingresso un certo insieme di misure, e fornisce in uscita una stima affidabile della posizione del treno lungo la traccia.\\*
+Il software che esegue tale algoritmo \`e schematizzabile come una \emph{black-box} (figura \ref{fig:sfa}), la quale prende in ingresso un certo insieme di misure, e fornisce in uscita una stima affidabile della posizione del treno lungo la traccia. \cite{datafuse}\\*
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.75]{img/sfaschema}
@@ -18,7 +18,7 @@ Le grandezze fisiche che dovranno essere misurate e fornite a SFA sono:
 	\item Coordinate geografiche;
 	\item Velocit\`a lineare (scalare).
 \end{itemize}
-SFA utilizzer\`a queste informazioni in combinazione con un'apposita digitalizzazione della traccia tramviaria su cui si trova il treno monitorato. Queste informazioni si suppongono note a priori ed accedibili tramite un \emph{database} caricato in memoria centrale.
+In quest'applicazione, SFA utilizza queste informazioni in combinazione con un'apposita digitalizzazione della traccia tramviaria su cui si trova il treno monitorato.\cite{sfaimugps}\cite{sfaimuodo}\cite{sfaimuodogps} \\* Queste informazioni si suppongono note a priori ed accedibili tramite un \emph{database} caricato in memoria centrale. \cite{sqlite3}
 \section{Constituent Systems}
 Il sistema studiato si compone dei seguenti CS:
 \begin{itemize}
@@ -29,7 +29,7 @@ Il sistema studiato si compone dei seguenti CS:
 		$$
 		\mathbf{a}\;\left[\frac{m}{s^2}\right]\;\;\;\;\mathbf{v_{ang}}\;\left[ \frac{rad}{s} \right]
 		$$
-		Esso \'e il sensore principale. Date le caratteristiche intrinseche del particolare SFA utilizzato, ossia un \emph{Filtro di Kalman}, il sistema potrebbe funzionare anche senza i rimanenti sensori. Si osserverebbe tuttavia un calo delle performance in termini di errore commesso sulla stima della posizione del treno. \cite{partialmeas}
+		Esso \'e il sensore principale. Date le caratteristiche intrinseche del particolare SFA utilizzato, ossia un \emph{Filtro di Kalman}, il sistema potrebbe funzionare anche senza i rimanenti sensori. Si osserverebbe tuttavia un calo delle performance in termini di errore commesso sulla stima della posizione del treno. \cite{partialmeas} \cite{gpsdarkarea}
 		\begin{figure}[h]
 			\centering
 			\includegraphics[scale=0.5]{img/imu}
@@ -130,4 +130,4 @@ Le misure di GPS sono riportate in formato standard come tripla di coordinate \t
 	La piattaforma di elaborazione dati esegue SFA durante l'intero moto del treno. Le misure fornite dai sensori vengono elaborate al fine di aggiornare continuamente la stima della posizione del treno.\\*
 	Ogniqualvolta un'aggiornamento di SFA viene completato, avviene un'interazione all'interfaccia LTE. Tale interazione consiste nell'invio di un messaggio contenente la posizione del treno, dalla piattaforma di elaborazione dati verso OBCU, e nella trasmissione di un messaggio di \emph{acknowledgment} nel senso opposto.\\*
 	La tipologia di scambio dei messaggi esposta \`e detta \emph{event-triggered} \cite{evttimetriggered} in quanto le tempistiche di interazione non sono note a priori, ma dipendono dal tempo impiegato da SFA a compiere un'iterazione per aggiornare la stima prodotta.\\*
-	LTE \`e a tutti gli effetti una regolare interfaccia di rete. A livello di trasporto, il messaggio trasmesso \`e contenuto nel \emph{payload} di un datagramma \texttt{UDP}; in accordo al modello di rete \texttt{ISO-OSI}. \cite{libroreti} La specifica del messaggio a livello applicazione sar\`a descritta nel prossimo capitolo.
+	LTE \`e a tutti gli effetti una regolare interfaccia di rete. A livello di trasporto, il messaggio trasmesso \`e contenuto nel \emph{payload} di un datagramma \texttt{UDP}; in accordo al modello di rete \texttt{ISO-OSI}. \cite{libroreti}\\*La specifica del messaggio a livello applicazione sar\`a descritta nel prossimo capitolo.
