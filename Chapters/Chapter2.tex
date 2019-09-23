@@ -168,3 +168,9 @@ L'\emph{On Board Control Unit} (OBCU) \`e il computer di bordo del treno. Esso n
 	Ogniqualvolta un'aggiornamento di SFA viene completato, avviene un'interazione all'interfaccia LTE. Tale interazione consiste nell'invio di un messaggio contenente la posizione del treno, dalla piattaforma di elaborazione dati verso OBCU, e nella trasmissione di un messaggio di \emph{acknowledgment} nel senso opposto.\\*
 	La tipologia di scambio dei messaggi esposta \`e detta \emph{event-triggered} \cite{evttimetriggered} in quanto le tempistiche di interazione non sono note a priori, ma dipendono dal tempo impiegato da SFA a compiere un'iterazione per aggiornare la stima prodotta.\\*
 	LTE \`e a tutti gli effetti una regolare interfaccia di rete. Il messaggio trasmesso \`e contenuto nel \emph{payload} di un datagramma \texttt{UDP}; in accordo al modello di rete \texttt{ISO-OSI}. \cite{libroreti}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/seqdiag2}
+		\caption{Sequenza di trasmissione della posizione}
+		\label{fig:seqdiag2}
+	\end{figure}
