@@ -24,13 +24,13 @@ Per posizionamento ferroviario si intende la valutazione della posizione di un t
 Gli odierni sistemi di posizionamento si basano principalmente sull'utilizzo di strumenti installati a terra, chiamati \emph{beacon}, o \emph{balise} in gergo ferroviario, i quali hanno lo scopo di rilevare il passaggio di un treno.\cite{tecnicheodierne}
 Esiste uno standard a livello europeo al quale gli odierni sistemi di posizionamento si devono uniformare, l' \emph{European Train Control System} (ETCS).\\*
 Nel corso della storia, ogni paese europeo ha sviluppato autonomamente le proprie infrastrutture ferroviarie e relative regole operative. Tuttavia, ad oggi i treni possono attraversare le frontiere, pertanto \`e necessario sviluppare un sistema ferroviario standard che rispetti una comune normativa operazionale europea. Tale sistema prende il nome di \emph{European Rail Traffic Management System} (ERTMS) \cite{ertms}, ed ETCS \`e il sottosistema di ERTMS dedicato al posizionamento delle vetture.\\*
-Come standard, ETCS definisce specifici livelli di \emph{compliance} che possiede un sistema di posizionamento rispetto allo standard, ed essi vanno dal livello \texttt{ETCS-0} al livello \texttt{ETCS-3}. \cite{svolta}
+Come standard, ETCS definisce specifici livelli di \emph{compliance} che possiede un sistema di posizionamento rispetto ad ETCS, ed essi vanno dal livello \texttt{ETCS-0} al livello \texttt{ETCS-3}. \cite{svolta}
 \\*
 L'obiettivo \`e quello di sviluppare progressivamente un sistema di posizionamento completamente autonomo (\texttt{ETCS-3}), partendo da un sistema interamente \emph{non-compliant} con ETCS (\texttt{ETCS-0}).
 \\*
 Allo stato attuale, quasi tutti i sistemi di posizionamento sono \texttt{ETCS-2}. Nei livelli \texttt{ETCS-1} e \texttt{ETCS-2}, le traccie vengono suddivise in blocchi, e all'entrata di ciascun blocco viene posizionato un \emph{beacon} in grado di rilevare la presenza di un treno.\\*
 L'autorizzazione all'ingresso in un blocco viene rilasciata se nessun altro treno sta occupando il blocco al quale si vuole accedere, mentre un sistema di \emph{odometria} installato a bordo, posiziona il treno rispetto all'ultimo \emph{beacon} incontrato.\\*
-Nel livello \texttt{ETCS-3}, non sono richiesti segnali provenienti dalla linea: un treno deve essere in grado di localizzarsi autonomamente. \cite{etcs3}\\*
+Nel livello \texttt{ETCS-3}, non sono richiesti segnali provenienti dalla linea: un treno deve essere in grado di posizonarsi autonomamente. \cite{etcs3}\\*
 In sintesi, i livelli ETCS possono essere descritti come segue:
 \begin{itemize}
 	\item \texttt{ETCS-0}: Sistema non conforme a ETCS;
@@ -46,9 +46,9 @@ In sintesi, i livelli ETCS possono essere descritti come segue:
 \end{figure}
 Il livello \texttt{ETCS-2} prevede che l'autorizzazione a procedere venga gestita dal sistema di \emph{interlocking} e non dal solo operatore umano notificato mediante indicazioni semaforiche.\\*
 La funzionalit\`a offerta del sistema di \emph{interlocking} viene pertanto considerata \emph{safety-critical}, in quanto un suo fallimento pu\`o portare a conseguenze anche catastrofiche.\cite{marocchini}\\*
-La natura incrementale di ETCS implica che un sistema \texttt{ETCS-3} dovr\`a interagire con il sistema di \emph{interlocking} e pertanto anch'esso deve essere considerato un sistema \emph{safety-critical}, e la sua implementazione hardware e software \`e vincolata da standard generici \cite{MISRA} \cite{sil}, e standard specifici del dominio ferroviario \cite{50128}.\\*
-ERTMS/ETCS \`e pensato per sistemi ferroviari, tuttavia i sistemi ferrotramviari, per quanto caratterizzati da una normativa meno rigida, tendono ad essere anch'essi \emph{ETCS-compliant}.
-
+ETCS adotta un approccio incrementale alla realizzazione di sistemi di posizionamento autonomi. Un sistema di posizionamento \texttt{ETCS-3} deve continuare a interagire con il sistema di \emph{interlocking}, quindi deve essere considerato a sua volta un sistema \emph{safety-critical}.\\*
+L'implementazione hardware e software di un sistema \texttt{ETCS-3} viene dunque vincolata da standard generici per sistemi \emph{safety-critical} \cite{MISRA} \cite{sil}, e da standard specifici del dominio ferroviario \cite{50128}.\\*
+ERTMS/ETCS \`e pensato per sistemi ferroviari, mentre nel dominio ferrotramviario vige la regola della \emph{marcia a vista}. Il rispetto di ETCS non \`e obbligatorio in detto contesto, tuttavia le tecniche di posizionamento ivi utilizzate rispettano spesso le linee guida imposte da ETCS. 
 \section{Verso ETCS-3}
 Gli attuali sistemi di posizionamento richiedono un minimo intervento di computer installati a bordo e una grande quantit\`a di apparati installati a terra. Gli apparati di terra sono costosi e hanno un impatto ambientale non trascurabile, pertanto \`e necessario iniziare a pianificare una migrazione verso sistemi \texttt{ETCS-3}.\cite{market}\\*
 Il sistema oggetto della Tesi \`e un sottosistema di posizionamento conforme alla filosofia \texttt{ETCS-3}.\\*
