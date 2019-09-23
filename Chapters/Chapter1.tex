@@ -1,60 +1,62 @@
 \chapter{Stato dell'Arte}
 Questa Tesi si colloca nell'ambito del posizionamento ferrotramviario.\\*
-Il problema del posizionamento esiste tanto nel contesto ferroviario quanto nel contesto ferrotramviario, dal momento che il secondo nasce come derivazione dal primo. In questo capitolo vengono introdotte le principali caratteristiche dei sistemi ferrotramviari e si descrive lo stato dell'arte nell'ambito del posizionamento ferrotramviario, al fine di introdurre gli argomenti trattati nel seguito.
+Il posizionamento \`e un problema tipico del dominio ferroviario, tuttavia si presenta anche nel contesto ferrotramviario, poich\`e i sistemi ferrotramviari nascono come derivazione dai sistemi ferroviari.\\*
+Al fine di introdurre gli argomenti trattati nel seguito della Tesi, in questo capitolo vengono brevemente introdotti i sistemi ferrotramviari, evidenziandone le principali differenze con i sistemi ferroviari. Si descrive infine lo stato dell'arte nell'ambito del posizionamento ferroviario e ferrotramviario.
 \section{Sistemi Ferroviari e Ferrotramviari}
-\`E possibile schematizzare un Sistema Ferroviario, o Ferrotramviario, come un insieme di vetture vincolate a muoversi lungo una traccia fissa.\\*
-Questa schematizzazione vale per qualsiasi sistema di trasporto ferroviario o ferrotramviario a prescindere dalla sua scala in termini di veicoli transitanti ed estensione geografica. Ci\'o che invece differenzia un Sistema Ferroviario da un Sistema Ferrotramviario sono:
+\`E possibile schematizzare un sistema ferroviario, o ferrotramviario, come un insieme di vetture vincolate a muoversi lungo una traccia fissata.\\*
+Questa schematizzazione \`e, in grossolana approssimazione, valida per qualsiasi sistema ferroviario o ferrotramviario, a prescindere dal numero di veicoli transitanti o dall'estensione geografica. Ci\'o che invece differenzia un sistema ferroviario da un sistema ferrotramviario sono:
 \begin{itemize}
-		\item Le caratteristiche fisiche del treno, come lunghezza e massa;
+		\item Le caratteristiche fisiche del veicolo transitante, come lunghezza e massa;
 		\item Le caratteristiche geografiche dell'ambiente operativo;
 		\item Gli scopi del trasporto.
 \end{itemize}
-In generale, nel trasporto ferroviario si utilizzano treni caratterizzati da grandi dimensioni, che trasportano persone o merci su lunghe percorrenze, e che operano pertanto prevalentemente in ambienti extra urbani. \\*
-Nel trasporto ferrotramviario, di contro, si utilizzano vetture dalle ridotte dimensioni, pi\'u leggere di quelle usate nei sistemi ferroviari, e che hanno lo scopo di rappresentare un'alternativa per il cittadino all'utilizzo di mezzi privati durante i suoi spostamenti all'interno di un'area metropolitana. Quest'ultima caratteristica implica che l'ambiente operativo di un sistema ferrotramviario sia radicalmente diverso da quello di un sistema ferroviario: i treni si muovono lungo rotaie installate su strade urbane, quindi il traffico ferrotramviario \`e fuso con il traffico cittadino, come mostrato in figura \ref{fig:tramschema}.\\*
+In generale, nel trasporto ferroviario si utilizzano veicoli pesanti atti a trasportare persone o merci su lunghe percorrenze, pertanto \`e comune che l'ambiente operativo di un sistema ferroviario sia prevalentemente extra urbano.\\*
+Nel trasporto ferrotramviario, di contro, si utilizzano veicoli leggeri per offrire un'alternativa al cittadino all'utilizzo di mezzi privati durante i suoi spostamenti all'interno di un'area metropolitana. Quest'ultima caratteristica implica che l'ambiente operativo di un sistema ferrotramviario sia radicalmente diverso dall'ambiente operativo di un sistema ferroviario. Le vetture si muovono lungo traccie installate su strade urbane, e di conseguenza il traffico ferrotramviario condivide l'ambiente con il traffico cittadino, come mostrato in figura \ref{fig:tramschema}.\\*
 \begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\linewidth]{img/twschema}
-		\caption{Schema di un tipico scenario tramviario}
+		\caption{Schema di un tipico scenario ferrotramviario}
 		\label{fig:tramschema}
 \end{figure}
 \section{Il problema del posizionamento}
-Per posizionamento ferroviario, si intende la valutazione della posizione di un treno all'interno di una traccia ferroviaria. \cite{trainpositioning} Esso esiste tanto nel contesto ferrotramviario quanto nel contesto ferroviario classico.\\*
-Tale posizione viene espressa come progressiva chilometrica rispetto all'origine della linea.\\*
-Il problema del posizionamento sorge nel momento in cui, per ragioni di rotta, un treno ha necessit\`a di spostarsi da una sezione di binario, anche detta traccia, ad un'altra. Questa operazione di scambio \`e offerta dal sistema di \emph{interlocking}. \cite{interlockingsystems}  \cite{interlocking}\\*Tale sistema \`e detto \emph{safety-critical} \cite{safetycritical}, pertanto offre una funzionalit\`a che deve rispettare adeguati standard di sicurezza. \cite{50128} \cite{MISRA} \\*
-Gli odierni sistemi di posizionamento si basano principalmente sull'utilizzo di strumenti installati a terra, che hanno lo scopo di rilevare il passaggio di un treno, e quindi di interagire con il sistema di \emph{interlocking} della traccia al fine di garantire, con un elevato livello di confidenza, un transito sicuro dei mezzi.\cite{tecnicheodierne}
+Per posizionamento ferroviario si intende la valutazione della posizione di un treno all'interno di una traccia ferroviaria. Tale posizione viene espressa come progressiva chilometrica rispetto a una posizione nota, come ad esempio l'origine della linea. \cite{trainpositioning}\\*
 \subsubsection{Odierne Tecniche di Posizionamento}
-I sistemi di posizionamento attualmente in uso hanno come nucleo essenziale il sistema di \emph{interlocking}, il quale si fa carico di offrire al treno un attraversamento sicuro di una \emph{Junction Area (JA)}. Una JA \`e un punto della linea ferroviara in cui il treno pu\'o cambiare direzione, e occupare una nuova traccia di binario.\\*
-La nuova traccia da occupare potrebbe avere particolari vincoli sul numero di treni contemporaneamente transitanti, ed in ogni caso lo scambio di rotaia deve essere corretto ed avvenire in sicurezza, in quanto occupare la traccia sbagliata potrebbe avere ripercussioni finanche catastrofiche. \cite{marocchini}\\*
-Un sistema di \emph{interlocking} \`e composto dai seguenti elementi:
+Gli odierni sistemi di posizionamento si basano principalmente sull'utilizzo di strumenti installati a terra, chiamati \emph{beacon}, o \emph{balise} in gergo ferroviario, i quali hanno lo scopo di rilevare il passaggio di un treno.\cite{tecnicheodierne}
+Esiste uno standard a livello europeo al quale gli odierni sistemi di posizionamento si devono uniformare, l' \emph{European Train Control System} (ETCS).\\*
+Nel corso della storia, ogni paese europeo ha sviluppato autonomamente le proprie infrastrutture ferroviarie e relative regole operative. Tuttavia, ad oggi i treni possono attraversare le frontiere, pertanto \`e necessario sviluppare un sistema ferroviario standard che rispetti una comune normativa operazionale europea. Tale sistema prende il nome di \emph{European Rail Traffic Management System} (ERTMS) \cite{ertms}, ed ETCS \`e il sottosistema di ERTMS dedicato al posizionamento delle vetture.\\*
+Come standard, ETCS definisce specifici livelli di \emph{compliance} che possiede un sistema di posizionamento rispetto allo standard, ed essi vanno dal livello \texttt{ETCS-0} al livello \texttt{ETCS-3}. \cite{svolta}
+\\*
+L'obiettivo \`e quello di sviluppare progressivamente un sistema di posizionamento completamente autonomo (\texttt{ETCS-3}), partendo da un sistema interamente \emph{non-compliant} con ETCS (\texttt{ETCS-0}).
+\\*
+Allo stato attuale, quasi tutti i sistemi di posizionamento sono \texttt{ETCS-2}. Nei livelli \texttt{ETCS-1} e \texttt{ETCS-2}, le traccie vengono suddivise in blocchi, e all'entrata di ciascun blocco viene posizionato un \emph{beacon} in grado di rilevare la presenza di un treno.\\*
+L'autorizzazione all'ingresso in un blocco viene rilasciata se nessun altro treno sta occupando il blocco al quale si vuole accedere, mentre un sistema di \emph{odometria} installato a bordo, posiziona il treno rispetto all'ultimo \emph{beacon} incontrato.\\*
+Nel livello \texttt{ETCS-3}, non sono richiesti segnali provenienti dalla linea: un treno deve essere in grado di localizzarsi autonomamente. \cite{etcs3}\\*
+In sintesi, i livelli ETCS possono essere descritti come segue:
 \begin{itemize}
-		\item \emph{Switch Control Unit (UCS)}:\\*
-		Piattaforma certificata \texttt{SIL-3} \cite{sil} che rappresenta il nucleo del sistema di \emph{interlocking} e che implementa l'intera logica di gestione di una JA. Un UCS dispone di un'interfaccia di \emph{Input/Output} verso gli elementi di \emph{interlocking} installati a terra e ne consente un controllo sicuro in accordo allo standard \texttt{SIL-3}.
-	\begin{figure}[h]
-		\centering
-				\includegraphics[width=0.7\linewidth]{img/ucs}
-				\caption{UCS}
-				\label{fig:ucs}
-		\end{figure}\clearpage
-		\item Conta Assi:\\*
-		Il Conta Assi, o in inglese \emph{Axle Counter} (AC), \`e un sistema certificato \texttt{SIL-3} che ha lo scopo di rilevare la presenza del treno e fornire quindi lo stato di occupazione della sezione di traccia in cui l'AC \`e installato.
-	\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.7\linewidth,height=7.1cm]{img/axlecounter}
-			\caption{Conta Assi}
-			\label{fig:ac}
-		\end{figure}
-		\item \emph{Point Machines}:\\*
-		Le \emph{Point Machines} infine, sono degli strumenti certificati \texttt{SIL-3} che hanno lo scopo di direzionare le rotaie verso una determinata sezione di traccia.
-		\begin{figure}[h]
-				\centering
-				\includegraphics[width=0.7\linewidth]{img/pointmachine}
-				\caption{\emph{Point Machine}}
-				\label{fig:pointmachine}
-			\end{figure}
-	\end{itemize}
-L'intero sistema di \emph{interlocking} viene attivato dai \emph{Track Circuit}. Questi apparati sono installati a terra prima di ciascuna JA, e segnalano al sistema di \emph{interlocking} l'avvicinamento di un treno alla successiva JA.
-\subsection{Criticit\`a}
-Le attuali tecniche di posizionamento richiedono un intervento trascurabile di computer installati a bordo e una grande quantit\`a di apparati installati a terra. Mentre i computer di bordo non forniscono in generale funzionalit\`a legate alla \emph{safety}, gli apparati installati a terra sono costosi e hanno un impatto ambientale non trascurabile.\\*
-\`E possibile considerare il treno e il computer di bordo come un unico sistema, ossia il treno viene modellato come un \emph{Cyber-Physical System}.\\*
-Un \emph{Cyber-Physical System} (CPS) \`e un sistema composto da una parte \emph{fisica} e da una parte \emph{cyber}. Il sottosistema fisico \`e composto da sensori e attuatori che hanno rispettivamente lo scopo di rilevare lo stato dell'ambiente circostante e di alterarlo se necessario. Il sottosistema \emph{cyber} \`e essenzialmente un elaboratore, che dispone di processore, memoria, e interfacce I/O verso i sensori, gli attuatori, ed eventuali operatori  umani. \cite{cps}\cite{cecca}\\*Una tale architettura di sistema, permette di sfruttare le capacit\`a di calcolo dei moderni processori per implementare algoritmi anche molto complessi per il \emph{processing} di grandi quantit\`a di dati provenienti dai sensori.\\*
-Lo scopo della Tesi \`e quello di mostrare i risultati sperimentali delle campagne di analisi condotte su di un innovativo sottosistema di posizionamento. Tale sottosistema ha lo scopo di stimare la posizione di un treno attraverso l'uso combinato di un insieme di sensori installati bordo treno, e al fine di integrarne le misure, queste dovranno essere processate da un algoritmo noto come \emph{Sensor Fusion Algorithm} (SFA). \cite{sfarailway} 
+	\item \texttt{ETCS-0}: Sistema non conforme a ETCS;
+	\item \texttt{ETCS-1}: Utilizzo di apparati di posizionamento installati a terra, autorizzazione a procedere segnalata al macchinista attraverso indicazioni semaforiche;
+	\item \texttt{ETCS-2}: Come \texttt{ETCS-1}, ma l'autorizzazione a procedere \`e gestita da un sistema automatico di scambio, denominato sistema di \emph{interlocking};\cite{interlocking}
+	\item \texttt{ETCS-3}: Posizionamento autonomo, nessun utilizzo di apparati a terra.
+\end{itemize}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{img/etcs123.png}
+	\caption{Livelli \texttt{ETCS}}
+	\label{fig:etcs123}
+\end{figure}
+Il livello \texttt{ETCS-2} prevede che l'autorizzazione a procedere venga gestita dal sistema di \emph{interlocking} e non dal solo operatore umano notificato mediante indicazioni semaforiche.\\*
+La funzionalit\`a offerta del sistema di \emph{interlocking} viene pertanto considerata \emph{safety-critical}, in quanto un suo fallimento pu\`o portare a conseguenze anche catastrofiche.\cite{marocchini}\\*
+La natura incrementale di ETCS implica che un sistema \texttt{ETCS-3} dovr\`a interagire con il sistema di \emph{interlocking} e pertanto anch'esso deve essere considerato un sistema \emph{safety-critical}, e la sua implementazione hardware e software \`e vincolata da standard generici \cite{MISRA} \cite{sil}, e standard specifici del dominio ferroviario \cite{50128}.\\*
+ERTMS/ETCS \`e pensato per sistemi ferroviari, tuttavia i sistemi ferrotramviari, per quanto caratterizzati da una normativa meno rigida, tendono ad essere anch'essi \emph{ETCS-compliant}.
+
+\section{Verso ETCS-3}
+Gli attuali sistemi di posizionamento richiedono un minimo intervento di computer installati a bordo e una grande quantit\`a di apparati installati a terra. Gli apparati di terra sono costosi e hanno un impatto ambientale non trascurabile, pertanto \`e necessario iniziare a pianificare una migrazione verso sistemi \texttt{ETCS-3}.\cite{market}\\*
+Il sistema oggetto della Tesi \`e un sottosistema di posizionamento conforme alla filosofia \texttt{ETCS-3}.\\*
+Nell'ottica di voler realizzare un sistema di posizionamento autonomo, il treno viene modellato come un \emph{Cyber-Physical System} (CPS).\\*
+Un CPS \`e un sistema che consiste di un computer (sottosistema \emph{cyber}) e un oggetto da esso controllato (sottosistema \emph{physical}).
+Il sottosistema \emph{cyber} \`e essenzialmente un elaboratore che opera in un tempo discreto, dispone di processore, memoria, e di interfacce I/O che abilitano l'interazione del CPS con eventuali operatori umani.\\*Il sottosistema \emph{physical} consiste di un sistema governato dalle leggi della fisica che opera in un tempo continuo.
+\cite{cps}\cite{cecca}\\*
+Nella fattispecie, l'oggetto controllato \`e il treno, mentre l'elemento \emph{cyber} \`e costituito da un \emph{sistema di sistemi} composto da un'unit\`a in grado di campionare e processare un certo insieme di misure, e da un'unit\`a in grado di controllare il movimento del treno. Quest'ultima unit\`a prende il nome di \emph{On Board Control Unit} (OBCU), ed \`e il computer di bordo nominale che ogni treno deve possedere in accordo a ERTMS/ETCS.\\*
+Lo scopo della Tesi \`e quello di mostrare i risultati sperimentali delle campagne di analisi condotte sul sistema introdotto.\\*
+Tale sistema ha lo scopo di stimare la posizione di un treno attraverso l'uso combinato di un insieme di sensori installati a bordo.\\*
+I valori campionati dai sensori dovranno essere integrati al fine di ottenere una stima sicura e affidabile della posizione del treno. Tale integrazione viene realizzata grazie all'utilizzo di un algoritmo noto come \emph{Sensor Fusion Algorithm} (SFA). \cite{sfarailway} 
