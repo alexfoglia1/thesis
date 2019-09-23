@@ -1,16 +1,16 @@
 \chapter{Architettura di Sistema}
-In questo capitolo viene descritta l'architettura \emph{hardware} del CPS in esame, in particolare, ne vengono evidenziati i \emph{Constituent System} (CS) e le loro interfacce di comunicazione. Vengono infine descritte le interazioni alle particolari interfacce del sistema.
+In questo capitolo viene descritta l'architettura \emph{hardware} del sottosistema di posizionamento, in particolare, ne vengono evidenziati i moduli costituenti e le loro interfacce di comunicazione. Vengono infine descritte le interazioni osservabili.
 \section{Descrizione generale}
 Lo scopo del sistema \`e quello di implementare un meccanismo di posizionamento basato su SFA.\\*
-Il software che esegue tale algoritmo \`e schematizzabile come una \emph{black-box} (figura \ref{fig:sfa}), la quale prende in ingresso un certo insieme di misure, e fornisce in uscita una stima affidabile della posizione del treno lungo la traccia. \cite{datafuse}\\*
+Tale algoritmo viene eseguito da un software schematizzabile, ai fini di questa Tesi, come una \emph{black-box}  che, ricevuto in ingresso un certo insieme di misure, fornisce in uscita una stima affidabile della posizione del treno lungo la traccia (figura \ref{fig:sfa}), pi\`u accurata di quella che si otterrebbe dai singoli sensori.\cite{datafuse} \\*
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.75]{img/sfaschema}
+	\includegraphics[scale=0.7]{img/sfaschema}
 	\caption{Schema SFA}
 	\label{fig:sfa}
 \end{figure}
 \clearpage
-Questo algoritmo verr\`a eseguito su di un hardware installato a bordo treno, ed ha lo scopo di monitorare costantemente il moto dello stesso.\\*
+Questo algoritmo verr\`a eseguito su di un hardware installato a bordo, e la sua esecuzione \`e volta a monitorare costantemente il moto del treno.\\*
 Le grandezze fisiche che dovranno essere misurate e fornite a SFA sono:
 \begin{itemize}
 	\item Vettore accelerazione;
@@ -20,7 +20,7 @@ Le grandezze fisiche che dovranno essere misurate e fornite a SFA sono:
 \end{itemize}
 In quest'applicazione, SFA utilizza queste informazioni in combinazione con un'apposita digitalizzazione della traccia tramviaria su cui si trova il treno monitorato.\cite{sfaimugps}\cite{sfaimuodo}\cite{sfaimuodogps} \\* Queste informazioni si suppongono note a priori ed accedibili tramite un \emph{database} caricato in memoria centrale. \cite{sqlite3}
 \section{Constituent Systems}
-Il sistema studiato si compone dei seguenti CS:
+Il sistema studiato si compone dei seguenti sistemi costituenti:
 \begin{itemize}
 	\item \emph{Sensor Set}, ossia un insieme di sensori atto a campionare le misure di interesse per il sistema. Il \emph{Sensor Set} \`e composto dai seguenti moduli:
 	\begin{itemize}
@@ -124,10 +124,10 @@ Le misure di GPS sono riportate in formato standard come tripla di coordinate \t
 		\caption{Sequenza di acquisizione dati}
 		\label{fig:seqdiag}
 	\end{figure}
-	In figura \ref{fig:seqdiag} viene riportata una sequenza esempio di campionamento e invio dei dati. I protocolli di comunicazione tra \emph{Sensor Set} e la piattaforma di elaborazione dati sono definiti a livello \emph{software}, e saranno descritti nel prossimo capitolo.
-	Questa tipologia di interazione \`e detta \emph{time-triggered}, in quanto \`e determinata unicamente dallo scorrere del tempo. \cite{timetriggered} \cite{evttimetriggered}
+	In figura \ref{fig:seqdiag} viene riportato un \emph{sequence diagram} rappresentante una possibile sequenza di campionamento e invio dei dati.\\*
+	Questa tipologia di interazione \`e detta \emph{time-triggered}, in quanto \`e determinata unicamente dallo scorrere del tempo. \cite{timetriggered}
 	\subsection{Trasmissione della posizione}
 	La piattaforma di elaborazione dati esegue SFA durante l'intero moto del treno. Le misure fornite dai sensori vengono elaborate al fine di aggiornare continuamente la stima della posizione del treno.\\*
 	Ogniqualvolta un'aggiornamento di SFA viene completato, avviene un'interazione all'interfaccia LTE. Tale interazione consiste nell'invio di un messaggio contenente la posizione del treno, dalla piattaforma di elaborazione dati verso OBCU, e nella trasmissione di un messaggio di \emph{acknowledgment} nel senso opposto.\\*
 	La tipologia di scambio dei messaggi esposta \`e detta \emph{event-triggered} \cite{evttimetriggered} in quanto le tempistiche di interazione non sono note a priori, ma dipendono dal tempo impiegato da SFA a compiere un'iterazione per aggiornare la stima prodotta.\\*
-	LTE \`e a tutti gli effetti una regolare interfaccia di rete. A livello di trasporto, il messaggio trasmesso \`e contenuto nel \emph{payload} di un datagramma \texttt{UDP}; in accordo al modello di rete \texttt{ISO-OSI}. \cite{libroreti}\\*La specifica del messaggio a livello applicazione sar\`a descritta nel prossimo capitolo.
+	LTE \`e a tutti gli effetti una regolare interfaccia di rete. A livello di trasporto, il messaggio trasmesso \`e contenuto nel \emph{payload} di un datagramma \texttt{UDP}; in accordo al modello di rete \texttt{ISO-OSI}. \cite{libroreti}
