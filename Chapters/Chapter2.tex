@@ -3,7 +3,7 @@ In questo capitolo viene descritta l'architettura hardware del sottosistema di p
 \section{Descrizione generale}
 Lo scopo del sistema \`e quello di implementare un meccanismo di posizionamento basato su SFA.\\*
 Tale algoritmo viene eseguito da una libreria software schematizzabile, ai fini di questa Tesi, come una \emph{black-box} che rappresenta il nucleo centrale del sottosistema di posizionamento.\\*
-Ricevuti in ingresso un certo insieme di misure, essa fornisce in uscita una stima della posizione del treno, pi\`u accurata della stima che si otterrebbe utilizzando le misure provenienti dai singoli sensori.\cite{datafuse} \\*
+Ricevuti in ingresso un certo insieme di misure, essa fornisce in uscita una \emph{stima statistica} della posizione del treno, pi\`u accurata della misura che si otterrebbe utilizzando i dati provenienti dai singoli sensori.\cite{datafuse} \\*
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.6]{img/sfaschema}

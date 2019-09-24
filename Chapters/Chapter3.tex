@@ -54,9 +54,20 @@ Prima di poter inizializzare SFA attraverso una chiamata a \texttt{FusionInit()}
 \end{figure}
 Quando \emph{SensorFusionLib} viene eseguito a bordo treno, deve essere specificato un file \textit{sqlite} che contiene il database da caricare in memoria centrale.\\*
 Il software \emph{listener} ricerca automaticamente un file \textit{sqlite} nella \emph{directory} in cui si trova l'eseguibile, ed istanzia una connessione verso di esso utilizzando la classe concreta \texttt{SQLITEDatabaseInterfaceEdges}.\\*
+SFA modella la determinata traccia ferrotramviaria lungo la quale si vuole eseguire l'algoritmo, come una \emph{spline} interpolante una lista di \emph{punti} sulla superficie della Terra.\\*
+All'interno del database, ciascuna traccia \`e memorizzata in una tabella \emph{edges}.\\*
+Una tabella \emph{edge\_vertices} memorizza le informazioni di progressiva chilometrica caratteristiche di ciascun punto geografico, associandolo alla traccia di appartenenza.\\*
+Un'ultima tabella \emph{vertices} associa a ciascun punto geografico le sue coordinate \emph{ECEF}.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{../Trainpositioning/train-positioning-tools/Documentation/SplineDatabaseSchema}
+	\caption{Schema database tracce}
+	\label{fig:dbschema}
+\end{figure}\newpage
 \section{Interface Modules}
 La comunicazione con i sensori \`e gestita interamente da un set di processi denominati \textit{interface-modules}. Ciascun sensore \`e collegato ad un'interfaccia seriale della piattaforma attraverso un bus dati.
 Per ogni interfaccia connessa, un processo resta in ascolto su di essa. Quando un sensore invia un campionamento su una specifica interfaccia, il processo in ascolto su quest'utlima si fa carico di inoltrare a \emph{listener} i valori ricevuti.\\*
+Ciascun processo di \emph{interface-modules} dispone di una \emph{socket UDP} che abilita la comunicazione con \emph{listener}.
 \begin{table}[h]
 	\centering
 	\begin{tabular}{|c|c|c|}
@@ -74,8 +85,7 @@ Per ogni interfaccia connessa, un processo resta in ascolto su di essa. Quando u
 	\end{tabular}
 	\caption{Moduli di \textit{interface-modules}}
 	\label{tab:interfacem}
-\end{table}\newpage
-Ciascun processo di \emph{interface-modules} dispone di una \emph{socket UDP} che abilita la comunicazione con \emph{listener}.
+\end{table}
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/IntModules}
