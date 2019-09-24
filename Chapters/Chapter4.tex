@@ -25,7 +25,7 @@ L'ultima informazione che \`e necessario specificare per utilizzare \emph{SynthD
 \subsection{Rail Track Tool}
 RTT \`e un software \emph{front-end} realizzato al fine di valutare le performance di SFA.\\*
 Gli output di SFA non sono esclusivamente limitati alla stima della posizione del treno; infatti date le caratteristiche dell'algoritmo, altre informazioni utili ai fini dell'analisi sono la velocit\`a stimata e la stima dell'errore commesso.\\*
-Nel sistema reale queste informazioni vengono semplicemente \emph{loggate} a scopi di debug o di \emph{monitoring online}, mentre nell'ambiente simulato da RTT queste informazioni vengono mostrate per intero. Non c'\`e dunque la necessit\`a di modificare il codice di \emph{SensorFusionLib} per valutare le misure di interesse, in quanto queste vengono calcolate per definizione dell'algoritmo. Quanto esposto dimostra la non intrusuvit\`a dell'attivit\`a di \emph{monitoring}.\\*
+Nel sistema reale queste informazioni vengono semplicemente \emph{loggate} a scopi di debug o di \emph{monitoring online}, mentre nell'ambiente simulato da RTT queste informazioni vengono mostrate per intero. Non c'\`e dunque la necessit\`a di modificare il codice di \emph{SensorFusionLib} per valutare le misure di interesse, in quanto queste vengono calcolate per definizione dell'algoritmo. Quanto esposto dimostra la non intrusuvit\`a dell'attivit\`a di analisi.\\*
 RTT include tra le sue dipendenze la libreria \emph{SensorFusionLib}, e ne sfrutta le relative \texttt{API} per alimentare SFA ed ottenere gli output dell'algoritmo; ed include \emph{SynthDataGen} per simulare il comportamento dei sensori.\\*
 \begin{figure}[h]
 	\centering
