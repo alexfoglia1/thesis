@@ -26,7 +26,7 @@ Le grandezze fisiche che dovranno essere misurate e fornite a SFA sono:
 \end{itemize}
 In quest'applicazione, SFA utilizza tali informazioni in combinazione con un'apposita digitalizzazione della traccia tramviaria su cui si trova il treno monitorato.\cite{sfaimugps}\cite{sfaimuodo}\cite{sfaimuodogps} \\* Queste informazioni si suppongono note a priori ed accedibili tramite un \emph{database} caricato in memoria centrale. \cite{sqlite3}
 \section{Sistemi Costituenti}
-Il sottosistema di posizionamento si compone dei moduli, o sistemi costituenti, descritti nel seguito di questa sezione.
+Il sottosistema di posizionamento si compone dei moduli, o \emph{Constituent Systems} (CS), descritti nel seguito di questa sezione.
 \subsection{Sensor Set}
 Il \emph{Sensor Set} \`e un insieme di sensori atti a campionare le misure richieste da SFA. Esso si compone a sua volta dei seguenti moduli:
 \begin{itemize}
@@ -151,7 +151,7 @@ L'\emph{On Board Control Unit} (OBCU) \`e il computer di bordo del treno. Esso n
 	\end{table}
 \newpage
 	\section{Interazioni}
-	In questa sezione si descrivono le interazioni osservabili alle interfacce sopra descritte. Queste possono essere in prima istanza categorizzate in accordo a discrezione della fase di SFA in cui esse avvengono.\\*
+	In questa sezione si descrivono le interazioni osservabili alle interfacce sopra descritte. Queste possono essere in prima istanza categorizzate a discrezione della fase di SFA in cui esse avvengono.\\*
 	Si distinguono pertanto le interazioni riguardanti l'acquisizione dei dati in ingresso a SFA, e le interazioni riguardanti l'acquisizione da parte di OBCU della posizione del treno.
 	\subsection{Acquisizione dei dati}
 	L'acquisizione dei dati si divide in due differenti interazioni: la prima, con l'ambiente, avviene alle RUPI del \emph{Sensor Set}, mentre la seconda avviene alle RUMI bus dati che collegano il \emph{Sensor Set} alla piattaforma di elaborazione dati.\\*
@@ -165,8 +165,8 @@ L'\emph{On Board Control Unit} (OBCU) \`e il computer di bordo del treno. Esso n
 	Questa tipologia di interazione \`e detta \emph{time-triggered}, in quanto \`e determinata unicamente dallo scorrere del tempo. \cite{timetriggered}
 	\subsection{Trasmissione della posizione}
 	La piattaforma di elaborazione dati esegue SFA durante l'intero moto del treno. Le misure fornite dai sensori vengono elaborate al fine di aggiornare continuamente la stima della posizione del treno.\\*
-	Ogniqualvolta un'aggiornamento di SFA viene completato, avviene un'interazione all'interfaccia LTE. Tale interazione consiste nell'invio di un messaggio contenente la posizione del treno, dalla piattaforma di elaborazione dati verso OBCU, e nella trasmissione di un messaggio di \emph{acknowledgment} nel senso opposto.\\*
-	La tipologia di scambio dei messaggi esposta \`e detta \emph{event-triggered} \cite{evttimetriggered} in quanto le tempistiche di interazione non sono note a priori, ma dipendono dal tempo impiegato da SFA a compiere un'iterazione per aggiornare la stima prodotta.\\*
+	Ogniqualvolta venga completato un aggiornamento di SFA, si osserva un'interazione all'interfaccia LTE. Tale interazione consiste nell'invio di un messaggio contenente la posizione del treno, dalla piattaforma di elaborazione dati verso OBCU, e nella trasmissione di un messaggio di \emph{acknowledgment} nel senso opposto.\\*
+	La tipologia di scambio dei messaggi esposta \`e detta \emph{event-triggered} \cite{evttimetriggered} in quanto le tempistiche di interazione non sono note a priori, ma dipendono dal tempo computazionale impiegato da SFA nell'aggiornare la propria stima della posizione.\\*
 	LTE \`e a tutti gli effetti una regolare interfaccia di rete. Il messaggio trasmesso \`e contenuto nel \emph{payload} di un datagramma \texttt{UDP}; in accordo al modello di rete \texttt{ISO-OSI}. \cite{libroreti}
 	\begin{figure}[h]
 		\centering
@@ -174,3 +174,8 @@ L'\emph{On Board Control Unit} (OBCU) \`e il computer di bordo del treno. Esso n
 		\caption{Sequenza di trasmissione della posizione}
 		\label{fig:seqdiag2}
 	\end{figure}
+	\subsection{Interazioni con eventuali operatori umani}
+	La filosofia del sistema oggetto della Tesi include la minimizzazione di interventi da parte di operatori umani.\\*
+	A questi viene lasciato il compito di predisporre le informazioni geografiche della traccia nel database, e di segnalare l'avvio al sistema.\\*
+	Il processo che esegue SFA \`e in effetti un \emph{demone} che si avvia contestualmente all'accensione della piattaforma.\\*
+	Viene infine predisposta un interfaccia \texttt{SSH} per accedere da remoto alla piattaforma a scopi di \emph{deployment} o di \emph{monitoring online} attraverso la lettura dei file di \emph{log}.
