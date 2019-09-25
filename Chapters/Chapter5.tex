@@ -1,14 +1,14 @@
 \chapter{Parte Sperimentale}
 Questo capitolo rappresenta la parte sperimentale del lavoro di Tesi.\\*
 L'attivit\`a di analisi effettuata rientra nella categoria del \emph{monitoring} dei sistemi software.\\*
-Nel seguito, si illustrano gli esperimenti condotti sul sistema nell'ambiente descritto nel capitolo 4, e si discutono i risultati ottenuti.\\*
-La traccia ferrotramviaria scelta per l'analisi \`e un sottoinsieme della linea \texttt{T1} della Tramvia di Firenze, che si estende per $4250.44 m$ dal terminal di \emph{Villa Costanza}, nel comune di \emph{Scandicci}. 
+Nel seguito si illustrano gli esperimenti condotti sul sistema nell'ambiente descritto nel capitolo 4, e si discutono i risultati ottenuti.\\*
+La traccia ferrotramviaria scelta per l'analisi \`e un sottoinsieme della linea \texttt{T1} della Tramvia di Firenze, che si estende per $4.25044$ chilometri dal terminal di \emph{Villa Costanza}, nel comune di Scandicci. 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{"../Trainpositioning/linea test"}
-	\caption{Tracia di analisi}
+	\caption{Traccia di analisi}
 	\label{fig:linea-test}
-\end{figure}\clearpage
+\end{figure}
 \section{Misure di interesse}
 Le performance del sistema saranno valutate in termini degli errori che SFA commette nella stima delle seguenti grandezze:
 \begin{itemize}
@@ -20,13 +20,13 @@ Al variare dei seguenti parametri:
 	\item Numero di sensori integrati (Scenario 1);
 	\item Frequenza di campionamento IMU (Scenario 2);
 	\item Frequenza di campionamento odometro (Scenario 3);
+	\item Varianza rumore di misura odometro (Scenario 4);
+	\item Covarianza rumore di misura IMU (Scenario 5).
 \end{itemize}
-Per ciascuna grandezza osservata viene riportato il valore medio, il valore massimo e la deviazione standard (dev. std.) dell'errore commesso. Viene mostrato altres\`i un grafico che riporta l'andamento degli errori in funzione del tempo, in cui:
-\begin{itemize}
-	\item Le linee rosse indicano l'errore rispetto all'asse $x$;
-	\item Le linee verdi indicano l'errore rispetto all'asse $y$;
-	\item Le linee blu indicano l'errore rispetto all'asse $z$.
-\end{itemize}
+Gli scenari da 1 a 3 hanno lo scopo di valutare l'impatto della frequenza di campionamento di ciascun sensore su SFA, al fine di determinare una configurazione ottimale. Si assume di utilizzare sensori ideali caratterizzati da un rumore di misura nullo.\\*
+Il focus dell'analisi si sposta in seguito alla valutazione dell'impatto sulle performance di SFA del rumore di misura, fissate le frequenze di campionamento.\\*
+Per ciascuna grandezza osservata viene riportato il valore medio, il valore
+massimo e la deviazione standard (dev. std.) dell'errore commesso da SFA nel relativo processo di stima.
 \section{Esperimenti}
 \subsection{Scenario 1}
 \subsubsection{Esperimento 1.1}
@@ -64,19 +64,6 @@ Per ciascuna grandezza osservata viene riportato il valore medio, il valore mass
 	\caption{Esperimento 1.1: Risultati}
 	\label{tab:exp11res}
 \end{table}
-\FloatBarrier
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\linewidth, height = 5cm]{../Trainpositioning/poserrorplot11}
-	\caption{Esperimento 1.1: Grafico errore posizione}
-	\label{fig:poserrorplot11}
-\end{figure}
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\linewidth, height = 5cm]{../Trainpositioning/speederrorplot11}
-	\caption{Esperimento 1.1: Grafico errore velocit\`a}
-	\label{fig:velerrorplot11}
-\end{figure}
 Alimentare SFA utilizzando esclusivamente le misurazioni di IMU conducono a una netta divergenza dell'errore, sia in termini di posizione che in termini di velocit\`a.\\*
 Si osserva che l'errore sulla posizione non varia significativamente lungo l'asse $z$, poich\`e la linea scelta per gli esperimenti si sviluppa in un'area pianeggiante, non caratterizzata da importanti cambi di altitudine.\\*
 Questi risultati non sono accettabili.
@@ -115,23 +102,10 @@ Questi risultati non sono accettabili.
 	\caption{Esperimento 1.2: Risultati}
 	\label{tab:exp12res}
 \end{table}
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\linewidth, height = 5cm]{../Trainpositioning/poserrorplot12}
-	\caption{Esperimento 1.2: Grafico errore posizione}
-	\label{fig:poserrorplot12}
-\end{figure}
-\FloatBarrier
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\linewidth, height = 5cm]{../Trainpositioning/speederrorplot12}
-	\caption{Esperimento 1.2: Grafico errore velocit\`a}
-	\label{fig:velerrorplot12}
-\end{figure}
-Attivando anche l'odometro, si ottiene una netta riduzione degli errori commessi. L'errore sulla stima della posizione permane in un intorno del valore iniziale di 20 metri per poi diminuire col procedere della simulazione.\\*
-In termini di velocit\`a, l'errore si assesta su valori inferiori a 1 metro al secondo.\\*
-Questi risultati sono accettabili.
+Utilizzando anche l'odometro, si ottiene una netta riduzione degli errori commessi. L'errore massimo commesso sulla stima della posizione permane in un intorno del valore iniziale di 20 metri.\\*
+Questo esperimento viene considerato \emph{golden run}, in quanto corrisponde alla configurazione standard del sistema. I risultati osservati durante questo esperimento saranno confrontati. Tale confronto viene riportato in termini di differenza percentuale.
 \subsection{Scenario 2}
+\definecolor{mygreen}{rgb}{0.0.33, 0.42, 0.18}
 \subsubsection{Esperimento 2.1}
 \begin{table}[h]
 	\centering
@@ -139,11 +113,10 @@ Questi risultati sono accettabili.
 		\hline 
 		\textbf{Sensori integrati} & \textbf{Frequenza IMU}  & \textbf{Frequenza odometro} & \textbf{Errore iniziale} \\ 
 		\hline 
-		IMU & 50 Hz & 10 Hz & 20 m\\ 
+		IMU, Odometro & 50 Hz & 10 Hz & 20 m \\ 
 		\hline 
 	\end{tabular}
 	\caption{Scenario 2, Esperimento 2.1}
-	\label{tab:exp21}
 \end{table}
 \begin{table}[h]
 	\centering
@@ -154,11 +127,11 @@ Questi risultati sono accettabili.
 		& \textbf{Errore massimo}
 		& \textbf{Dev. std. errore}\\ 
 		\hline 
-		ECEF X & 3.57373 m & 20.1609 m & 5.60308 m \\ 
+		ECEF X & 3.57373 m & 20.1609 m & 5.60304 m \\ 
 		\hline 
 		ECEF Y & 0.0234386 m & 0.366496 m & 0.0445943 m \\ 
 		\hline 
-		ECEF Z & 3.55578$\cdot10^{-6}$ m & 3.19863$\cdot10^{-5}$ m & 8.81543$\cdot10^{-6}$ m \\ 
+		ECEF Z & 3.55578e-06 m & 3.19863e-05 m & 8.7636e-06 m \\ 
 		\hline 
 		Velocit\`a X & 0.0184494 m/s & 0.129497 m/s & 0.0222426 m/s \\ 
 		\hline 
@@ -166,26 +139,36 @@ Questi risultati sono accettabili.
 		\hline 
 		Velocit\`a Z & 0.00355928 m/s & 0.0189619 m/s & 0.00306268 m/s \\ 
 		\hline 
-	\end{tabular}
+	\end{tabular} 
 	\caption{Esperimento 2.1: Risultati}
-	\label{tab:exp21res}
-\end{table}\FloatBarrier
-Non si osservano particolari variazioni rispetto allo scenario 1.2, a discapito di una diminuzione del 50\% della frequenza di campionamento IMU.\\*
-L'andamento degli errori nel tempo ricalca qualitativamente quanto osservato in 2.1. 
-\begin{figure}[h]
+\end{table}
+\begin{table}[h]
 	\centering
-	\includegraphics[width=\linewidth, height = 7cm]{../Trainpositioning/poserrorplot21}
-	\caption{Esperimento 2.1: Grafico errore posizione}
-	\label{fig:poserrorplot21}
-\end{figure}
+	\begin{tabular}{|p{2cm}|p{3.2cm}|p{3cm}|p{3cm}|}
+		\hline 
+		\textbf{Misura} 
+		& \textbf{Errore medio} 
+		& \textbf{Errore massimo}
+		& \textbf{Dev. std. errore}\\ 
+		\hline 
+		ECEF X & \textcolor{mygreen}{\textbf{-0.247586 \%}}& \textcolor{red}{\textbf{+0.232673 \%}} & \textcolor{mygreen}{\textbf{-0.000714 \%}}  \\ 
+		\hline 
+		ECEF Y & \textcolor{mygreen}{\textbf{-3.59762 \%}}& \textcolor{red}{\textbf{+1.01512 \%}} & \textcolor{mygreen}{\textbf{-1.50631 \%}}  \\ 
+		\hline 
+		ECEF Z & \textcolor{mygreen}{\textbf{-0.239597 \%}}& \textcolor{red}{\textbf{+0.207393 \%}} & \textcolor{mygreen}{\textbf{-0.587946 \%}}  \\ 
+		\hline 
+		Velocit\`a X & \textcolor{red}{\textbf{+8.82804 \%}}& \textcolor{red}{\textbf{+4.03705 \%}} & \textcolor{red}{\textbf{+11.6748 \%}}  \\ 
+		\hline 
+		Velocit\`a Y & \textcolor{red}{\textbf{+0.415626 \%}}& \textcolor{red}{\textbf{+1.94155 \%}} & \textcolor{red}{\textbf{+2.31528 \%}}  \\ 
+		\hline 
+		Velocit\`a Z & \textcolor{mygreen}{\textbf{-6.88388 \%}}& \textcolor{mygreen}{\textbf{-1.41622 \%}}& \textcolor{mygreen}{\textbf{-2.68061 \%}} \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Esperimento 2.1: Confronto con esperimento 1.2} 
+\end{table}
 \FloatBarrier
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\linewidth, height = 5cm]{../Trainpositioning/speederrorplot21}
-	\caption{Esperimento 2.1: Grafico errore velocit\`a}
-	\label{fig:velerrorplot21}
-\end{figure}
-\newpage
+Il dimezzamento della frequenza di campionamento di IMU ha causato un lieve degrado delle performance di SFA nell'errore massimo commesso nella stima della posizione e della velocit\`a.\\*
+\`E ragionevole supporre che 50 hertz sia un valore di frequenza IMU comunque sufficiente a garantire risultati accettabili, considerato che l'errore rimane comunque nell'ordine del valore iniziale.
 \subsubsection{Esperimento 2.2}
 \begin{table}[h]
 	\centering
@@ -193,11 +176,10 @@ L'andamento degli errori nel tempo ricalca qualitativamente quanto osservato in 
 		\hline 
 		\textbf{Sensori integrati} & \textbf{Frequenza IMU}  & \textbf{Frequenza odometro} & \textbf{Errore iniziale} \\ 
 		\hline 
-		IMU & 10 Hz & 10 Hz & 20 m\\ 
+		IMU, Odometro & 20 Hz & 10 Hz & 20 m \\ 
 		\hline 
 	\end{tabular}
 	\caption{Scenario 2, Esperimento 2.2}
-	\label{tab:exp22}
 \end{table}
 \begin{table}[h]
 	\centering
@@ -208,19 +190,227 @@ L'andamento degli errori nel tempo ricalca qualitativamente quanto osservato in 
 		& \textbf{Errore massimo}
 		& \textbf{Dev. std. errore}\\ 
 		\hline 
-		ECEF X & 3.57373 m & 20.1609 m & 5.60308 m \\ 
+		ECEF X & 4.3248 m & 20.5617 m & 5.41018 m \\ 
 		\hline 
-		ECEF Y & 0.0234386 m & 0.366496 m & 0.0445943 m \\ 
+		ECEF Y & 0.0226056 m & 0.39742 m & 0.04816 m \\ 
 		\hline 
-		ECEF Z & 3.55578$\cdot10^{-6}$ m & 3.19863$\cdot10^{-5}$ m & 8.81543$\cdot10^{-6}$ m \\ 
+		ECEF Z & 3.81041e-06 m & 3.30294e-05 m & 9.04865e-06 m \\ 
 		\hline 
-		Velocit\`a X & 0.0184494 m/s & 0.129497 m/s & 0.0222426 m/s \\ 
+		Velocit\`a X & 0.0248871 m/s & 0.150687 m/s & 0.0260141 m/s \\ 
 		\hline 
-		Velocit\`a Y & 0.0396467 m/s & 0.863711 m/s & 0.084737 m/s \\ 
+		Velocit\`a Y & 0.0475246 m/s & 0.908185 m/s & 0.0899591 m/s \\ 
 		\hline 
-		Velocit\`a Z & 0.00355928 m/s & 0.0189619 m/s & 0.00306268 m/s \\ 
+		Velocit\`a Z & 0.00406042 m/s & 0.0228906 m/s & 0.00340827 m/s \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Esperimento 2.2: Risultati}
+\end{table}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{2cm}|p{3.2cm}|p{3cm}|p{3cm}|}
+		\hline 
+		\textbf{Misura} 
+		& \textbf{Errore medio} 
+		& \textbf{Errore massimo}
+		& \textbf{Dev. std. errore}\\ 
+		\hline 
+		ECEF X & \textcolor{red}{\textbf{+20.7168 \%}}& \textcolor{red}{\textbf{+2.22531 \%}} & \textcolor{mygreen}{\textbf{-3.44275 \%}}  \\ 
+		\hline 
+		ECEF Y & \textcolor{mygreen}{\textbf{-7.02373 \%}}& \textcolor{red}{\textbf{+9.53852 \%}} & \textcolor{red}{\textbf{+6.36912 \%}}  \\ 
+		\hline 
+		ECEF Z & \textcolor{red}{\textbf{+6.90426 \%}}& \textcolor{red}{\textbf{+3.47524 \%}} & \textcolor{red}{\textbf{+2.64559 \%}}  \\ 
+		\hline 
+		Velocit\`a X & \textcolor{red}{\textbf{+46.8023 \%}}& \textcolor{red}{\textbf{+21.061 \%}} & \textcolor{red}{\textbf{+30.6106 \%}}  \\ 
+		\hline 
+		Velocit\`a Y & \textcolor{red}{\textbf{+20.3685 \%}}& \textcolor{red}{\textbf{+7.1907 \%}} & \textcolor{red}{\textbf{+8.62068 \%}}  \\ 
+		\hline 
+		Velocit\`a Z & \textcolor{red}{\textbf{+6.2267 \%}}& \textcolor{red}{\textbf{+19.0093 \%}}& \textcolor{red}{\textbf{+8.30082 \%}} \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Esperimento 2.2: Confronto con esperimento 1.2} 
+\end{table}
+L'ulteriore diminuzione della frequenza di campionamento IMU ha questa volta prodotto un degrado delle performance di SFA non trascurabile. In particolare, la velocit\`a risulta la grandezza pi\`u sensibile al variare dell frequenza di IMU.
+\subsubsection{Esperimento 2.3}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{3.2cm}|p{2.75cm}|p{2.75cm}|p{2.75cm}|}
+		\hline 
+		\textbf{Sensori integrati} & \textbf{Frequenza IMU}  & \textbf{Frequenza odometro} & \textbf{Errore iniziale} \\ 
+		\hline 
+		IMU, Odometro & 10 Hz & 10 Hz & 20 m \\ 
 		\hline 
 	\end{tabular}
-	\caption{Esperimento 2.2: Risultati}
-	\label{tab:exp22res}
-\end{table}\FloatBarrier
+	\caption{Scenario 2, Esperimento 2.3}
+\end{table}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{2cm}|p{3.2cm}|p{3cm}|p{3cm}|}
+		\hline 
+		\textbf{Misura} 
+		& \textbf{Errore medio} 
+		& \textbf{Errore massimo}
+		& \textbf{Dev. std. errore}\\ 
+		\hline 
+		ECEF X & 5.2473 m & 21.1805 m & 5.35502 m \\ 
+		\hline 
+		ECEF Y & 0.0267588 m & 0.512581 m & 0.0640117 m \\ 
+		\hline 
+		ECEF Z & 4.47911e-06 m & 3.49469e-05 m & 9.3992e-06 m \\ 
+		\hline 
+		Velocit\`a X & 0.0379368 m/s & 0.223375 m/s & 0.0360634 m/s \\ 
+		\hline 
+		Velocit\`a Y & 0.0634147 m/s & 1.05148 m/s & 0.108924 m/s \\ 
+		\hline 
+		Velocit\`a Z & 0.00396413 m/s & 0.0226519 m/s & 0.00362388 m/s \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Esperimento 2.3: Risultati}
+\end{table}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{2cm}|p{3.2cm}|p{3cm}|p{3cm}|}
+		\hline 
+		\textbf{Misura} 
+		& \textbf{Errore medio} 
+		& \textbf{Errore massimo}
+		& \textbf{Dev. std. errore}\\ 
+		\hline 
+		ECEF X & \textcolor{red}{\textbf{+46.4663 \%}}& \textcolor{red}{\textbf{+5.30175 \%}} & \textcolor{mygreen}{\textbf{-4.42721 \%}}  \\ 
+		\hline 
+		ECEF Y & \textcolor{red}{\textbf{+10.0583 \%}}& \textcolor{red}{\textbf{+41.2797 \%}} & \textcolor{red}{\textbf{+41.3801 \%}}  \\ 
+		\hline 
+		ECEF Z & \textcolor{red}{\textbf{+25.6652 \%}}& \textcolor{red}{\textbf{+9.48243 \%}} & \textcolor{red}{\textbf{+6.62214 \%}}  \\ 
+		\hline 
+		Velocit\`a X & \textcolor{red}{\textbf{+123.779 \%}}& \textcolor{red}{\textbf{+79.458 \%}} & \textcolor{red}{\textbf{+81.0657 \%}}  \\ 
+		\hline 
+		Velocit\`a Y & \textcolor{red}{\textbf{+60.6143 \%}}& \textcolor{red}{\textbf{+24.1034 \%}} & \textcolor{red}{\textbf{+31.5198 \%}}  \\ 
+		\hline 
+		Velocit\`a Z & \textcolor{red}{\textbf{+3.70761 \%}}& \textcolor{red}{\textbf{+17.7683 \%}}& \textcolor{red}{\textbf{+15.152 \%}} \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Esperimento 2.3: Confronto con esperimento 1.2} 
+\end{table}
+Il calo della frequenza IMU fino al valore di 10 hertz ha impattato negativamente in maniera significativa e piuttosto diffusa sulle performance di SFA. Risultano particolarmente degradate sia le stime di velocit\`a che le stime di posizione.\newpage
+\subsection{Scenario 3}
+\subsubsection{Esperimento 3.1}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{3.2cm}|p{2.75cm}|p{2.75cm}|p{2.75cm}|}
+		\hline 
+		\textbf{Sensori integrati} & \textbf{Frequenza IMU}  & \textbf{Frequenza odometro} & \textbf{Errore iniziale} \\ 
+		\hline 
+		IMU, Odometro & 100 Hz & 20 Hz & 20 m \\ 
+		\hline 
+	\end{tabular}
+	\caption{Scenario 3, Esperimento 3.1}
+\end{table}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{2cm}|p{3.2cm}|p{3cm}|p{3cm}|}
+		\hline 
+		\textbf{Misura} 
+		& \textbf{Errore medio} 
+		& \textbf{Errore massimo}
+		& \textbf{Dev. std. errore}\\ 
+		\hline 
+		ECEF X & 3.24767 m & 20.1043 m & 5.63575 m \\ 
+		\hline 
+		ECEF Y & 0.022779 m & 0.314233 m & 0.0412647 m \\ 
+		\hline 
+		ECEF Z & 3.43522e-06 m & 3.19257e-05 m & 8.73175e-06 m \\ 
+		\hline 
+		Velocit\`a X & 0.0132552 m/s & 0.0951454 m/s & 0.0153522 m/s \\ 
+		\hline 
+		Velocit\`a Y & 0.0340335 m/s & 0.785133 m/s & 0.0745504 m/s \\ 
+		\hline 
+		Velocit\`a Z & 0.00326259 m/s & 0.0182945 m/s & 0.00296276 m/s \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Esperimento 3.1: Risultati}
+\end{table}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{2cm}|p{3.2cm}|p{3cm}|p{3cm}|}
+		\hline 
+		\textbf{Misura} 
+		& \textbf{Errore medio} 
+		& \textbf{Errore massimo}
+		& \textbf{Dev. std. errore}\\ 
+		\hline 
+		ECEF X & \textcolor{mygreen}{\textbf{-9.3488 \%}}& \textcolor{mygreen}{\textbf{-0.048722 \%}} & \textcolor{red}{\textbf{+0.583072 \%}}  \\ 
+		\hline 
+		ECEF Y & \textcolor{mygreen}{\textbf{-6.31054 \%}}& \textcolor{mygreen}{\textbf{-13.3898 \%}} & \textcolor{mygreen}{\textbf{-8.86027 \%}}  \\ 
+		\hline 
+		ECEF Z & \textcolor{mygreen}{\textbf{-3.62201 \%}}& \textcolor{red}{\textbf{+0.017544 \%}} & \textcolor{mygreen}{\textbf{-0.949245 \%}}  \\ 
+		\hline 
+		Velocit\`a X & \textcolor{mygreen}{\textbf{-21.8111 \%}}& \textcolor{mygreen}{\textbf{-23.5608 \%}} & \textcolor{mygreen}{\textbf{-22.9203 \%}}  \\ 
+		\hline 
+		Velocit\`a Y & \textcolor{mygreen}{\textbf{-13.8013 \%}}& \textcolor{mygreen}{\textbf{-7.3328 \%}} & \textcolor{mygreen}{\textbf{-9.98448 \%}}  \\ 
+		\hline 
+		Velocit\`a Z & \textcolor{mygreen}{\textbf{-14.6457 \%}}& \textcolor{mygreen}{\textbf{-4.88606 \%}}& \textcolor{mygreen}{\textbf{-5.85566 \%}} \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Esperimento 3.1: Confronto con esperimento 1.2} 
+\end{table}
+In linea con le aspettative, il raddoppio della frequenza dell'odometro ha portato a un miglioramento diffuso delle performance di SFA.\newpage
+\subsubsection{Esperimento 3.2}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{3.2cm}|p{2.75cm}|p{2.75cm}|p{2.75cm}|}
+		\hline 
+		\textbf{Sensori integrati} & \textbf{Frequenza IMU}  & \textbf{Frequenza odometro} & \textbf{Errore iniziale} \\ 
+		\hline 
+		IMU, Odometro & 100 Hz & 5 Hz & 20 m \\ 
+		\hline 
+	\end{tabular}
+	\caption{Scenario 3, Esperimento 3.2}
+\end{table}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{2cm}|p{3.2cm}|p{3cm}|p{3cm}|}
+		\hline 
+		\textbf{Misura} 
+		& \textbf{Errore medio} 
+		& \textbf{Errore massimo}
+		& \textbf{Dev. std. errore}\\ 
+		\hline 
+		ECEF X & 7.79598 m & 20.0671 m & 6.6539 m \\ 
+		\hline 
+		ECEF Y & 0.0696885 m & 1.68216 m & 0.186058 m \\ 
+		\hline 
+		ECEF Z & 8.29376e-06 m & 3.18196e-05 m & 1.00588e-05 m \\ 
+		\hline 
+		Velocit\`a X & 0.0387411 m/s & 0.749128 m/s & 0.106435 m/s \\ 
+		\hline 
+		Velocit\`a Y & 0.219215 m/s & 5.72096 m/s & 0.707916 m/s \\ 
+		\hline 
+		Velocit\`a Z & 0.00502424 m/s & 0.0809832 m/s & 0.00758546 m/s \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Esperimento 3.2: Risultati}
+\end{table}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{2cm}|p{3.2cm}|p{3cm}|p{3cm}|}
+		\hline 
+		\textbf{Misura} 
+		& \textbf{Errore medio} 
+		& \textbf{Errore massimo}
+		& \textbf{Dev. std. errore}\\ 
+		\hline 
+		ECEF X & \textcolor{red}{\textbf{+117.607 \%}}& \textcolor{mygreen}{\textbf{-0.233667 \%}} & \textcolor{red}{\textbf{+18.7543 \%}}  \\ 
+		\hline 
+		ECEF Y & \textcolor{red}{\textbf{+186.627 \%}}& \textcolor{red}{\textbf{+363.644 \%}} & \textcolor{red}{\textbf{+310.939 \%}}  \\ 
+		\hline 
+		ECEF Z & \textcolor{red}{\textbf{+132.688 \%}}& \textcolor{mygreen}{\textbf{-0.314849 \%}} & \textcolor{red}{\textbf{+14.1045 \%}}  \\ 
+		\hline 
+		Velocit\`a X & \textcolor{red}{\textbf{+128.523 \%}}& \textcolor{red}{\textbf{+501.845 \%}} & \textcolor{red}{\textbf{+434.385 \%}}  \\ 
+		\hline 
+		Velocit\`a Y & \textcolor{red}{\textbf{+455.219 \%}}& \textcolor{red}{\textbf{+575.23 \%}} & \textcolor{red}{\textbf{+754.77 \%}}  \\ 
+		\hline 
+		Velocit\`a Z & \textcolor{red}{\textbf{+31.4417 \%}}& \textcolor{red}{\textbf{+321.035 \%}}& \textcolor{red}{\textbf{+141.035 \%}} \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Esperimento 3.2: Confronto con esperimento 1.2} 
+\end{table}
+In questo caso, il dimezzamento della frequenza dell'odometro ha impattato negativamente sulle performance dell'algoritmo in maniera pi\`u significativa di quanto abbia impattato positivamente il raddoppio. \`E dunque ragionevole pensare che 10 hertz sia un valore accettabile come frequenza di campionamento dell'odometro.\\*
