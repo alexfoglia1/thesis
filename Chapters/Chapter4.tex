@@ -24,13 +24,19 @@ L'ultima informazione che \`e necessario specificare per utilizzare \emph{SynthD
 \end{figure}
 \subsection{Rail Track Tool}
 RTT \`e un software \emph{front-end} realizzato al fine di valutare le performance di SFA.\\*
-Gli output di SFA non sono esclusivamente limitati alla stima della posizione del treno; infatti date le caratteristiche dell'algoritmo, altre informazioni utili ai fini dell'analisi sono la velocit\`a stimata e la stima dell'errore commesso.\\*
+Gli output di SFA non sono esclusivamente limitati alla stima della posizione del treno espressa come progressiva chilometrica; infatti date le caratteristiche dell'algoritmo, altre informazioni utili ai fini dell'analisi che esso fornisce sono:
+\begin{itemize}
+	\item Coordinate ECEF della posizione stimata del treno;
+	\item Stima della velocit\`a proiettata lungo i 3 assi cartesiani;
+	\item Errore commesso nella stima di posizione e velocit\`a.
+\end{itemize}.
+Il termine \emph{errore} indica la differenza, in valore assoluto, tra la stima prodotta e la misura reale.\\*
 Nel sistema reale queste informazioni vengono semplicemente \emph{loggate} a scopi di debug o di \emph{monitoring online}, mentre nell'ambiente simulato da RTT queste informazioni vengono mostrate per intero. Non c'\`e dunque la necessit\`a di modificare il codice di \emph{SensorFusionLib} per valutare le misure di interesse, in quanto queste vengono calcolate per definizione dell'algoritmo. Quanto esposto dimostra la non intrusuvit\`a dell'attivit\`a di analisi.\\*
 RTT include tra le sue dipendenze la libreria \emph{SensorFusionLib}, e ne sfrutta le relative \texttt{API} per alimentare SFA ed ottenere gli output dell'algoritmo; ed include \emph{SynthDataGen} per simulare il comportamento dei sensori.\\*
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/RTTSchemaFull}
-	\caption{Schema ambiente analisi RTT}
+	\caption{Schema riassuntivo RTT}
 	\label{fig:rttfull}
 \end{figure}
 \subsubsection{Interfaccia Utente}
@@ -77,20 +83,20 @@ Un'altra interfaccia permette infine di definire le caratteristiche dei sensori 
 	\caption{Posizione del treno mostrata sulla mappa}
 	\label{fig:trainonmap}
 \end{figure}
-\\*Sui grafici nel pannello inferiore \`e possibile inoltre visualizzare i dati forniti in ingresso all'algoritmo, e gli errori commessi dallo stesso durante il processo di stima.\\*
+\\*Sui grafici nel pannello inferiore \`e possibile inoltre visualizzare i dati forniti in ingresso all'algoritmo, e gli errori commessi dallo stesso durante il processo di stima.\newpage
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.8\linewidth]{../Trainpositioning/train-positioning-tools/Documentation/UserGuide/DataPlotImuAccel.png}
+	\includegraphics[height=5cm,width=0.8\linewidth]{../Trainpositioning/train-positioning-tools/Documentation/UserGuide/DataPlotImuAccel.png}
 	\caption{Grafico valori di accelerazione assi X e Y}
 	\label{fig:imuxy}
 \end{figure}
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.7\linewidth]{../Trainpositioning/train-positioning-tools/Documentation/UserGuide/DataPlotPosError.png}
+	\includegraphics[height=5cm,width=0.7\linewidth]{../Trainpositioning/train-positioning-tools/Documentation/UserGuide/DataPlotPosError.png}
 	\caption{Grafico errore sulla stima della posizione}
 	\label{fig:dataplotposerror}
 \end{figure}
-\\*Al termine di ciascuna simulazione, RTT produce un report \texttt{HTML} contenente la sintesi dei principali risultati relativi alla simulazione appena effettuata.\\*
+Al termine di ciascuna simulazione, RTT produce un report \texttt{HTML} contenente la sintesi dei principali risultati relativi alla simulazione appena effettuata.\\*
 \subsubsection{Database Interface}
 Come nel sistema reale, le informazioni geografiche relative alle tracce in esame sono memorizzate in un database. A differenza di quanto avviene nel sistema \emph{embedded}, in cui si utilizza un database \emph{sqlite}, nell'ambiente di analisi il database utilizzato \`e di tipo \emph{MySql}. Permane comunque inalterato lo schema logico del database (capitolo 3).\\*
 Quanto esposto implica che all'atto di inizializzazione di SFA, RTT istanzi una connessione verso un database \emph{MySql}, implementata dalla classe concreta \texttt{MySqlDatabaseInterfaceEdges}.\\*

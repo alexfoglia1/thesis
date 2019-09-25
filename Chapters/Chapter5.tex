@@ -1,9 +1,226 @@
-\chapter{Esperimenti e Risultati}
+\chapter{Parte Sperimentale}
 Questo capitolo rappresenta la parte sperimentale del lavoro di Tesi.\\*
 L'attivit\`a di analisi effettuata rientra nella categoria del \emph{monitoring} dei sistemi software.\\*
-Nel seguito, si illustrano gli esperimenti condotti sul sistema nell'ambiente descritto nel capitolo 4, e si discutono i risultati ottenuti.
-\section{Traccia di analisi}
-La traccia ferrotramviaria scelta per l'analisi \`e un sottoinsieme della linea \texttt{T1} della Tramvia di Firenze.\\*
-\`E stato scelto un sottoinsieme della linea, in luogo della linea intera, principalmente per ragioni di complessit\`a computazionale.
+Nel seguito, si illustrano gli esperimenti condotti sul sistema nell'ambiente descritto nel capitolo 4, e si discutono i risultati ottenuti.\\*
+La traccia ferrotramviaria scelta per l'analisi \`e un sottoinsieme della linea \texttt{T1} della Tramvia di Firenze, che si estende per $4250.44 m$ dal terminal di \emph{Villa Costanza}, nel comune di \emph{Scandicci}. 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{"../Trainpositioning/linea test"}
+	\caption{Tracia di analisi}
+	\label{fig:linea-test}
+\end{figure}\clearpage
 \section{Misure di interesse}
-Prima di poter procedere all'analisi del sistema, occorre definire le \emph{misure di interesse} che si intende valutare attraverso gli esperimenti condotti.
+Le performance del sistema saranno valutate in termini degli errori che SFA commette nella stima delle seguenti grandezze:
+\begin{itemize}
+	\item Coordinate ECEF della posizione del treno;
+	\item Velocit\`a proiettata sugli assi cartesiani;
+\end{itemize}
+Al variare dei seguenti parametri:
+\begin{itemize}
+	\item Numero di sensori integrati (Scenario 1);
+	\item Frequenza di campionamento IMU (Scenario 2);
+	\item Frequenza di campionamento odometro (Scenario 3);
+\end{itemize}
+Per ciascuna grandezza osservata viene riportato il valore medio, il valore massimo e la deviazione standard (dev. std.) dell'errore commesso. Viene mostrato altres\`i un grafico che riporta l'andamento degli errori in funzione del tempo, in cui:
+\begin{itemize}
+	\item Le linee rosse indicano l'errore rispetto all'asse $x$;
+	\item Le linee verdi indicano l'errore rispetto all'asse $y$;
+	\item Le linee blu indicano l'errore rispetto all'asse $z$.
+\end{itemize}
+\section{Esperimenti}
+\subsection{Scenario 1}
+\subsubsection{Esperimento 1.1}
+	\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{2.75cm}|p{2.75cm}|p{2.75cm}|p{2.75cm}|}
+		\hline 
+		\textbf{Sensori integrati} & \textbf{Frequenza IMU}  & \textbf{Frequenza odometro} & \textbf{Errore iniziale} \\ 
+		\hline 
+		IMU & 100 Hz & - & 20 m\\ 
+		\hline 
+	\end{tabular}
+	\caption{Scenario 1, Esperimento 1.1}
+	\label{tab:exp11}
+\end{table}
+	\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{2cm}|p{3cm}|p{3cm}|p{3cm}|}
+		\hline 
+		\textbf{Misura} & \textbf{Errore medio}  & \textbf{Errore massimo} & \textbf{Dev. std. errore}\\ 
+		\hline 
+		ECEF X & 861.883 m & 2431.1 m & 678.953 m \\ 
+		\hline 
+		ECEF Y & 348.814 m & 1518.65 m & 499.222 m \\ 
+		\hline 
+		ECEF Z & 0.123305 m & 0.155086 m & 0.567656 m \\ 
+		\hline 
+		Velocit\`a X & 8.20331 m/s & 30.782 m/s & 7.32822 m/s \\ 
+		\hline 
+		Velocit\`a Y & 23.4213 m/s & 75.1929 m/s & 20.0333 m/s \\ 
+		\hline 
+		Velocit\`a Z & 87.7399 m/s & 87.1907 m/s & 245.723 m/s \\ 
+		\hline 
+	\end{tabular}
+	\caption{Esperimento 1.1: Risultati}
+	\label{tab:exp11res}
+\end{table}
+\FloatBarrier
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth, height = 5cm]{../Trainpositioning/poserrorplot11}
+	\caption{Esperimento 1.1: Grafico errore posizione}
+	\label{fig:poserrorplot11}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth, height = 5cm]{../Trainpositioning/speederrorplot11}
+	\caption{Esperimento 1.1: Grafico errore velocit\`a}
+	\label{fig:velerrorplot11}
+\end{figure}
+Alimentare SFA utilizzando esclusivamente le misurazioni di IMU conducono a una netta divergenza dell'errore, sia in termini di posizione che in termini di velocit\`a.\\*
+Si osserva che l'errore sulla posizione non varia significativamente lungo l'asse $z$, poich\`e la linea scelta per gli esperimenti si sviluppa in un'area pianeggiante, non caratterizzata da importanti cambi di altitudine.\\*
+Questi risultati non sono accettabili.
+\subsubsection{Esperimento 1.2}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{3cm}|p{2.75cm}|p{2.75cm}|p{2.75cm}|}
+	\hline 
+	\textbf{Sensori integrati} & \textbf{Frequenza IMU}  & \textbf{Frequenza odometro} & \textbf{Errore iniziale} \\ 
+	\hline 
+		IMU, Odometro & 100 Hz & 10 Hz & 20 m\\ 
+		\hline 
+	\end{tabular}
+	\caption{Scenario 1, Esperimento 1.2}
+	\label{tab:exp12}
+\end{table}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{2cm}|p{3cm}|p{3cm}|p{3cm}|}
+		\hline 
+		\textbf{Misura} & \textbf{Errore medio}  & \textbf{Errore massimo} & \textbf{Dev. std. errore}\\ 
+		\hline 
+		ECEF X & 3.5826 m & 20.1141 m & 5.60308 m \\ 
+		\hline 
+		ECEF Y & 0.0243133 m & 0.362813 m & 0.0452763 m \\ 
+		\hline 
+		ECEF Z & 3.56432$\cdot10^{-6}$ m & 3.19201$\cdot10^{-5}$ m & 8.81543$\cdot10^{-6}$ m \\ 
+		\hline 
+		Velocit\`a X & 0.0169528 m/s & 0.124472 m/s & 0.0199173 m/s \\ 
+		\hline 
+		Velocit\`a Y & 0.0394826 m/s & 0.847261 m/s & 0.0828195 m/s \\ 
+		\hline 
+		Velocit\`a Z & 0.00382241 m/s & 0.0192343 m/s & 0.00314704 m/s \\ 
+		\hline 
+	\end{tabular}
+	\caption{Esperimento 1.2: Risultati}
+	\label{tab:exp12res}
+\end{table}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth, height = 5cm]{../Trainpositioning/poserrorplot12}
+	\caption{Esperimento 1.2: Grafico errore posizione}
+	\label{fig:poserrorplot12}
+\end{figure}
+\FloatBarrier
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth, height = 5cm]{../Trainpositioning/speederrorplot12}
+	\caption{Esperimento 1.2: Grafico errore velocit\`a}
+	\label{fig:velerrorplot12}
+\end{figure}
+Attivando anche l'odometro, si ottiene una netta riduzione degli errori commessi. L'errore sulla stima della posizione permane in un intorno del valore iniziale di 20 metri per poi diminuire col procedere della simulazione.\\*
+In termini di velocit\`a, l'errore si assesta su valori inferiori a 1 metro al secondo.\\*
+Questi risultati sono accettabili.
+\subsection{Scenario 2}
+\subsubsection{Esperimento 2.1}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{3.2cm}|p{2.75cm}|p{2.75cm}|p{2.75cm}|}
+		\hline 
+		\textbf{Sensori integrati} & \textbf{Frequenza IMU}  & \textbf{Frequenza odometro} & \textbf{Errore iniziale} \\ 
+		\hline 
+		IMU & 50 Hz & 10 Hz & 20 m\\ 
+		\hline 
+	\end{tabular}
+	\caption{Scenario 2, Esperimento 2.1}
+	\label{tab:exp21}
+\end{table}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{2cm}|p{3.2cm}|p{3cm}|p{3cm}|}
+		\hline 
+		\textbf{Misura} 
+		& \textbf{Errore medio} 
+		& \textbf{Errore massimo}
+		& \textbf{Dev. std. errore}\\ 
+		\hline 
+		ECEF X & 3.57373 m & 20.1609 m & 5.60308 m \\ 
+		\hline 
+		ECEF Y & 0.0234386 m & 0.366496 m & 0.0445943 m \\ 
+		\hline 
+		ECEF Z & 3.55578$\cdot10^{-6}$ m & 3.19863$\cdot10^{-5}$ m & 8.81543$\cdot10^{-6}$ m \\ 
+		\hline 
+		Velocit\`a X & 0.0184494 m/s & 0.129497 m/s & 0.0222426 m/s \\ 
+		\hline 
+		Velocit\`a Y & 0.0396467 m/s & 0.863711 m/s & 0.084737 m/s \\ 
+		\hline 
+		Velocit\`a Z & 0.00355928 m/s & 0.0189619 m/s & 0.00306268 m/s \\ 
+		\hline 
+	\end{tabular}
+	\caption{Esperimento 2.1: Risultati}
+	\label{tab:exp21res}
+\end{table}\FloatBarrier
+Non si osservano particolari variazioni rispetto allo scenario 1.2, a discapito di una diminuzione del 50\% della frequenza di campionamento IMU.\\*
+L'andamento degli errori nel tempo ricalca qualitativamente quanto osservato in 2.1. 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth, height = 7cm]{../Trainpositioning/poserrorplot21}
+	\caption{Esperimento 2.1: Grafico errore posizione}
+	\label{fig:poserrorplot21}
+\end{figure}
+\FloatBarrier
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth, height = 5cm]{../Trainpositioning/speederrorplot21}
+	\caption{Esperimento 2.1: Grafico errore velocit\`a}
+	\label{fig:velerrorplot21}
+\end{figure}
+\newpage
+\subsubsection{Esperimento 2.2}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{3.2cm}|p{2.75cm}|p{2.75cm}|p{2.75cm}|}
+		\hline 
+		\textbf{Sensori integrati} & \textbf{Frequenza IMU}  & \textbf{Frequenza odometro} & \textbf{Errore iniziale} \\ 
+		\hline 
+		IMU & 10 Hz & 10 Hz & 20 m\\ 
+		\hline 
+	\end{tabular}
+	\caption{Scenario 2, Esperimento 2.2}
+	\label{tab:exp22}
+\end{table}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{2cm}|p{3.2cm}|p{3cm}|p{3cm}|}
+		\hline 
+		\textbf{Misura} 
+		& \textbf{Errore medio} 
+		& \textbf{Errore massimo}
+		& \textbf{Dev. std. errore}\\ 
+		\hline 
+		ECEF X & 3.57373 m & 20.1609 m & 5.60308 m \\ 
+		\hline 
+		ECEF Y & 0.0234386 m & 0.366496 m & 0.0445943 m \\ 
+		\hline 
+		ECEF Z & 3.55578$\cdot10^{-6}$ m & 3.19863$\cdot10^{-5}$ m & 8.81543$\cdot10^{-6}$ m \\ 
+		\hline 
+		Velocit\`a X & 0.0184494 m/s & 0.129497 m/s & 0.0222426 m/s \\ 
+		\hline 
+		Velocit\`a Y & 0.0396467 m/s & 0.863711 m/s & 0.084737 m/s \\ 
+		\hline 
+		Velocit\`a Z & 0.00355928 m/s & 0.0189619 m/s & 0.00306268 m/s \\ 
+		\hline 
+	\end{tabular}
+	\caption{Esperimento 2.2: Risultati}
+	\label{tab:exp22res}
+\end{table}\FloatBarrier

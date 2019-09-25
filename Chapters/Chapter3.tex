@@ -8,7 +8,7 @@ Le \texttt{API} di \emph{SensorFusionLib} definiscono le interfacce software ver
 Le principali funzioni disponibili sono le seguenti:
 \begin{itemize}
 	\item \texttt{FusionInit(args...)}\\*
-	Funzione che inizializza SFA. Tale funzione deve essere chiamata quando \`e necessario avviare l'algoritmo. Essa riceve come parametri i valori che caratterizzano le condizioni iniziali del moto, come progressiva chilometrica iniziale e la velocit\`a iniziale lungo i 3 assi cartesiani;
+	Funzione che inizializza SFA. Tale funzione deve essere chiamata quando \`e necessario avviare l'algoritmo. Essa riceve come parametri i valori che caratterizzano le condizioni iniziali del moto, come l'errore iniziale rispetto alla progressiva chilometrica e alla velocit\`a;
 	\item \texttt{ProcessInertialMeasurementData(args...)}\\*
 	Funzione che permette a SFA di ricevere ed elaborare un campionamento di IMU; 
 	\item \texttt{ProcessOdometryMeasurementData(args...)}\\*
@@ -57,7 +57,8 @@ Il software \emph{listener} ricerca automaticamente un file \textit{sqlite} nell
 SFA modella la determinata traccia ferrotramviaria lungo la quale si vuole eseguire l'algoritmo, come una \emph{spline} interpolante una lista di \emph{punti} sulla superficie della Terra.\\*
 All'interno del database, ciascuna traccia \`e memorizzata in una tabella \emph{edges}.\\*
 Una tabella \emph{edge\_vertices} memorizza le informazioni di progressiva chilometrica caratteristiche di ciascun punto geografico, associandolo alla traccia di appartenenza.\\*
-Un'ultima tabella \emph{vertices} associa a ciascun punto geografico le sue coordinate \emph{ECEF}.
+Un'ultima tabella \emph{vertices} associa a ciascun punto geografico le sue coordinate, espresse in formato \emph{Earth Centered Earth Fixed} (ECEF).\\*
+ECEF \`e uno standard per esprimere la posizione di un oggetto in un sistema di riferimento cartesiano con origine nel centro della Terra.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{../Trainpositioning/train-positioning-tools/Documentation/SplineDatabaseSchema}
