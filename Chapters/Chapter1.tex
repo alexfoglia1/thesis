@@ -1,8 +1,85 @@
 \chapter{Stato dell'Arte}
-Questa Tesi si colloca nell'ambito del posizionamento ferrotramviario.\\*
-Il posizionamento \`e un problema tipico del dominio ferroviario, tuttavia si presenta anche nel contesto ferrotramviario, poich\`e i sistemi ferrotramviari nascono come derivazione dai sistemi ferroviari.\\*
-Al fine di introdurre gli argomenti trattati nel seguito della Tesi, in questo capitolo vengono brevemente introdotti i sistemi ferrotramviari, evidenziandone le principali differenze con i sistemi ferroviari. Si descrive infine lo stato dell'arte nell'ambito del posizionamento ferroviario e ferrotramviario.
-\section{Sistemi Ferroviari e Ferrotramviari}
+\section{Introduzione}
+Negli ultimi anni, i sistemi informatici hanno assunto un ruolo sempre pi\`u centrale nelle attivit\`a umane.\\*
+Inizialmente, il computer era considerato un semplice strumento di supporto alla matematica applicata, capace di svolgere calcoli particolarmente onerosi in un tempo relativamente breve. Con lo sviluppo delle tecnologie, i sistemi informatici sono ad oggi impiegati in un vasto insieme di domini applicativi, dall'elettromedicale al trasporto aereo, fino all'\emph{Internet of Things}.\\*
+Quanto pi\`u si diffonde l'utilizzo dei sistemi informatici, tanto pi\`u peso assume un eventuale fallimento dei medesimi. La letteratura scientifica dimostra che la valutazione della \emph{dependability} di un sistema informatico \`e un problema chiave.\\*
+Per \emph{dependability} si intende la capacit\`a che ha un sistema di fornire un servizio in modo corretto. \cite{depdef}\\*
+Un \emph{fallimento} \`e una transizione compiuta da un sistema dall'erogazione di un servizio corretto verso l'erogazione di un servizio scorretto. La transizione contraria \`e detta \emph{restauro}.\\*
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/FallimentoRestauro}
+	\caption{Fallimento e restauro}
+	\label{fig:fallimentorestauro}
+\end{figure}\newpage
+Effettuare misure sperimentali su un sistema informatico, o su un suo prototipo, \`e una valida opzione per valutarne la \emph{dependability}.\\*
+Questa Tesi descrive l'attivit\`a di osservazione del prototipo di un sistema informatico impiegato nell'ambito del posizionamento ferrotramviario.
+\subsection{Dependability}
+La \emph{dependability} di un sistema \`e:
+\begin{itemize}
+	\item Misurata rispetto a un certo insieme di propriet\`a note come \emph{measures};
+	\item Raggiunta attraverso l'utilizzo di specifiche tecniche, i \emph{means};
+	\item Minacciata dai \emph{threats}, ossia da tutto ci\`o che porta il sistema ad erogare un servizio improprio.\\*
+	Un sistema pu\`o fallire nel caso in cui questo non sia conforme alle specifiche, oppure perch\`e le specifiche non descrivono adeguatamente le sue funzioni.\\*
+\end{itemize}
+La \emph{dependability} di un sistema viene misurata rispetto alle seguenti propriet\`a:
+\begin{itemize}
+	\item \emph{Availability}: L'alternanza tra la fornitura di un servizio corretto e uno scorretto.
+	$$
+	A(t) = \begin{cases} 1 & \mbox{se il servizio fornito \`e corretto al tempo t} \\ 0 & \mbox{altrimenti} \end{cases}
+	$$
+	$\mathbb E[A(t)]:$ probabilit\`a che il servizio fornito sia corretto al tempo $t$
+	\item \emph{Reliability}: Capacit\`a di fornire un servizio continuamente corretto in un certo intervallo di tempo.
+	$$
+	R(t):\mbox{probabilit\`a di fornire un servizio corretto nell'intervallo }[0,t]
+	$$
+	\item \emph{Safety}: Il tempo medio a un fallimento catastrofico.\\*\\*
+	$S(t):$ probabilit\`a che non si verifichi alcun fallimento catastrofico nell'intervallo $[0,t]$\\*\\*
+	La \emph{safety} \`e un' estensione del concetto di \emph{reliability}.\newpage
+	Si definisce uno stato sicuro in cui il sistema:
+	\begin{itemize}
+		\item Fornisce il servizio corretto, oppure
+		\item Non fornisce il servizio corretto, ma il fallimento non ha conseguenze catastrofiche sull'ambiente o sulle persone
+	\end{itemize}
+	Qualunque fallimento che induca il sistema a fornire un servizio scorretto con conseguenze catastrofiche, viene modellato come una transizione verso uno stato non sicuro.\\*
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/safety}
+		\caption{La \emph{safety} estende il concetto di \emph{reliability}}
+		\label{fig:safety}
+	\end{figure}
+	\item \emph{Time to Failure}: Il tempo che intercorre fra l'ultimo restauro e il successivo fallimento.\\*
+	Spesso \`e opportuno considerare il valore atteso di questa grandezza, il \emph{Mean Time to Failure} (MTTF)
+	\item \emph{Maintainability}: Il tempo necessario a restaurare il sistema, dopo l'ultimo fallimento. Il valore atteso di questa misura prende il nome di \emph{Mean Time to Repair} (MTTR)
+	\item \emph{Coverage}: Probabilit\`a che il sistema sia in grado di tollerare un guasto.
+\end{itemize}
+I \emph{threats} che minano la \emph{dependability} di un sistema sono i guasti, gli errori e i fallimenti.\\*
+Un guasto \`e un qualunque evento interno al sistema in grado di causare un errore. Quando l'errore raggiunge l'interfaccia di servizio, ovvero altera il servizio fornito dal sistema, si parla di fallimento. In letteratura, si fa riferimento a questo rapporto di causalit\`a come \emph{fault error failure chain}, catena guasto errore fallimento.\\*
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/gefpng}
+	\caption{Catena guasto errore fallimento}
+	\label{fig:gefpng}
+\end{figure}\newpage
+La \emph{dependability} di un sistema informatico \`e raggiunta attraverso l'uso di quattro tecniche:
+\begin{itemize}
+	\item \emph{Fault Prevention}: Previene l'insorgenza di guasti durante il ciclo di vita del sistema
+	\item \emph{Fault Tolerance}: Rende il sistema in grado di fornire un servizio corretto anche in presenza di guasti
+	\item \emph{Fault Removal}: Riduce il numero di guasti nel sistema
+	\item \emph{Fault Forecasting}: Stima il numero di guasti presenti nel sistema, attualmente o in futuro
+\end{itemize}
+La \emph{dependability} \`e la propriet\`a che viene misurata durante il processo di \emph{validazione} di un sistema informatico.\\*
+La validazione di un sistema informatico \`e un processo atto a determinare se il sistema \`e conforme alle sue specifiche funzionali.\\*
+Il processo di validazione avviene durante tutte le fasi del ciclo di vita del sistema, anche prima che venga realizzato. Per questo motivo, il sistema viene opportunamente modellato al fine di condurre propriamente l'analisi.\\*
+A discrezione della fase del ciclo di vita del sistema, si utilizzano differenti tecniche e modelli di validazione: \cite{librobonda}
+\begin{itemize}
+	\item Specifica: la validazione \`e basata sull'utilizzo di tecniche combinatorie che mirano a determinare le condizioni di fallimento di un sistema in funzione del fallimento dei suoi sottocomponenti, considerati indipendenti;
+	\item \emph{Design}: in questa fase si usano tecniche analitiche, come ad esempio le Catene di Markov, che permettono di rilassare le assunzioni di indipendenza tipiche dei modelli combinatori;
+	\item Implementazione: con il procedere della fase di implementazione, il sistema prende forma e pu\`o essere interessante osservarne direttamente il comportamento ed effettuare misure sperimentali;
+	\item Fase operativa: il sistema \`e impiegato sul campo e possono quindi essere utilizzate tutte le tecniche disponibili per l'analisi.
+\end{itemize}
+
+
+\section{Robaccia}
 \`E possibile schematizzare un sistema ferroviario, o ferrotramviario, come un insieme di vetture vincolate a muoversi lungo una traccia fissata.\\*
 Questa schematizzazione \`e, in grossolana approssimazione, valida per qualsiasi sistema ferroviario o ferrotramviario, a prescindere dal numero di veicoli transitanti o dall'estensione geografica. Ci\'o che invece differenzia un sistema ferroviario da un sistema ferrotramviario sono:
 \begin{itemize}
