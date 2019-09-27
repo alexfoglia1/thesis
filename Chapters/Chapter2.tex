@@ -1,9 +1,8 @@
-\chapter{Architettura di Sistema}
-In questo capitolo viene descritta l'architettura hardware del sottosistema di posizionamento, in particolare, ne vengono evidenziati i moduli costituenti e le loro interfacce di comunicazione. Vengono infine descritte le interazioni osservabili.
+\chapter{Il Sistema Analizzato}
 \section{Descrizione generale}
-Lo scopo del sistema \`e quello di implementare un meccanismo di posizionamento basato su SFA.\\*
+Il sistema analizzato rientra nella categoria dei CPSoS. Lo scopo del sistema \`e quello di implementare un meccanismo di posizionamento basato su SFA.\\*
 Tale algoritmo viene eseguito da una libreria software schematizzabile, ai fini di questa Tesi, come una \emph{black-box} che rappresenta il nucleo centrale del sottosistema di posizionamento.\\*
-Ricevuti in ingresso un certo insieme di misure, essa fornisce in uscita una \emph{stima statistica} della posizione del treno, pi\`u accurata della misura che si otterrebbe utilizzando i dati provenienti dai singoli sensori.\cite{datafuse} \\*
+Ricevuti in ingresso un certo insieme di misure, essa fornisce in uscita una \emph{stima statistica} della posizione del treno, pi\`u accurata della misura che si otterrebbe utilizzando i dati provenienti dai singoli sensori.\cite{datafuse}\\*
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.6]{img/sfaschema}
@@ -25,8 +24,8 @@ Le grandezze fisiche che dovranno essere misurate e fornite a SFA sono:
 	\item Velocit\`a lineare (scalare).
 \end{itemize}
 In quest'applicazione, SFA utilizza tali informazioni in combinazione con un'apposita digitalizzazione della traccia tramviaria su cui si trova il treno monitorato.\cite{sfaimugps}\cite{sfaimuodo}\cite{sfaimuodogps} \\* Queste informazioni si suppongono note a priori ed accedibili tramite un \emph{database} caricato in memoria centrale. \cite{sqlite3}
-\section{Sistemi Costituenti}
-Il sottosistema di posizionamento si compone dei moduli, o \emph{Constituent Systems} (CS), descritti nel seguito di questa sezione.
+\section{Constituent Systems}
+Il sottosistema di posizionamento si compone dei moduli, o CS, descritti nel seguito di questa sezione.
 \subsection{Sensor Set}
 Il \emph{Sensor Set} \`e un insieme di sensori atti a campionare le misure richieste da SFA. Esso si compone a sua volta dei seguenti moduli:
 \begin{itemize}
@@ -64,7 +63,7 @@ Da quest'ultimo essa riceve le misure da processare tramite SFA.
 		\caption{\texttt{Nvidia TX-Jetson}}
 		\label{fig:nvidia}
 \end{figure}
-\texttt{Nvidia TX-Jetson} \`e un'architettura specifica per sistemi \emph{embedded}. Essa \`e ottimizzata per i calcoli computazionalmente onerosi tipici delle applicazioni di intelligenza artificiale.\cite{nvidia}\\*
+\texttt{Nvidia TX-Jetson} \`e un'architettura specifica per sistemi \emph{embedded}. Essa \`e ottimizzata per i calcoli computazionalmente onerosi tipici delle applicazioni di intelligenza artificiale. \cite{nvidia}\\*
 \begin{table}[h]
 \begin{tabular}{|p{3cm}|p{8cm}|}
 	\hline 
@@ -82,42 +81,36 @@ Da quest'ultimo essa riceve le misure da processare tramite SFA.
 \caption{Specifiche Tecniche \texttt{NVidia TX-Jetson}}
 \label{tab:nvidia}
 \end{table}
-\subsection{On Board Control Unit}
-L'\emph{On Board Control Unit} (OBCU) \`e il computer di bordo del treno. Esso non svolge alcun ruolo attivo nel sistema di posizionamento, tuttavia la progressiva chilometrica, stimata da SFA, dovr\'a essere trasmessa a OBCU al fine di poter utilizzare questa informazione all'interno del sistema di \emph{interlocking} della traccia.
+\subsection{OBCU}
+L'OBCU \`e il computer di bordo del treno. Esso non svolge alcun ruolo attivo nel sistema di posizionamento, tuttavia la progressiva chilometrica, stimata da SFA, dovr\'a essere trasmessa a OBCU al fine di poter utilizzare questa informazione all'interno del sistema di \emph{interlocking} della traccia.
 	\section{Specifica delle Interfacce}
-	\subsection{Relied Upon Interfaces}
-	Le interfacce sono definite come punti di interazione, tra un CS e l'ambiente oppure tra un CS e un altro.\\*
+	\subsection{RUI}
 	In questa sezione si evidenziano le principali interfacce del sistema, alle quali si osservano le interazioni fondamentali che avvengono al suo interno.\\*
-	Tali interfacce prendono il nome di \emph{Relied Upon Interfaces} (RUI). Le RUI si dividono in:
-	\begin{itemize}
-		\item \emph{Relied Upon Physical Interfaces} (RUPI), in cui l'interazione avviene tramite osservazione diretta di una grandezza fisica;
-		\item \emph{Relied Upon Message Interfaces} (RUMI), dove l'interazione \`e rappresentata da uno scambio di messaggi a livello \emph{cyber}.
-	\end{itemize}
-	La specifica delle RUI \`e di particolare importanza poich\'e qualunque struttura del sistema, responsabile del comportamento osservato, pu\'o essere ridotta alla specifica delle interfacce del sistema. \cite{interfacespec}\\*  
-	Il CPS interagisce con l'ambiente attraverso le RUPI del \emph{Sensor Set}, ossia gli strumenti di misura che esso integra. Queste interfacce acquisiscono, a diverse frequenze, i dati sul moto del treno che verranno elaborati da SFA. Una descrizione sintetica delle RUPI del sistema \`e mostrata in tabella \ref{tab:rupi}.\\*
+	Il sistema di posizionamento interagisce con il treno attraverso le RUPI del \emph{Sensor Set}, ossia gli strumenti di misura che esso integra. Questi sensori campionano, a diverse frequenze, i dati sul moto del treno che verranno elaborati da SFA. Una descrizione sintetica delle RUPI del sistema \`e mostrata in tabella \ref{tab:rupi}.\\*
 	\begin{table}[h]
 	\centering
 	\begin{tabular}{|c|c|c|}
 		\hline 
 		\textbf{RUPI} & \textbf{Grandezza Campionata}  & \textbf{Parti interagenti} \\ 
 		\hline 
-		Accelerometro & Accelerazione & Ambiente - IMU \\ 
+		Accelerometro & Accelerazione & Vettura - IMU \\ 
 		\hline 
-		Giroscopio & Velocit\`a angolare & Ambiente - IMU  \\ 
+		Giroscopio & Velocit\`a angolare & Vettura - IMU  \\ 
 		\hline 
-		Radar & Velocit\`a lineare & Ambiente - Odometro \\ 
+		Radar & Velocit\`a lineare & Vettura - Odometro \\ 
 		\hline 
-		Ricevitore GPS & Coordinate geografiche& Ambiente - GPS \\ 
+		Ricevitore GPS & Coordinate geografiche& Vettura - GPS \\ 
 		\hline 
 	\end{tabular}
 	\caption{Specifica delle RUPI del sistema}
 	\label{tab:rupi}
-	\end{table}\clearpage
+	\end{table}
+\FloatBarrier
 	Per quanto concerne le RUMI, se ne osservano di due tipi:
 	\begin{itemize}
 		\item Tre bus dati, che collegano il \emph{Sensor Set} alla scheda \texttt{Nvidia TX-Jetson}. Su ciascuno di essi, \emph{Sensor Set} invia rispettivamente messaggi contenenti i dati campionati da IMU, Odometro e GPS.
 		\item Interfaccia LTE. Essa permette di realizzare una \emph{rete wireless ad hoc} fra la scheda e OBCU.\\*
-		All'interno di tale rete vengono instradati datagrammi \texttt{IP} contenenti le informazioni sulla progressiva chilometrica stimata da SFA, ed eventualmente messaggi di \emph{acknowledgment} di OBCU verso la scheda.
+		All'interno di tale rete vengono instradati datagrammi \texttt{UDP} contenenti le informazioni sulla progressiva chilometrica stimata da SFA, ed eventualmente messaggi di \emph{acknowledgment} di OBCU verso la scheda.
 		\begin{figure}[h]
 			\centering
 			\includegraphics[scale=0.40]{img/lte}
@@ -127,8 +120,8 @@ L'\emph{On Board Control Unit} (OBCU) \`e il computer di bordo del treno. Esso n
 	\end{itemize}
 	\begin{figure}[h]
 		\centering
-		\includegraphics[width=0.7\linewidth]{img/TrainDiagram}
-		\caption{Architettura hardware del sottosistema di posizionamento}
+		\includegraphics[scale=0.6]{img/TrainDiagram}
+		\caption{Diagramma a blocchi del sottosistema di posizionamento}
 		\label{fig:tdiagram}
 	\end{figure}
 		\begin{table}[h]
@@ -149,14 +142,14 @@ L'\emph{On Board Control Unit} (OBCU) \`e il computer di bordo del treno. Esso n
 		\caption{Specifica delle RUMI del sistema}
 		\label{tab:rumi}
 	\end{table}
-\newpage
-	\section{Interazioni}
+\section{Interazioni}
 	In questa sezione si descrivono le interazioni osservabili alle interfacce sopra descritte. Queste possono essere in prima istanza categorizzate a discrezione della fase di SFA in cui esse avvengono.\\*
 	Si distinguono pertanto le interazioni riguardanti l'acquisizione dei dati in ingresso a SFA, e le interazioni riguardanti l'acquisizione da parte di OBCU della posizione del treno.
 	\subsection{Acquisizione dei dati}
-	L'acquisizione dei dati si divide in due differenti interazioni: la prima, con l'ambiente, avviene alle RUPI del \emph{Sensor Set}, mentre la seconda avviene alle RUMI bus dati che collegano il \emph{Sensor Set} alla piattaforma di elaborazione dati.\\*
+	L'acquisizione dei dati si divide in due differenti interazioni: la prima, con la vettura, avviene alle RUPI del \emph{Sensor Set}, mentre la seconda avviene alle RUMI bus dati che collegano il \emph{Sensor Set} alla piattaforma di elaborazione dati.\\*
 	I moduli che compongono il \emph{Sensor Set} campionano ad una data frequenza le grandezze fisiche che descrivono il moto del treno. Ciascun campionamento fisico \`e seguito dall'invio dei valori letti alla piattaforma di elaborazione dati. I moduli del \emph{Sensor Set} sono tra di loro indipendenti.\\* 
-	In figura \ref{fig:seqdiag} viene riportato un \emph{sequence diagram} rappresentante una possibile sequenza di campionamento e invio dei dati.\newpage	\begin{figure}[h]
+	In figura \ref{fig:seqdiag} viene riportato un \emph{sequence diagram} rappresentante una possibile sequenza di campionamento e invio dei dati.
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\linewidth]{img/seqdiag}
 		\caption{Sequenza di acquisizione dati}
@@ -164,18 +157,79 @@ L'\emph{On Board Control Unit} (OBCU) \`e il computer di bordo del treno. Esso n
 	\end{figure}
 	Questa tipologia di interazione \`e detta \emph{time-triggered}, in quanto \`e determinata unicamente dallo scorrere del tempo. \cite{timetriggered}
 	\subsection{Trasmissione della posizione}
-	La piattaforma di elaborazione dati esegue SFA durante l'intero moto del treno. Le misure fornite dai sensori vengono elaborate al fine di aggiornare continuamente la stima della posizione del treno.\\*
-	Ogniqualvolta venga completato un aggiornamento di SFA, si osserva un'interazione all'interfaccia LTE. Tale interazione consiste nell'invio di un messaggio contenente la posizione del treno, dalla piattaforma di elaborazione dati verso OBCU, e nella trasmissione di un messaggio di \emph{acknowledgment} nel senso opposto.\\*
+	Ogniqualvolta viene completato un aggiornamento di SFA, si osserva un'interazione all'interfaccia LTE. Tale interazione consiste nell'invio di un messaggio contenente la posizione del treno, dalla piattaforma di elaborazione dati verso OBCU, e nella trasmissione di un messaggio di \emph{acknowledgment} nel senso opposto.\\*
 	La tipologia di scambio dei messaggi esposta \`e detta \emph{event-triggered} \cite{evttimetriggered} in quanto le tempistiche di interazione non sono note a priori, ma dipendono dal tempo computazionale impiegato da SFA nell'aggiornare la propria stima della posizione.\\*
-	LTE \`e a tutti gli effetti una regolare interfaccia di rete. Il messaggio trasmesso \`e contenuto nel \emph{payload} di un datagramma \texttt{UDP}; in accordo al modello di rete \texttt{ISO-OSI}. \cite{libroreti}
+	LTE \`e a tutti gli effetti una regolare interfaccia di rete. Il messaggio trasmesso \`e contenuto nel \emph{payload} di un datagramma \texttt{UDP}.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\linewidth]{img/seqdiag2}
 		\caption{Sequenza di trasmissione della posizione}
 		\label{fig:seqdiag2}
 	\end{figure}
+	\FloatBarrier
 	\subsection{Interazioni con eventuali operatori umani}
-	La filosofia del sistema oggetto della Tesi include la minimizzazione di interventi da parte di operatori umani.\\*
+	La filosofia del sistema include la minimizzazione di interventi da parte di operatori umani.\\*
 	A questi viene lasciato il compito di predisporre le informazioni geografiche della traccia nel database, e di segnalare l'avvio al sistema.\\*
 	Il processo che esegue SFA \`e in effetti un \emph{demone} che si avvia contestualmente all'accensione della piattaforma.\\*
 	Viene infine predisposta un interfaccia \texttt{SSH} per accedere da remoto alla piattaforma a scopi di \emph{deployment} o di \emph{monitoring online} attraverso la lettura dei file di \emph{log}.
+\section{Architettura Software}
+In questa sezione viene completata la panoramica sul sistema descrivendo i moduli software in esecuzione sulla piattaforma \texttt{NVidia TX-Jetson}. Su tale piattaforma  \`e installato il sistema operativo \texttt{Ubuntu 16.04 LTS}, basato su Kernel \texttt{Linux}.
+\subsection{Sensor Fusion Library}
+Il software che esegue SFA viene fornito come libreria, denominata \textit{SensorFusionLib}, la quale mette a disposizione dei \emph{client} le \texttt{API} descritte di seguito.
+\subsubsection{API}
+Le \texttt{API} di \emph{SensorFusionLib} definiscono le interfacce software verso il modulo SFA che possono essere utilizzate dai \emph{client}.\\*
+Le principali funzioni disponibili sono le seguenti:
+\begin{itemize}
+	\item \texttt{FusionInit(args...)}\\*
+	Funzione che inizializza SFA. Tale funzione deve essere chiamata quando \`e necessario avviare l'algoritmo. Essa riceve come parametri i valori che caratterizzano le condizioni iniziali del moto, come l'errore iniziale rispetto alla progressiva chilometrica e alla velocit\`a;
+	\item \texttt{ProcessInertialMeasurementData(args...)}\\*
+	Funzione che permette a SFA di ricevere ed elaborare un campionamento di IMU; 
+	\item \texttt{ProcessOdometryMeasurementData(args...)}\\*
+	Funzione che permette a SFA di ricevere ed elaborare un campionamento di Odometro;
+	\item \texttt{ProcessGPSMeasurementData(args...)}\\*
+	Funzione che permette a SFA di ricevere ed elaborare un campionamento di GPS;
+	\item \texttt{ProcessStrobe(args...)}\\*
+	Funzione che deve essere invocata ogni secondo, per permettere a SFA di sincronizzarsi rispetto a una \emph{global timebase} esterna; \cite{clock}
+	\item 
+	\texttt{IsUpdated()}\\*
+	Funzione che restituisce \texttt{vero} se SFA ha completato un'iterazione ed \`e pronto a fornire l'output prodotto;
+	\item \texttt{GetFusionOutput()}\\*
+	Se \texttt{IsUpdated()} restituisce \texttt{vero}, \`e possibile invocare questa funzione per ricevere da SFA l'ultimo output calcolato.
+\end{itemize}
+\subsection{Listener}
+\textit{SensorFusionLib} \`e incapsulato all'interno di un eseguibile, \textit{listener}.\\*
+Questo software possiede un'istanza di \textit{SensorFusionLib} con la quale interagisce attraverso le \texttt{API} descritte in 3.1.1. Esso dispone di due \textit{socket} \texttt{UDP}, una utilizzata per ricevere i dati \textit{raw} provenienti dai sensori, l'altra per la comunicazione remota con OBCU.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/ListenerOK}
+	\caption{Diagramma a blocchi di \emph{listener}}
+	\label{fig:listener}
+\end{figure}
+\subsection{Interface Modules}
+La comunicazione con i sensori \`e gestita interamente da un set di processi denominati \textit{interface-modules}. Ciascun sensore \`e collegato ad un'interfaccia seriale della piattaforma attraverso un bus dati.
+Per ogni interfaccia connessa, un processo resta in ascolto su di essa. Quando un sensore invia un campionamento su una specifica interfaccia, il processo in ascolto su quest'utlima si fa carico di inoltrare a \emph{listener} i valori ricevuti.\\*
+Ciascun processo di \emph{interface-modules} dispone di una \emph{socket UDP} che abilita la comunicazione con \emph{listener}.
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|c|c|c|}
+		\hline 
+		\textbf{Modulo} & \textbf{Sensore}  & \textbf{Dati Inviati a \emph{listener}} \\ 
+		\hline 
+		\textit{IMU Process} & IMU & Accelerazione, Velocit\`a angolare \\ 
+		\hline 
+		\textit{ODO Process} & Odometro & Velocit\`a lineare  \\ 
+		\hline 
+		\textit{GPS Process} & GPS & Coordinate Geografiche \\ 
+		\hline 
+		\textit{Strobe Process} & N/A & Sincronizzazione \\ 
+		\hline 
+	\end{tabular}
+	\caption{Moduli di \textit{interface-modules}}
+	\label{tab:interfacem}
+\end{table}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/IntModules}
+	\caption{Diagramma a blocchi del sistema software}
+	\label{fig:imod}
+\end{figure}

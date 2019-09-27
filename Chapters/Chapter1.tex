@@ -1,5 +1,4 @@
-\chapter{Stato dell'Arte}
-\section{Introduzione}
+\chapter{Introduzione}
 Negli ultimi anni, i sistemi informatici hanno assunto un ruolo sempre pi\`u centrale nelle attivit\`a umane.\\*
 Inizialmente, il computer era considerato un semplice strumento di supporto alla matematica applicata, capace di svolgere calcoli particolarmente onerosi in un tempo relativamente breve. Con lo sviluppo delle tecnologie, i sistemi informatici sono ad oggi impiegati in un vasto insieme di domini applicativi, dall'elettromedicale al trasporto aereo, fino all'\emph{Internet of Things}.\\*
 Quanto pi\`u si diffonde l'utilizzo dei sistemi informatici, tanto pi\`u peso assume un eventuale fallimento dei medesimi.\\*
@@ -13,7 +12,7 @@ Un \emph{fallimento} \`e una transizione compiuta da un sistema dall'erogazione 
 	\label{fig:fallimentorestauro}
 \end{figure}\newpage
 Effettuare misure sperimentali su un sistema informatico, o su un suo prototipo, \`e una valida opzione per valutarne la \emph{dependability}.\\*
-\subsection{Dependability}
+\section{Dependability}
 La \emph{dependability} di un sistema \`e:
 \begin{itemize}
 	\item Misurata rispetto a un certo insieme di propriet\`a note come \emph{measures};
@@ -66,7 +65,7 @@ La \emph{dependability} di un sistema informatico \`e raggiunta attraverso l'uso
 	\item \emph{Fault Prevention}: Previene l'insorgenza di guasti durante il ciclo di vita del sistema;
 	\item \emph{Fault Tolerance}: Rende il sistema in grado di fornire un servizio corretto anche in presenza di guasti;
 	\item \emph{Fault Removal}: Riduce il numero di guasti nel sistema;
-	\item \emph{Fault Forecasting}: Stima il numero di guasti presenti nel sistema, attualmente o in futuro;
+	\item \emph{Fault Forecasting}: Stima il numero di guasti presenti nel sistema, attualmente o in futuro.
 \end{itemize}
 La \emph{dependability} \`e la propriet\`a che viene misurata durante il processo di \emph{validazione}.\\*
 La validazione \`e un processo atto a determinare se il sistema \`e conforme alle sue specifiche funzionali.\\*
@@ -84,7 +83,7 @@ Il processo di validazione avviene durante tutte le fasi del ciclo di vita del s
 	\item Implementazione: con il procedere della fase di implementazione, il sistema prende forma e pu\`o essere interessante osservarne direttamente il comportamento per effettuare misure sperimentali. L'attivit\`a di osservazione e misurazione prende il nome di \emph{monitoring};
 	\item Fase operativa: il sistema \`e impiegato sul campo e possono essere utilizzate tutte le tecniche disponibili per l'analisi.
 \end{itemize}
-\subsection{Osservazione dei sistemi}
+\section{Osservazione dei sistemi}
 L'osservazione, o \emph{monitoring}, \`e una tecnica per valutare la \emph{dependability} di un sistema o un suo prototipo osservandone l'esecuzione nell'ambiente finale.\\*
 In questa sezione viene esposto il \emph{monitoring} dei sistemi informatici come descritto nei lavori \cite{monitor1}, \cite{monitor2} e \cite{monitor3}.\\*
 L'obiettivo \`e quello di monitorare costantemente l'esecuzione del sistema, verificando che il comportamento osservato sia confrome alle aspettative.\\*
@@ -105,7 +104,7 @@ Esistono due differenti configurazioni di un processo di monitoring: \emph{black
 	\label{fig:blackbox}
 \end{figure}
 \FloatBarrier
-Il monitoring \emph{white-box} prevede l'utilizzo agiuntivo di strumenti necessari a osservare anche gli output intermedi che il sistema produce. Questi strumenti sono chiamati sonde, o \emph{probes}.\\*
+Il monitoring \emph{white-box} prevede l'utilizzo aggiuntivo di strumenti necessari a osservare anche gli output intermedi che il sistema produce. Questi strumenti sono chiamati sonde, o \emph{probes}.\\*
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/whitebox}
@@ -120,13 +119,42 @@ Quando si progetta il \emph{monitoring} di un sistema, si devono rispettare due 
 	\item I \emph{probes} devono essere in grado di raccogliere il giusto numero di informazioni circa il comportamento del sistema;
 	\item Il comportamento del \emph{target system} non deve essere alterato in maniera significativa a causa dell'inserimento dei \emph{probes}. Quando questo avviene, si dice che il sistema di monitoraggio \`e \emph{poco intrusivo}.
 \end{itemize}
-\subsection{Fault Injection}
-La \emph{fault injection} \`e un approccio all'analisi della \emph{dependability} che estende le tecniche di \emph{monitoring} esposte in 1.1.2.\\*
+\section{Fault Injection}
+La \emph{fault injection} \`e un approccio all'analisi della \emph{dependability} che estende le tecniche di \emph{monitoring} esposte in 1.2.\\*
 \`E definita come la volontaria introduzione di guasti all'interno di un sistema, al fine di osservarne il comportamento in presenza di guasti. \cite{faultinj1} \cite{faultinj2} \cite{faultinj3}\\*
-
+Gli strumenti utilizzati per effettuare un'attivit\`a di \emph{fault injection} sono mostrati in figura \ref{fig:faultinj}.\\*
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/faultinj}
+	\caption{Elementi di un processo \emph{fault injection}}
+	\label{fig:faultinj}
+\end{figure}
+\FloatBarrier
+Il \emph{target system} \`e, come nel \emph{monitoring}, il sistema che si vuole osservare.\\*
+Il sistema viene alimentato con un \emph{workload} generato dal \emph{load generator}. L'input fornito al sistema \`e costituito da dati che vengono normalmente processati dal sistema a \emph{runtime}.\\*
+L'\emph{injector} introduce guasti all'interno del sistema durante l'esperimento, i quali alterano la struttura o lo stato del sistema. Il carico di guasti iniettati prende il nome di \emph{faultload}.\\*
+Il \emph{monitor} colleziona i dati prodotti dal sistema per compiere misure di \emph{dependability}, in maniera non diversa da quanto avviene nel classico \emph{monitoring}.\\*
+Il \emph{controller} coordina le operazioni degli altri componenti e itera gli esperimenti.\\*
+Da un punto di \emph{dependability means}, la \emph{fault injection} \`e una tecnica di \emph{fault removal} e di \emph{fault forecasting} in quanto viene testata l'efficacia dei meccanismi di \emph{fault tolerance} del sistema e stimata la \emph{dependability} osservando il comportamento dello stesso in presenza di guasti.\\*
+Le caratteristiche dei guasti iniettati, in termini di \emph{tipo} e \emph{frequenza}, vengono chiamate \emph{fault model}.\\*
+Il \emph{fault model} di un sistema \`e ottenuto considerando:
+\begin{itemize}
+	\item I requisiti di sistema;
+	\item L'ambiente in cui esso opera;
+	\item Le tecnologie con cui il sistema \`e realizzato.
+\end{itemize}
+Per essere affidabile, un'attivit\`a di \emph{fault injection} deve rispettare alcune propriet\`a fondamentali:
+\begin{itemize}
+	\item Rappresentativit\`a: sia il \emph{workload} che il \emph{faultload} devono corrispondere ai profili di utilizzo del sistema e alle modalit\`a di fallimento durante la fase operazionale;
+	\item Non intrusivit\`a: come nel caso del \emph{monitoring}, l'intrusivit\`a data dall'iniezione di guasti e dall'osservazione del sistema deve essere minimizzata;
+	\item Fattibilit\`a: le tecniche di iniezione dei guasti devono richiedere un minimo sforzo implementativo, al fine di limitare i costi;
+	\item Ripetibilit\`a: Una campagna di \emph{fault injection} deve produrre risultati comparabili se l'esperimento \`e ripetuto diverse volte sotto le stesse condizioni, per aumentare l'affidabilit\`a dei risultati ottenuti.
+\end{itemize}
+Le attivit\`a di \emph{monitoring} e \emph{fault injection} fanno spesso affidamento sull'utilizzo di \emph{tool} specifici. \cite{monitoring}\\*
 \section{Scopo della Tesi}
-Questa Tesi descrive l'attivit\`a di \emph{monitoring} del prototipo di un sistema informatico impiegato nell'ambito del posizionamento ferrotramviario. Per quanto esposto in 1.1.1, il dominio ferrotramviario \`e un contesto \emph{safety-critical}, come tale, lo sviluppo di sistemi informatici da impiegare nell'ambito ferrotramviario \`e regolamentato da specifici standard e requisiti di \emph{dependability}.\\*
+Questa Tesi descrive l'attivit\`a di \emph{monitoring} e \emph{fault injection} effettuata sul prototipo di un sistema informatico impiegato nell'ambito del posizionamento ferrotramviario. Per quanto esposto in 1.1, il dominio ferrotramviario \`e un contesto \emph{safety-critical}, come tale, lo sviluppo di sistemi informatici da impiegare nell'ambito ferrotramviario \`e regolamentato da specifici standard e requisiti di \emph{dependability}.\\*
 Si introducono i sistemi ferrotramviari come derivazione dai classici sistemi ferroviari, si descrive il problema del posizionamento e le tecniche attualmente utilizzate per risolverlo, inquadrando il contesto operativo in cui si colloca il sistema analizzato.
+\chapter{Stato dell'arte}
 \section{Sistemi Ferroviari e Ferrotramviari}
 \`E possibile schematizzare un sistema ferroviario, o ferrotramviario, come un insieme di vetture vincolate a muoversi lungo una traccia fissata.\\*
 Questa schematizzazione \`e approssimativamente valida per qualsiasi sistema ferroviario o ferrotramviario, a prescindere dal numero di veicoli transitanti o dall'estensione geografica. Ci\'o che invece differenzia un sistema ferroviario da un sistema ferrotramviario sono:
@@ -145,15 +173,15 @@ Nel trasporto ferrotramviario, di contro, si utilizzano veicoli leggeri per offr
 \end{figure}
 \subsection{La safety nei sistemi ferroviari}
 La gestione della \emph{safety} nei sistemi ferroviari \`e regolamentata dallo standard \texttt{EN 50126}. \cite{50126}\\*
-Questo standard definisce un insieme di documenti che regolamentano la gestione della \emph{safety} nel dominio ferroviario, con particolare enfasi verso le attivit\`a di valutazione RAMS (\emph{Reliability, Availability, Maintainability, Safety}).\\*
+Questo standard regolamenta la gestione della \emph{safety} nel dominio ferroviario, con particolare enfasi verso le attivit\`a di valutazione RAMS (\emph{Reliability, Availability, Maintainability, Safety}).\\*
 Esso prevede che vengano redatti i seguenti documenti.
 \paragraph{Safety Plan}\mbox{}\\*Un insieme documentato di attivit\`a programmate, risorse ed eventi necessari a implementare la struttura organizzativa, le responsabilit\`a, le procedure, le attivit\`a, le funzioni e le risorse che insieme assicurano la \emph{safety} del sistema.\\*
 In sintesi, il \emph{safety plan} individua \emph{chi} fa \emph{cosa}, e \emph{quando}, al fine di realizzare un sistema \emph{safe}.
 \paragraph{Safety Requirements}\mbox{}\\*Definisce i requisiti di \emph{safety} che il sistema deve soddisfare prima di poter essere impiegato sul campo.
 \paragraph{Safety Case}\mbox{}\\*La dimostrazione documentata che un prodotto sia conforme ai suoi requisiti di \emph{safety}.
 Il \emph{Safety Case} deve essere redatto come una dimostrazione logica della \emph{safety} del sistema.\\*\\*Per quanto riguarda le procedure e i requisiti tecnici per lo sviluppo di applicazioni software utilizzate nel controllo ferroviario, lo standard di riferimento \`e \texttt{EN 50128}. \cite{50128}\\*
-Lo standard \texttt{EN 50128} impone che a ciascun software integrato all'interno di un sistema ferroviario debba essere assegnato un livello di \emph{Safety Integrity Level} (SIL). \cite{sil}\\*
-Il livello SIL viene assegnato sulla base del tempo medio al fallimento catastrofico, ossia il MTTF relativo a fallimenti catastrofici.\\*
+Lo standard \texttt{EN 50128} impone che a ciascun software integrato all'interno di un sistema ferroviario debba essere assegnato un \emph{Safety Integrity Level} (SIL). \cite{sil}\\*
+Il SIL viene assegnato sulla base del tempo medio al fallimento catastrofico, ossia il MTTF relativo a fallimenti catastrofici.\\*
 \begin{table}[h]
 	\centering
 	\begin{tabular}{|l|l|}
@@ -172,10 +200,10 @@ Il livello SIL viene assegnato sulla base del tempo medio al fallimento catastro
 \caption{Livelli SIL}
 \end{table}
 \FloatBarrier
-\noindent{}Mentre lo standard \texttt{EN 50126} \`e generico e applicabile a qualunque sistema ferroviario o parti di esso, poich\`e relativo alla \emph{gestione} della \emph{safety} piuttosto che al suo effettivo raggiungimento, lo standard \texttt{EN 50128} \`e inerentemente tecnico e specifico per i software critici.\\*Esso identifica le fasi principali nel ciclo di vita del software e per ciascuna di queste prevede un insieme di tecniche da utilizzare per soddisfare il SIL assegnato al software.
+\noindent{}Mentre lo standard \texttt{EN 50126} \`e generico e applicabile a qualunque sistema ferroviario o parti di esso, poich\`e relativo alla \emph{gestione} della \emph{safety} piuttosto che al suo effettivo raggiungimento, lo standard \texttt{EN 50128} \`e inerentemente tecnico e specifico per i software critici. Esso identifica le fasi principali nel ciclo di vita del software e per ciascuna di queste prevede un insieme di tecniche da utilizzare per soddisfare il SIL assegnato al software.
 \section{Il problema del posizionamento}
-Per posizionamento ferroviario si intende la valutazione della posizione di un treno all'interno di una traccia ferroviaria. Tale posizione viene espressa come progressiva chilometrica rispetto a una posizione nota, come ad esempio l'origine della linea. \cite{trainpositioning}\\*
-\subsubsection{Odierne Tecniche di Posizionamento}
+Per posizionamento ferroviario si intende la valutazione della posizione di un treno all'interno di una traccia ferroviaria. Tale posizione viene espressa come progressiva chilometrica rispetto a una posizione nota, come ad esempio l'origine della linea. \cite{trainpositioning}
+\subsection{Odierne Tecniche di Posizionamento}
 Gli odierni sistemi di posizionamento si basano principalmente sull'utilizzo di strumenti installati a terra, chiamati \emph{beacon}, o \emph{balise} in gergo ferroviario, i quali hanno lo scopo di rilevare il passaggio di un treno.\cite{tecnicheodierne}
 Esiste uno standard a livello europeo al quale gli odierni sistemi di posizionamento si devono uniformare, l' \emph{European Train Control System} (ETCS).\\*
 Nel corso della storia, ogni paese europeo ha sviluppato autonomamente le proprie infrastrutture ferroviarie e relative regole operative. Tuttavia, ad oggi i treni possono attraversare le frontiere, pertanto \`e necessario sviluppare un sistema ferroviario standard che rispetti una comune normativa operazionale europea. Tale sistema prende il nome di \emph{European Rail Traffic Management System} (ERTMS) \cite{ertms}, ed ETCS \`e il sottosistema di ERTMS dedicato al posizionamento delle vetture.\\*
@@ -203,9 +231,71 @@ La funzionalit\`a offerta del sistema di \emph{interlocking} viene pertanto cons
 ETCS adotta un approccio incrementale alla realizzazione di sistemi di posizionamento autonomi. Un sistema di posizionamento \texttt{ETCS-3} deve continuare a interagire con il sistema di \emph{interlocking}, quindi deve essere considerato a sua volta un sistema \emph{safety-critical}.\\*
 ERTMS/ETCS \`e pensato per sistemi ferroviari, mentre nel dominio ferrotramviario vige la regola della \emph{marcia a vista}. Il rispetto di ETCS non \`e obbligatorio in detto contesto, tuttavia le tecniche di posizionamento ivi utilizzate rispettano spesso le linee guida imposte da ETCS. 
 \subsection{Verso ETCS-3}
-Gli attuali sistemi di posizionamento richiedono un minimo intervento di computer installati a bordo e una grande quantit\`a di apparati installati a terra. Gli apparati di terra sono costosi e hanno un impatto ambientale non trascurabile, pertanto \`e necessario iniziare a pianificare una migrazione verso sistemi \texttt{ETCS-3}.\cite{market}\\*
+Gli attuali sistemi di posizionamento richiedono un minimo intervento di computer installati a bordo e una grande quantit\`a di apparati installati a terra. Gli apparati di terra sono costosi e hanno un impatto ambientale non trascurabile, pertanto \`e necessario iniziare a pianificare una migrazione verso sistemi \texttt{ETCS-3}. \cite{market}\\*
 Il sistema analizzato in questa Tesi \`e un sottosistema di posizionamento conforme alla filosofia \texttt{ETCS-3}.
-\section{Definizione del problema affrontato}
-Nell'ottica di migrazione verso sistemi \texttt{ETCS-3}, \`e stato progettato un sistema di posizionamento ferrotramviario autonomo, basato principalmente sull'utilizzo di un \emph{sensore inerziale} installato a bordo treno, le cui misurazioni vengono processate da un sistema software. \cite{svolta}\\*
-Attualmente il sistema ha superato le fasi di analisi e definizione dei requisiti, \emph{system design}, e si trova nella fase di implementazione. Si \`e quindi reso disponibile per l'analisi di \emph{dependability} un prototipo del sistema.\\*
-Per quanto esposto in 1.1.1, questo pu\`o essere osservato durante l'esecuzione nel suo ambiente operativo.
+Nell'ottica di migrazione verso sistemi \texttt{ETCS-3}, \`e stato progettato un sistema di posizionamento ferrotramviario autonomo, basato principalmente sull'utilizzo di un \emph{sensore inerziale}, un odometro e un GPS installati a bordo treno, le cui misurazioni vengono processate da un software al fine di stimare la posizione del treno. \cite{svolta}\\*
+Le misure fornite al software vengono integrate attraverso l'utilizzo di un algoritmo noto come \emph{Sensor Fusion Algorithm} (SFA). \cite{sfarailway}\\*
+Attualmente il software ha superato le fasi di analisi e definizione dei requisiti, \emph{system design}, e si trova nella fase di implementazione. Si \`e quindi reso disponibile per l'analisi di \emph{dependability} un prototipo del software.\\*
+Per quanto esposto in 1.1, questo pu\`o essere osservato durante l'esecuzione nel suo ambiente operativo.\\*
+L'analisi condotta sul sistema \`e del tipo \emph{fault injection}. Poich\`e esso operer\`a in un contesto \emph{safety critical}, il focus \`e quello di valutare l'efficacia dei meccanismi di \emph{fault tolerance} implementati nel sistema.\\*
+Il \emph{target system} \`e l'intero sottosistema di posizionamento installato a bordo, quindi include gli strumenti di misura e l'\emph{On Board Control Unit} (OBCU). OBCU \`e un computer di bordo che dovr\`a elaborare le informazioni sulla posizione del treno al fine di interagire, quando necessario, con il sistema di \emph{interlocking} della traccia.\\*
+Il \emph{target component} in esame \`e il modulo software che processa le misure campionate. Durante il processo di analisi, si far\`a affidamento a un \emph{tool} realizzato appositamente per valutare le performance del software che implementa SFA. Il \emph{tool} utilizzato include:
+\begin{itemize}
+	\item Un \emph{load generator} che alimenta SFA con misure che verosimilmente potrebbero essere campionate dal sistema nel suo ambiente reale;
+	\item Un \emph{injector} in grado di iniettare i guasti che potrebbero verificarsi quando il sistema sar\`a impiegato sul campo;
+	\item Un \emph{monitor} che colleziona le uscite e i risultati intermedi del modulo SFA.
+\end{itemize}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/faultinjrtt}
+	\caption{Schema dell'ambiente di \emph{fault injection}}
+	\label{fig:faultinjrtt}
+\end{figure}
+Il \emph{tool} si comporta come \emph{controller} in quanto \`e in grado di controllare il \emph{load generator}, l'\emph{injector} e il \emph{monitor}. Esso itera gli esperimenti un numero arbitrario di volte, stablito dall'osservatore, e fornisce un report riassuntivo della campagna sperimentale. Il modulo SFA \`e incluso nel \emph{tool} come libreria.
+\section{Cyber Physical Systems of Systems}
+Il sottosistema di posizionamento studiato rientra nella categoria dei \emph{Cyber Physical Systems of Systems} (CPSoS). \cite{cecca}\\*
+Un \emph{Cyber Physical System} (CPS) \`e un sistema composto da due parti:
+\begin{itemize}
+	\item \emph{Cyber}: Elementi di computazione, comunicazione e controllo che operano in un tempo discreto;
+	\item \emph{Physical}: Sottosistema naturale o costruito dall'uomo che \`e governato dalle leggi della fisica e opera in un tempo continuo.
+\end{itemize}
+Un CPS \`e un sistema che consiste in un computer (il sistema \emph{cyber}) e un oggetto controllato (il sistema \emph{physical}), che include la possiblit\`a di interazione con gli esseri umani.\\*
+In talune applicazioni i sistemi sono integrati in un pi\`u ampio contesto al fine di fornire un \emph{servizio} che un sistema \emph{standalone} non sarebbe in grado di fornire. Si parla in questo caso di \emph{Systems of Systems} (SoS).\\*
+I SoS sono caratterizzati da una gerarchia multi-livello: una struttura ricorsiva in cui un sistema viene considerato \emph{il tutto} al pi\`u alto livello di interesse (\emph{macro-level}), e composto da un insieme di sottosistemi al livello sottostante (\emph{micro-level}). Ciascun sottosistema pu\`o essere considerato a sua volta come un sistema, e la ricorsione termina quando l'ulteriore suddivisione di un sottosistema perde di interesse.\\*
+Si definisce \emph{componente} un sottosistema al pi\`u basso livello di interesse.\\*
+Un SoS composto da CPS prende il nome di CPSoS.\\*
+Gli elementi architetturali che compongono un CPSoS sono:
+\begin{itemize}
+	\item \emph{Itom}: costituiscono l'unit\`a minima di interazione. Sono elementi informativi composti da dati e metadati;
+	\item \emph{Constituent Systems} (CS): Entit\`a di tpo CPS che processano e scambiano gli \emph{itom};
+	\item Ambiente: tutte le entit\`a con cui pu\`o interagire un CS.
+\end{itemize}
+I CS interagiscono fra di loro, o con l'ambiente, scambiandosi \emph{itom} attraverso le loro \emph{interfacce}.\\*Si distinguono le seguenti interfacce:
+\begin{itemize}
+	\item \emph{Local I/O} (L-interface): interfacce che abilitano l'interazione tra un CS e il suo ambiente. Non sono rilevanti ai fini del servizio che si intende fornire;
+	\item \emph{Configuration} (C-interface): interfacce utilizzate per scopi di configurazione o \emph{update} hardware e software;
+	\item \emph{Diagnostic} (D-Interface): Interfacce di diagnostica utili per il \emph{monitoring} di un CS;
+	\item \emph{Time-Sync} (TSI): interfacce di sincronizzazione esterna che vengono utilizzate per rendere un CS \emph{time-aware} e stabilire una \emph{global timebase};
+	\item \emph{Relied Upon Interfaces} (RUI): Un CPSoS fa affidamento alle RUI per fornire il servizio atteso.
+\end{itemize}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/csifaces}
+	\caption{Interfacce di un CPS}
+	\label{fig:csifaces}
+\end{figure}
+La specifica delle RUI \`e di particolare importanza poich\'e qualunque struttura del sistema, responsabile del comportamento osservato, pu\'o essere ridotta alla specifica delle interfacce del sistema. \cite{interfacespec}\\*
+In base al canale di comunicazione e agli \emph{itom} scambiati attraverso le RUI, si distinguono:
+\begin{itemize}
+	\item \emph{Relied Upon Message Interfaces} (RUMI): L'interazione consiste di uno scambio di messaggi a livello \emph{cyber}, come ad esempio un pacchetto TCP;
+	\item \emph{Relied Upon Physical Interfaces} (RUPI): Le componenti \emph{physical} di un CS interagiscono attraverso un canale \emph{stigmergico}.\\*
+	Un CS altera una grandezza fisica nell'ambiente, in maniera tale per cui un altro CS possa trarre contenuto informativo attraverso il rilevamento della modifica.
+\end{itemize}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/rupmi}
+	\caption{RUMI e RUPI}
+	\label{fig:rupmi}
+\end{figure}
+\FloatBarrier
+Un CPS crea canali stigmergici attraverso l'uso di \emph{sensori} e \emph{attuatori}. I sensori sono in grado di rilevare parte delle grandezze fisiche che caratterizzano l'ambiente operativo di un CS, mentre gli attuatori sono in grado di alterare tali grandezze.
