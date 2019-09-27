@@ -16,7 +16,7 @@ La \emph{fault tolerance} del sistema verr\`a valutata in termini degli errori c
 	\item Velocit\`a del treno, proiettata sui tre assi cartesiani.
 \end{itemize}
 ECEF \`e l'acronimo di \emph{Earth Centered Earth Fixed}. Una coordinata ECEF esprime la posizione di un oggetto immerso in un sistema di riferimento cartesiano a 3 dimensioni, con origine nel centro della Terra.
-\section{Guasti Iniettati}
+\section{Guasti iniettati}
 In relazione al \emph{fault model} individuato al capitolo 4, sono stati iniettati i seguenti guasti:
 \begin{enumerate}
 	\item[(1)] Soppressione del canale di comunicazione tra IMU e SFA;
@@ -76,7 +76,7 @@ I risultati ottenuti durante la campagna di \emph{fault injection} verranno quin
 	\label{tab:exp12res}
 \end{table}
 \FloatBarrier
-\subsection{Scenario 3: Soppressione della comunicazione Odometro-SFA}
+\subsection{Soppressione della comunicazione odometro - SFA}
 In questo scenario il \emph{faultload} consiste nella soppressione del canale di comunicazione tra Odometro e modulo SFA.
 \subsubsection{Esperimento 3.1}
 Si sopprime il canale di comunicazione \textbf{per tutta la durata dell'esperimento}.\\*
@@ -315,7 +315,7 @@ Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la sec
 \FloatBarrier
 Non si osservano particolari variazioni rispetto ai risultati ottenuti nella \emph{golden run}. \`E ragionevole ipotizzare che la causa di questo comportamento sia da ricercare nella sezione di traccia in cui si \`e soppresso il canale di comunicazione tra Odometro e SFA. Nella prima met\`a la traccia compie una curva netta, mentre nella seconda essa si sviluppa in modo approssimativamente lineare.
 \FloatBarrier
-\section{Considerazioni Finali}
+\section{Considerazioni finali}
 La campagna di \emph{fault injection} effettuata sul modulo SFA ha condotto alle conclusioni che seguono:
 \begin{itemize}
 	\item Il sistema \`e in grado di tollerare la perdita di misure IMU fino a un massimo di 2 secondi. Superata questa soglia, il sistema si blocca e smette di erogare il proprio servizio. Questa modalit\`a di fallimento \`e comunque facilmente rilevabile da OBCU. Quest'ultima potrebbe agire sul treno, ad esempio fermandolo. Si osserverebbe un degrado delle performance, ma si avrebbe comunque un fallimento \emph{safe}.
