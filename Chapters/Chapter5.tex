@@ -1,8 +1,7 @@
-\chapter{Parte Sperimentale}
+\chapter{Attivit\`a Sperimentale}
 \definecolor{mygreen}{rgb}{0.0.33, 0.42, 0.18}
 Questo capitolo rappresenta la parte sperimentale del lavoro di Tesi.\\*
-L'attivit\`a di analisi effettuata rientra nella categoria del \emph{monitoring} dei sistemi software.\\*
-Nel seguito si illustrano gli esperimenti condotti sul sistema nell'ambiente descritto nel capitolo 4, e si discutono i risultati ottenuti.\\*
+Nel seguito si illustrano gli esperimenti di \emph{fault injection} condotti sul sistema nell'ambiente descritto nel capitolo 4, e si discutono i risultati ottenuti.\\*
 La traccia ferrotramviaria scelta per l'analisi \`e un sottoinsieme della linea \texttt{T1} della Tramvia di Firenze, che si estende per $4.25044$ chilometri dal terminal di \emph{Villa Costanza}, nel comune di Scandicci. 
 \begin{figure}[h]
 	\centering
@@ -16,15 +15,29 @@ La \emph{fault tolerance} del sistema verr\`a valutata in termini degli errori c
 	\item Posizione del treno, espressa in coordinate ECEF;
 	\item Velocit\`a del treno, proiettata sui tre assi cartesiani.
 \end{itemize}
-ECEF \`e l'acronimo di \emph{Earth Centered Earth Fixed}. Una coordinata ECEF esprime la posizione di un oggetto immerso in un sistema di riferimento cartesiano a 3 dimensioni, con origine nel centro della Terra.\\*
-Si iniettano i seguenti guasti:
-\begin{itemize}
-	\item Sopressione del canale di comunicazione tra odometro e SFA (Scenario 1);
-	\item Soppressione del canale di comunicazione tra IMU e SFA (Scenario 2);
-\end{itemize}
+ECEF \`e l'acronimo di \emph{Earth Centered Earth Fixed}. Una coordinata ECEF esprime la posizione di un oggetto immerso in un sistema di riferimento cartesiano a 3 dimensioni, con origine nel centro della Terra.
+\section{Guasti Iniettati}
+In relazione al \emph{fault model} individuato al capitolo 4, sono stati iniettati i seguenti guasti:
+\begin{enumerate}
+	\item[(1)] Soppressione del canale di comunicazione tra IMU e SFA;
+	\item[(2)] Alterazione del contenuto dei messaggi trasmessi dai sensori al modulo SFA;
+	\item[(3)] Sopressione del canale di comunicazione tra Odometro e SFA.
+\end{enumerate}
+Rispetto al sistema reale descritto nel capitolo 3, i guasti (1) e (3) simulano un guasto hardware nei bus dati che collegano i sensori alla scheda \emph{NVidia TX-Jetson} o comunque l'interruzione del funzionamento dei sensori, sia essa permanente o temporanea.\\*
+Il guasto (2) simula un comportamento di \texttt{UDP} comunque preventivabile, data la natura \emph{best effort} del protocollo.\\*Quando si utilizza \texttt{UDP} \`e opportuno non fare mai assunzioni riguardo il corretto ordinamento e l'integrit\`a dei messaggi trasmessi.\\*
+\section{Esperimenti}
+Durante l'attivit\`a di analisi sono stati effettuati numerosi esperimenti. In questa sezione, si riportano in dettaglio solo i risultati ritenuti pi\`u interessanti, mentre i rimanenti vengono descritti a un livello pi\`u generico.\\*
+La soppressione del canale di comunicazione tra IMU e modulo SFA, quando protratta per un periodo superiore a $5$ secondi, ha prodotto un'interruzione del servizio. Questo fatto \`e in linea con le aspettative in quanto IMU \`e il sensore principale su cui si basa l'esecuzione di SFA, e senza di esso l'algoritmo non pu\`o funzionare.\\*
+Il valore limite di $5$ secondi trova giustificazione andando a osservare l'implementazione del modulo SFA. Quest'ultimo infatti \`e programmato in maniera tale che il massimo numero di campionamenti IMU che pu\`o predire attraverso regressione lineare \`e $500$.\\*
+La frequenza di campionamento di IMU \`e pari a:
+$$100\;Hz\;=\;100\; \frac{\mbox{campionamenti}}{\mbox{s}}$$ Pertanto:
+$$
+\frac{500 \mbox{ campionamenti}}{100\frac{ \mbox{  campionamenti}}{\mbox{s}}} = \frac{500}{100}\mbox{ s} = 5\mbox{ s}
+$$
+L'alterazione del contenuto dei messaggi non ha portato a effetti rilevabili, a condizione che il software abbia maturato una adeguata esperienza circa il comportamento corretto dei sensori, ovvero, abbia stimato correttamente i parametri del modello di regressione attraverso il quale vengono predette le misure mancanti.\\*
+Nel seguito di questa sezione, si discutono gli esperimenti (3).\\*
 Per ciascuna grandezza osservata viene riportato il valore medio, il valore
 massimo e la deviazione standard (dev. std.) dell'errore commesso da SFA nel relativo processo di stima.
-\section{Esperimenti}
 \subsection{Golden Run}
 Per ottenere un termine di paragone consistente, il sistema viene eseguito prima senza l'iniezione di guasti.\\*
 I risultati ottenuti durante la campagna di \emph{fault injection} verranno quindi valutati in relazione ai risultati ottenuti dal software senza introduzione di guasti. Questa prima esecuzione del software prende il nome di \emph{golden run}.
@@ -50,7 +63,7 @@ I risultati ottenuti durante la campagna di \emph{fault injection} verranno quin
 		\hline 
 		ECEF Y & 0.0243133 m & 0.362813 m & 0.0452763 m \\ 
 		\hline 
-		ECEF Z & 3.56432$\cdot10^{-6}$ m & 3.19201$\cdot10^{-5}$ m & 8.81543$\cdot10^{-6}$ m \\ 
+		ECEF Z & 3.56432e-06 m & 3.19201e-06 m & 8.81543e-06 m \\ 
 		\hline 
 		Velocit\`a X & 0.0169528 m/s & 0.124472 m/s & 0.0199173 m/s \\ 
 		\hline 
@@ -62,10 +75,10 @@ I risultati ottenuti durante la campagna di \emph{fault injection} verranno quin
 	\caption{Golden Run: Risultati}
 	\label{tab:exp12res}
 \end{table}
-\newpage
-\subsection{Scenario 1}
+\FloatBarrier
+\subsection{Scenario 3}
 In questo scenario il \emph{faultload} consiste nella soppressione del canale di comunicazione tra Odometro e modulo SFA.
-\subsubsection{Esperimento 1.1}
+\subsubsection{Esperimento 3.1}
 Si sopprime il canale di comunicazione \textbf{per tutta la durata dell'esperimento}.\\*
 \begin{table}[h]
 	\centering
@@ -76,7 +89,7 @@ Si sopprime il canale di comunicazione \textbf{per tutta la durata dell'esperime
 		IMU, Odometro & 100 Hz & 10 Hz & 0.0004 & 10 \\
 		\hline 
 	\end{tabular}
-	\caption{Esperimento 1.1: workload}
+	\caption{Esperimento 3.1: workload}
 \end{table}
 	\begin{table}[h]
 	\centering
@@ -97,7 +110,7 @@ Si sopprime il canale di comunicazione \textbf{per tutta la durata dell'esperime
 		Velocit\`a Z & 87.7399 m/s & 87.1907 m/s & 245.723 m/s \\ 
 		\hline 
 	\end{tabular}
-	\caption{Esperimento 1.1: Risultati}
+	\caption{Esperimento 3.1: Risultati}
 	\label{tab:exp11res}
 \end{table}
 \begin{table}[h]
@@ -122,13 +135,29 @@ Si sopprime il canale di comunicazione \textbf{per tutta la durata dell'esperime
 		Velocit\`a Z & \textcolor{red}{\textbf{+2.29531e+06 \%}}& \textcolor{red}{\textbf{+1.27743e+06 \%}}& \textcolor{red}{\textbf{+2.77046e+06 \%}} \\ 
 		\hline 
 	\end{tabular} 
-	\caption{Esperimento 1.1: Golden Run} 
+	\caption{Esperimento 3.1: Confronto con Golden Run} 
 \end{table}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/exp11plot}
+	\caption{Esperimento 3.1: Grafico di confronto ECEF X con Golden Run}
+	\label{fig:exp11plot}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/exp11ecefY}
+	\caption{Esperimento 3.1: Grafico di confronto ECEF Y con Golden Run}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/exp11ecefZ}
+	\caption{Esperimento 3.1: Grafico di confronto ECEF Z con Golden Run}
+\end{figure}
 \FloatBarrier
-Alimentare SFA utilizzando esclusivamente le misurazioni di IMU conducono a una netta divergenza dell'errore, sia in termini di posizione che in termini di velocit\`a.\\*
-Questi risultati non sono accettabili.
-\subsubsection{Esperimento 1.2}
-Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la prima met\`a della simulazione}.\\*  
+Alimentare SFA utilizzando esclusivamente le misurazioni di IMU conduce a una netta divergenza dell'errore, sia in termini di posizione che in termini di velocit\`a.\\*
+Questi risultati non sono accettabili. In questa fattispecie, tuttavia, \`e stato iniettato un importante \emph{faultload} altamente improbabile da osservare sul campo.\\*
+\subsubsection{Esperimento 3.2}
+Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la prima met\`a della simulazione}.\\*
 \begin{table}[h]
 	\centering
 \begin{tabular}{|p{3.25cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
@@ -138,9 +167,8 @@ Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la pri
 	IMU, Odometro & 100 Hz & 10 Hz & 0.0004 & 10 \\
 	\hline 
 \end{tabular}
-	\caption{Esperimento 1.2: workload}
+	\caption{Esperimento 3.2: workload}
 \end{table}
-\FloatBarrier
 \begin{table}[h]
 	\centering
 	\begin{tabular}{|p{2cm}|p{3.2cm}|p{3cm}|p{3cm}|}
@@ -163,7 +191,7 @@ Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la pri
 		Velocit\`a Z & 0.00406042 m/s & 0.0228906 m/s & 0.00340827 m/s \\ 
 		\hline 
 	\end{tabular} 
-	\caption{Esperimento 1.2: Risultati}
+	\caption{Esperimento 3.2: Risultati}
 \end{table}
 \begin{table}[h]
 	\centering
@@ -187,10 +215,27 @@ Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la pri
 		Velocit\`a Z & \textcolor{red}{\textbf{+6.2267 \%}}& \textcolor{red}{\textbf{+19.0093 \%}}& \textcolor{red}{\textbf{+8.30082 \%}} \\ 
 		\hline 
 	\end{tabular} 
-	\caption{Esperimento 1.2: Confronto con golden run} 
+	\caption{Esperimento 3.2: Confronto con golden run} 
 \end{table}
-Si osserva un lieve degrado delle performance che influisce in maniera non particolarmente significativa ai fini del posizionamento.
-\subsubsection{Esperimento 1.3}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/exp12plot}
+	\caption{Esperimento 3.2: Grafico di confronto ECEF X con Golden Run}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/exp12ecefY}
+	\caption{Esperimento 3.2: Grafico di confronto ECEF Y con Golden Run}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/exp12ecefZ}
+	\caption{Esperimento 3.2: Grafico di confronto ECEF Z con Golden Run}
+\end{figure}
+\FloatBarrier
+Si osserva un lieve degrado delle performance che influisce in maniera non particolarmente significativa ai fini del posizionamento.\\*
+La grandezza che appare pi\`u degradata \`e la velocit\`a, e questo fatto permane in linea con le aspettative, poich\`e l'odometro \`e il sensore preposto a fornire le misure di velocit\`a al sistema.
+\subsubsection{Esperimento 3.3}
 Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la seconda met\`a della simulazione}.\\* 
 \begin{table}[h]
 	\centering
@@ -201,7 +246,7 @@ Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la sec
 	IMU, Odometro & 100 Hz & 10 Hz & 0.0004 & 10 \\
 	\hline 
 \end{tabular}
-	\caption{Esperimento 1.3: workload}
+	\caption{Esperimento 3.3: workload}
 \end{table}
 \begin{table}[h]
 	\centering
@@ -225,7 +270,7 @@ Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la sec
 	Velocit\`a Z & 0.00355928 m/s & 0.0189619 m/s & 0.00306268 m/s \\ 
 	\hline 
 \end{tabular} 
-	\caption{Esperimento 1.3: Risultati}
+	\caption{Esperimento 3.3: Risultati}
 \end{table}
 \begin{table}[h]
 	\centering
@@ -249,12 +294,34 @@ Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la sec
 	Velocit\`a Z & \textcolor{mygreen}{\textbf{-6.88388 \%}}& \textcolor{mygreen}{\textbf{-1.41622 \%}}& \textcolor{mygreen}{\textbf{-2.68061 \%}} \\ 
 	\hline 
 \end{tabular} 
-	\caption{Esperimento 1.3: Confronto con golden run} 
+	\caption{Esperimento 3.3: Confronto con golden run} 
 \end{table}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/exp13plot}
+	\caption{Esperimento 3.3: Grafico di confronto ECEF X con Golden Run}
+	\label{fig:exp13plot}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/exp13ecefY}
+	\caption{Esperimento 3.3: Grafico di confronto ECEF Y con Golden Run}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/exp13ecefZ}
+	\caption{Esperimento 3.3: Grafico di confronto ECEF Z con Golden Run}
+\end{figure}
 \FloatBarrier
 Non si osservano particolari variazioni rispetto ai risultati ottenuti nella \emph{golden run}. \`E ragionevole ipotizzare che la causa di questo comportamento sia da ricercare nella sezione di traccia in cui si \`e soppresso il canale di comunicazione tra Odometro e SFA. Nella prima met\`a la traccia compie una curva netta, mentre nella seconda essa si sviluppa in modo approssimativamente lineare.
-\subsection{Scenario 2}
-In questo scenario si sopprime il canale di comunicazione tra IMU e il modulo SFA.\\*
-\subsubsection{Esperimento 2.1}
-\subsubsection{Esperimento 2.2}
-\subsubsection{Esperimento 2.3}
+\FloatBarrier
+\section{Considerazioni Finali}
+La campagna di \emph{fault injection} effettuata sul modulo SFA ha condotto alle conclusioni che seguono:
+\begin{itemize}
+	\item Il sistema \`e in grado di tollerare la perdita di misure IMU fino a un massimo di 2 secondi. Superata questa soglia, il sistema si blocca e smette di erogare il proprio servizio. Questa modalit\`a di fallimento \`e comunque facilmente rilevabile da OBCU. Quest'ultima potrebbe agire sul treno, ad esempio fermandolo. Si osserverebbe un degrado delle performance, ma si avrebbe comunque un fallimento \emph{safe}.
+	\item Entro certi limiti di approssimazione, il sistema sembra tollerare bene la ricezione di messaggi fuori ordine o alterati. Infatti, attraverso un meccanismo di \emph{regressione lineare}, il sistema \`e in grado di riconoscere e scartare messaggi che hanno un'elevata probabilit\`a di contenere valori non affidabili. Un messaggio ricevuto fuori ordine \`e semplicemente un messaggio che ha probabilit\`a $1$ di non essere affidabile.\\*
+	Quando un messaggio viene scartato, l'informazione mancante viene stimata e fornita al sistema come se fosse stata campionata dai sensori.
+	\item L'odometro sembra particolarmente utile quando il movimento del treno \`e caratterizzato da repentini cambi di direzione, come nel caso di curve molto strette. Su tratti sufficientemente lineari, il sistema sembra comportarsi correttamente anche se viene alimentato esclusivamente dal sensore inerziale.
+	\item Non \`e stato possibile osservare il sistema quando sottoposto a misure di tipo GPS, e le \emph{software probe} che sono state inserite all'interno del codice potrebbero aver degradato le performance, seppur trascurabilmente. Si ipotizza che l'aggiunta di un nuovo strumento di misura, come il GPS, possa migliorare le performance osservate.
+	\item Quando la stima della posizione non diverge, \`e stato osservato che l'errore massimo sulla stima della posizione permane, in modulo, pari a circa 20 metri.
+\end{itemize}

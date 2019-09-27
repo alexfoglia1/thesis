@@ -41,9 +41,9 @@ Quando viene generato un possibile campionamento, il valore prodotto viene pertu
 Il \emph{faultload} \`e generato da uno specifico modulo (classe) di RTT.\\*
 L'utente, attraverso l'interfaccia del software, \`e in grado di:
 \begin{itemize}
-	\item Sopprimere, per un arbitrario periodo di tempo, il canale di comunicazione tra IMU e modulo SFA;
-	\item Sopprimere, per un arbitrario periodo di tempo, il canale di comunicazione tra Odometro e modulo SFA;
-	\item Sopprimere, per un arbitrario periodo di tempo, il canale di comunicazione tra i sensori e SFA;
+	\item Sopprimere, per un arbitrario periodo di tempo, il canale di comunicazione tra i sensori e il modulo SFA;
+	\item Alterare in modo casuale il contenuto dei messaggi trasmessi dai sensori al modulo SFA;
+	\item Modificare i riferimenti geografici della traccia forniti in ingresso al modulo SFA.
 \end{itemize}
 \`E stato individuato questo \emph{fault model} considerando in primo luogo i requisiti del software. In particolare:
 \begin{itemize}
@@ -76,7 +76,7 @@ Per aumentare la \emph{reliability} dei risultati prodotti, RTT permette all'ute
 	\caption{Controller RTT}
 	\label{fig:montecarloconfig}
 \end{figure}
-Al termine di ciascun esperimento, RTT processa il file di \emph{log} prodotto dal modulo SFA e costruisce un report HTML contenente una sintesi dei risultati ottenuti.
+Al termine di ciascun esperimento, RTT processa il file di \emph{log} prodotto dal modulo SFA e costruisce un report HTML contenente una sintesi dei risultati ottenuti (figura \ref{fig:rttreport}).
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{img/fusionlog}
@@ -87,7 +87,7 @@ Al termine di ciascun esperimento, RTT processa il file di \emph{log} prodotto d
 \`E noto dalla letteratura che un sistema di \emph{monitoring}, cos\`i come di \emph{fault injection}, deve essere il meno intrusivo possibile nei confronti del sistema monitorato.\\*
 Il codice di \emph{SensorFusionLib} \`e stato instrumentato con delle \emph{software probe} che includono:
 \begin{enumerate}
-	\item La scrittura di un file di log che riporta l'evoluzione dello stato interno del software;
+	\item La scrittura di un file di log che riporta l'evoluzione dello stato interno del software (figura \ref{fig:fusionlog});
 	\item L'invio verso RTT dei calcoli intermedi compiuti dal software per stimare la posizione del treno. Questi sono:
 	\begin{itemize}
 		\item La stima dell'errore commesso sulla predizione delle coordinate geografiche del treno;
