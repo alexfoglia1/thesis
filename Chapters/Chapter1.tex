@@ -11,14 +11,14 @@ Un \emph{fallimento} \`e una transizione compiuta da un sistema dall'erogazione 
 	\caption{Fallimento e restauro}
 	\label{fig:fallimentorestauro}
 \end{figure}\newpage
-Effettuare misure sperimentali su un sistema informatico, o su un suo prototipo, \`e una valida opzione per valutarne la \emph{dependability}.\\*
+Effettuare misure sperimentali su un sistema informatico, o su un suo prototipo, \`e una valida opzione per valutarne la \emph{dependability}.
 \section{Dependability}
 La \emph{dependability} di un sistema \`e:
 \begin{itemize}
 	\item Misurata rispetto a un certo insieme di propriet\`a note come \emph{measures};
 	\item Raggiunta attraverso l'utilizzo di specifiche tecniche, i \emph{means};
 	\item Minacciata dai \emph{threats}, ossia da tutto ci\`o che porta il sistema ad erogare un servizio improprio.\\*
-	Un sistema pu\`o fallire nel caso in cui questo non sia conforme alle specifiche, oppure perch\`e le specifiche non descrivono adeguatamente le sue funzioni.\\*
+	Un sistema pu\`o fallire nel caso in cui questo non sia conforme alle specifiche, oppure perch\`e le specifiche non descrivono adeguatamente le sue funzioni.
 \end{itemize}
 La \emph{dependability} di un sistema viene misurata rispetto alle seguenti propriet\`a:
 \begin{itemize}
@@ -34,17 +34,17 @@ La \emph{dependability} di un sistema viene misurata rispetto alle seguenti prop
 	\item \emph{Safety}: Il tempo medio a un fallimento catastrofico.\\*\\*
 	$S(t):$ probabilit\`a che non si verifichi alcun fallimento catastrofico nell'intervallo $[0,t]$\\*\\*
 	\item \emph{Time to Failure}: Il tempo che intercorre fra l'ultimo restauro e il successivo fallimento.\\*
-	Spesso \`e opportuno considerare il valore atteso di questa grandezza, il \emph{Mean Time to Failure} (MTTF)
-	\item \emph{Maintainability}: Il tempo necessario a restaurare il sistema, dopo l'ultimo fallimento. Il valore atteso di questa misura prende il nome di \emph{Mean Time to Repair} (MTTR)
+	Spesso \`e opportuno considerare il valore atteso di questa grandezza, il \emph{Mean Time to Failure} (MTTF).
+	\item \emph{Maintainability}: Il tempo necessario a restaurare il sistema, dopo l'ultimo fallimento. Il valore atteso di questa misura prende il nome di \emph{Mean Time to Repair} (MTTR).
 	\item \emph{Coverage}: Probabilit\`a che il sistema sia in grado di tollerare un guasto.
 \end{itemize}
 La \emph{safety} \`e un' estensione del concetto di \emph{reliability}.\\*
 Si definisce uno stato sicuro in cui il sistema:
 \begin{itemize}
 	\item Fornisce il servizio corretto, oppure
-	\item Non fornisce il servizio corretto, ma il fallimento non ha conseguenze catastrofiche sull'ambiente o sulle persone
+	\item Non fornisce il servizio corretto, ma il fallimento non ha conseguenze catastrofiche sull'ambiente o sulle persone.
 \end{itemize}
-Qualunque fallimento che induca il sistema a fornire un servizio scorretto con conseguenze catastrofiche, viene modellato come una transizione verso uno stato non sicuro. Quando esiste questa possibilit\`a, il sistema viene definito \emph{safety-critical}.\cite{safetycritical}\\*
+Qualunque fallimento che induca il sistema a fornire un servizio scorretto con conseguenze catastrofiche, viene modellato come una transizione verso uno stato non sicuro. Quando esiste questa possibilit\`a, il sistema viene definito \emph{safety-critical}. \cite{safetycritical}\\*
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/safety}
@@ -53,7 +53,7 @@ Qualunque fallimento che induca il sistema a fornire un servizio scorretto con c
 \end{figure}\\*
 Esistono numerosi contesti in cui i sistemi impiegati vengono definiti \emph{safety-critical}, uno di questi \`e il trasporto ferroviario.\\*
 I \emph{threats} che minano la \emph{dependability} di un sistema sono i guasti, gli errori e i fallimenti.\\*
-Un guasto \`e un qualunque evento interno al sistema in grado di causare un errore. Quando l'errore raggiunge l'interfaccia di servizio, ovvero altera il servizio fornito dal sistema, si parla di fallimento. In letteratura, si fa riferimento a questo rapporto di causalit\`a come \emph{fault error failure chain}, catena guasto errore fallimento.\\*
+Un guasto \`e un qualunque evento interno al sistema in grado di causare un errore. Quando l'errore raggiunge l'interfaccia di servizio, ovvero altera il servizio fornito dal sistema, si parla di fallimento. In letteratura, si fa riferimento a questo rapporto di causalit\`a come \emph{fault error failure chain}, catena guasto errore fallimento.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/gefpng}
@@ -62,10 +62,10 @@ Un guasto \`e un qualunque evento interno al sistema in grado di causare un erro
 \end{figure}\newpage
 La \emph{dependability} di un sistema informatico \`e raggiunta attraverso l'uso di quattro tecniche:
 \begin{itemize}
-	\item \emph{Fault Prevention}: Previene l'insorgenza di guasti durante il ciclo di vita del sistema;
-	\item \emph{Fault Tolerance}: Rende il sistema in grado di fornire un servizio corretto anche in presenza di guasti;
-	\item \emph{Fault Removal}: Riduce il numero di guasti nel sistema;
-	\item \emph{Fault Forecasting}: Stima il numero di guasti presenti nel sistema, attualmente o in futuro.
+	\item \emph{Fault Prevention}: previene l'insorgenza di guasti durante il ciclo di vita del sistema;
+	\item \emph{Fault Tolerance}: rende il sistema in grado di fornire un servizio corretto anche in presenza di guasti;
+	\item \emph{Fault Removal}: riduce il numero di guasti nel sistema;
+	\item \emph{Fault Forecasting}: stima il numero di guasti presenti nel sistema, attualmente o in futuro.
 \end{itemize}
 La \emph{dependability} \`e la propriet\`a che viene misurata durante il processo di \emph{validazione}.\\*
 La validazione \`e un processo atto a determinare se il sistema \`e conforme alle sue specifiche funzionali.\\*
@@ -204,8 +204,8 @@ Il SIL viene assegnato sulla base del tempo medio al fallimento catastrofico, os
 \section{Il problema del posizionamento}
 Per posizionamento ferroviario si intende la valutazione della posizione di un treno all'interno di una traccia ferroviaria. Tale posizione viene espressa come progressiva chilometrica rispetto a una posizione nota, come ad esempio l'origine della linea. \cite{trainpositioning}
 \subsection{Tradizionali tecniche di posizionamento}
-Gli odierni sistemi di posizionamento si basano principalmente sull'utilizzo di strumenti installati a terra, chiamati \emph{beacon}, o \emph{balise} in gergo ferroviario, i quali hanno lo scopo di rilevare il passaggio di un treno.\cite{tecnicheodierne}
-Esiste uno standard a livello europeo al quale gli odierni sistemi di posizionamento si devono uniformare, l' \emph{European Train Control System} (ETCS).\\*
+I tradizionali sistemi di posizionamento si basano principalmente sull'utilizzo di strumenti installati a terra, chiamati \emph{beacon}, o \emph{balise} in gergo ferroviario, i quali hanno lo scopo di rilevare il passaggio di un treno. \cite{tecnicheodierne}\\*
+Esiste uno standard a livello europeo al quale i tradizionali sistemi di posizionamento si devono uniformare, l' \emph{European Train Control System} (ETCS).\\*
 Nel corso della storia, ogni paese europeo ha sviluppato autonomamente le proprie infrastrutture ferroviarie e relative regole operative. Tuttavia, ad oggi i treni possono attraversare le frontiere, pertanto \`e necessario sviluppare un sistema ferroviario standard che rispetti una comune normativa operazionale europea. Tale sistema prende il nome di \emph{European Rail Traffic Management System} (ERTMS) \cite{ertms}, ed ETCS \`e il sottosistema di ERTMS dedicato al posizionamento delle vetture.\\*
 Come standard, ETCS definisce specifici livelli di \emph{compliance} che possiede un sistema di posizionamento rispetto ad ETCS, ed essi vanno dal livello \texttt{ETCS-0} al livello \texttt{ETCS-3}.\\*
 L'obiettivo \`e quello di sviluppare progressivamente un sistema di posizionamento completamente autonomo (\texttt{ETCS-3}), partendo da un sistema interamente \emph{non-compliant} con ETCS (\texttt{ETCS-0}).
@@ -217,7 +217,7 @@ In sintesi, i livelli ETCS possono essere descritti come segue:
 \begin{itemize}
 	\item \texttt{ETCS-0}: Sistema non conforme a ETCS;
 	\item \texttt{ETCS-1}: Utilizzo di apparati di posizionamento installati a terra, autorizzazione a procedere segnalata al macchinista attraverso indicazioni semaforiche;
-	\item \texttt{ETCS-2}: Come \texttt{ETCS-1}, ma l'autorizzazione a procedere \`e gestita da un sistema automatico di scambio, denominato sistema di \emph{interlocking};\cite{interlocking}
+	\item \texttt{ETCS-2}: Come \texttt{ETCS-1}, ma l'autorizzazione a procedere \`e gestita da un sistema automatico di scambio, denominato sistema di \emph{interlocking}; \cite{interlocking}
 	\item \texttt{ETCS-3}: Posizionamento autonomo, nessun utilizzo di apparati a terra.
 \end{itemize}
 \begin{figure}[h]
@@ -227,7 +227,7 @@ In sintesi, i livelli ETCS possono essere descritti come segue:
 	\label{fig:etcs123}
 \end{figure}
 Il livello \texttt{ETCS-2} prevede che l'autorizzazione a procedere venga gestita dal sistema di \emph{interlocking} e non dal solo operatore umano notificato mediante indicazioni semaforiche.\\*
-La funzionalit\`a offerta del sistema di \emph{interlocking} viene pertanto considerata \emph{safety-critical}, in quanto un suo fallimento pu\`o portare a conseguenze anche catastrofiche.\cite{marocchini}\\*
+La funzionalit\`a offerta del sistema di \emph{interlocking} viene pertanto considerata \emph{safety-critical}, in quanto un suo fallimento pu\`o portare a conseguenze anche catastrofiche. \cite{marocchini}\\*
 ETCS adotta un approccio incrementale alla realizzazione di sistemi di posizionamento autonomi. Un sistema di posizionamento \texttt{ETCS-3} deve continuare a interagire con il sistema di \emph{interlocking}, quindi deve essere considerato a sua volta un sistema \emph{safety-critical}.\\*
 ERTMS/ETCS \`e pensato per sistemi ferroviari, mentre nel dominio ferrotramviario vige la regola della \emph{marcia a vista}. Il rispetto di ETCS non \`e obbligatorio in detto contesto, tuttavia le tecniche di posizionamento ivi utilizzate rispettano spesso le linee guida imposte da ETCS. 
 \subsection{Verso ETCS-3}
