@@ -2,7 +2,8 @@
 \section{Descrizione generale}
 Il sistema analizzato rientra nella categoria dei CPSoS. Lo scopo del sistema \`e quello di implementare un meccanismo di posizionamento basato su SFA.\\*
 Tale algoritmo viene eseguito da una libreria software schematizzabile, ai fini di questa Tesi, come una \emph{black-box} che rappresenta il nucleo centrale del sottosistema di posizionamento.\\*
-Ricevuti in ingresso un certo insieme di misure, essa fornisce in uscita una \emph{stima statistica} della posizione del treno, pi\`u accurata della misura che si otterrebbe utilizzando i dati provenienti dai singoli sensori.\cite{datafuse}\\*
+Ricevuti in ingresso un certo insieme di misure, essa fornisce in uscita una \emph{stima statistica} della posizione del treno, pi\`u accurata della misura che si otterrebbe utilizzando i dati provenienti dai singoli sensori. \cite{datafuse}\\*
+La posizione viene fornita sia in termini di progressiva chilometrica che di coordinate geografiche.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.6]{img/sfaschema}
@@ -23,7 +24,9 @@ Le grandezze fisiche che dovranno essere misurate e fornite a SFA sono:
 	\item Coordinate geografiche;
 	\item Velocit\`a lineare (scalare).
 \end{itemize}
-In quest'applicazione, SFA utilizza tali informazioni in combinazione con un'apposita digitalizzazione della traccia tramviaria su cui si trova il treno monitorato.\cite{sfaimugps}\cite{sfaimuodo}\cite{sfaimuodogps} \\* Queste informazioni si suppongono note a priori ed accedibili tramite un \emph{database} caricato in memoria centrale. \cite{sqlite3}
+In quest'applicazione, SFA utilizza tali informazioni in combinazione con un'apposita digitalizzazione della traccia tramviaria su cui si trova il treno. \cite{sfaimugps}\cite{sfaimuodo}\cite{sfaimuodogps}\\*
+Queste informazioni si suppongono note a priori ed accedibili tramite un \emph{database} caricato in memoria centrale. \cite{sqlite3}\\*
+Nel database occorre predisporre una lista di punti geometrici appartenenti alla traccia, caratterizzati dalle loro coordinate e dalla progressiva chilometrica associata. Il sistema modella la traccia come una \emph{spline} interpolante i punti selezionati.
 \section{Constituent Systems}
 Il sottosistema di posizionamento si compone dei moduli, o CS, descritti nel seguito di questa sezione.
 \subsection{Sensor Set}
@@ -208,7 +211,7 @@ Questo software possiede un'istanza di \textit{SensorFusionLib} con la quale int
 \subsection{Interface Modules}
 La comunicazione con i sensori \`e gestita interamente da un set di processi denominati \textit{interface-modules}. Ciascun sensore \`e collegato ad un'interfaccia seriale della piattaforma attraverso un bus dati.
 Per ogni interfaccia connessa, un processo resta in ascolto su di essa. Quando un sensore invia un campionamento su una specifica interfaccia, il processo in ascolto su quest'utlima si fa carico di inoltrare a \emph{listener} i valori ricevuti.\\*
-Ciascun processo di \emph{interface-modules} dispone di una \emph{socket UDP} che abilita la comunicazione con \emph{listener}.
+Ciascun processo di \emph{interface-modules} dispone di una \emph{socket} \texttt{UDP} che abilita la comunicazione con \emph{listener}.
 \begin{table}[h]
 	\centering
 	\begin{tabular}{|c|c|c|}
