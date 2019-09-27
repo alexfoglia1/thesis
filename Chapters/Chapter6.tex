@@ -1,1 +1,20 @@
 \chapter{Conclusioni}
+In questa Tesi, si \`e discusso un processo di analisi sperimentale condotto verso un sottosistema di posizionamento ferrotramviario.\\*
+L'analisi condotta rientra nella categoria \emph{fault injection}, che prevede l'osservazione diretta del sistema, o di un suo prototipo, nel suo reale ambiente di esecuzione. Il fine di un'attivit\`a di \emph{fault injection} \`e quello di raccogliere accurate misure sperimentali circa la \emph{dependability} del sistema analizzato, quando vengono inseriti volontariamente dei guasti al suo interno. Si \`e discusso il concetto di \emph{dependability}, definendola come la capacit\`a che ha un sistema di fornire un servizio in modo corretto. In particolare, sono stati individuati:
+\begin{itemize}
+	\item Le \emph{measures}, ovvero i parametri di valutazione della \emph{dependability};
+	\item I \emph{threats}, ossia gli eventi che minano la \emph{dependability} di un sistema;
+	\item I \emph{means}, insieme di tecniche e metodologie atte a raggiungere la \emph{dependability} di un sistema informatico.
+\end{itemize}
+La \emph{dependability} \`e un aspetto fondamentale per tutti i sistemi informatici, ma il suo raggiungimento diventa obbligatorio per sistemi operanti in contesti \emph{safety critical}, come ad esempio il settore ferroviario.\\*
+Sono stati discussi gli standard \texttt{EN 50126} e \texttt{EN50128} che regolamentano la gestione e il raggiungimento della \emph{safety} nei sistemi ferroviari, e le normative operazionali imposte dallo standard europeo \texttt{ERTMS/ETCS}, completando il quadro del contesto normativo e operativo in cui si colloca il sistema studiato.\\*
+Il sistema \`e stato poi classificato, da un punto di vista architetturale, come un \emph{Cyber Physical System of Systems}, quindi se ne sono descritti gli elementi architetturali, come le interfacce e i sistemi costituenti. La descrizione del sistema si \`e quindi conclusa con la specifica dei sistemi software che lo compongono.\\*
+Definito il sistema nominale, la discussione si \`e concentrata sulla descrizione dell'ambiente di analisi costruito al fine di garantire le propriet\`a, note dalla letteratura, che un sistema di \emph{monitoring} e \emph{fault injection} deve possedere.\\*
+Sono stati quindi descritti gli esperimenti condotti individuando:
+\begin{itemize}
+	\item Un \emph{fault model} rappresentativo per il sistema;
+	\item Le misure di interesse che si intende valutare;
+	\item Un \emph{workload} il pi\`u possibile conforme agli input reali che il sistema dovr\`a processare;
+	\item Un \emph{faultload} basato sui requisiti di sistema e sulle tecnologie usate.
+\end{itemize}
+I risultati che ha fornito la campagna di \emph{fault injection} sembrano promettenti nell'ottica di poter impiegare il sistema sul campo, sebbene questo sia ancora in fase di sviluppo e si \`e reso disponibile per l'analisi solamente un suo prototipo.\\*
