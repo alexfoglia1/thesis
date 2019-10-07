@@ -113,7 +113,7 @@ Il monitoring \emph{white-box} prevede l'utilizzo aggiuntivo di strumenti necess
 \end{figure}
 \FloatBarrier
 I \emph{probes} sono collocati solitamente all'interno del sistema e il loro scopo \`e quello di fornire informazioni pi\`u dettagliate sul comportamento del \emph{target component}.\\*
-Se si vogliono monitorare segnali hardware interni al sistema, i \emph{probes} utilizzati saranno effettivamente hardware, mentre si utilizzano \emph{probe} software se si vuole ottenere informazioni sull'esecuzione interna di un programma. Questa tecnica \`e chiamata instrumentazione del codice, e il codice aggiunto prende il nome di \emph{software probe}.\\*
+Se si vogliono monitorare segnali hardware interni al sistema, i \emph{probes} utilizzati saranno effettivamente hardware, mentre si utilizzano \emph{probes} software se si vuole ottenere informazioni sull'esecuzione interna di un programma. Questa tecnica \`e chiamata instrumentazione del codice, e il codice aggiunto prende il nome di \emph{software probe}.\\*
 Quando si progetta il \emph{monitoring} di un sistema, si devono rispettare due regole principali:
 \begin{itemize}
 	\item I \emph{probes} devono essere in grado di raccogliere il giusto numero di informazioni circa il comportamento del sistema;
@@ -163,8 +163,8 @@ Questa schematizzazione \`e approssimativamente valida per qualsiasi sistema fer
 		\item Le caratteristiche geografiche dell'ambiente operativo;
 		\item Gli scopi del trasporto.
 \end{itemize}
-In generale, nel trasporto ferroviario si utilizzano veicoli pesanti atti a trasportare persone o merci su lunghe percorrenze, pertanto \`e comune che l'ambiente operativo di un sistema ferroviario sia prevalentemente extra urbano.\\*
-Nel trasporto ferrotramviario, di contro, si utilizzano veicoli leggeri per offrire un'alternativa al cittadino all'utilizzo di mezzi privati durante i suoi spostamenti all'interno di un'area metropolitana. Quest'ultima caratteristica implica che l'ambiente operativo di un sistema ferrotramviario sia radicalmente diverso dall'ambiente operativo di un sistema ferroviario. Le vetture, anche dette \emph{rotabili}, si muovono lungo traccie installate su strade urbane, e di conseguenza il traffico ferrotramviario condivide l'ambiente con il traffico cittadino, come mostrato in figura \ref{fig:tramschema}.\\*
+In generale, nel trasporto ferroviario si utilizzano veicoli pesanti atti a trasportare persone o merci su lunghe percorrenze, pertanto \`e comune che l'ambiente operativo di un sistema ferroviario sia prevalentemente extra-urbano.\\*
+Nel trasporto ferrotramviario, di contro, si utilizzano veicoli leggeri per offrire un'alternativa al cittadino all'utilizzo di mezzi privati durante i suoi spostamenti all'interno di un'area metropolitana. Quest'ultima caratteristica implica che l'ambiente operativo di un sistema ferrotramviario sia radicalmente diverso dall'ambiente operativo di un sistema ferroviario. Le vetture, anche dette \emph{rotabili}, si muovono lungo tracce installate su strade urbane, e di conseguenza il traffico ferrotramviario condivide l'ambiente con il traffico cittadino, come mostrato in figura \ref{fig:tramschema}.\\*
 \begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\linewidth]{img/twschema}
@@ -206,13 +206,13 @@ Per posizionamento ferroviario si intende la valutazione della posizione di un t
 \subsection{Tradizionali tecniche di posizionamento}
 I tradizionali sistemi di posizionamento si basano principalmente sull'utilizzo di strumenti installati a terra, chiamati \emph{beacon}, o \emph{balise} in gergo ferroviario, i quali hanno lo scopo di rilevare il passaggio di un treno. \cite{tecnicheodierne}\\*
 Esiste uno standard a livello europeo al quale i tradizionali sistemi di posizionamento si devono uniformare, l' \emph{European Train Control System} (ETCS).\\*
-Nel corso della storia, ogni paese europeo ha sviluppato autonomamente le proprie infrastrutture ferroviarie e relative regole operative. Tuttavia, ad oggi i treni possono attraversare le frontiere, pertanto \`e necessario sviluppare un sistema ferroviario standard che rispetti una comune normativa operazionale europea. Tale sistema prende il nome di \emph{European Rail Traffic Management System} (ERTMS) \cite{ertms}, ed ETCS \`e il sottosistema di ERTMS dedicato al posizionamento delle vetture.\\*
+Nel corso della storia, ogni paese europeo ha sviluppato autonomamente le proprie infrastrutture ferroviarie e relative regole operative. Tuttavia, ad oggi, i treni possono attraversare le frontiere, pertanto \`e necessario sviluppare un sistema ferroviario standard che rispetti una comune normativa operazionale europea. Tale sistema prende il nome di \emph{European Rail Traffic Management System} (ERTMS) \cite{ertms}, ed ETCS \`e il sottosistema di ERTMS dedicato al posizionamento delle vetture.\\*
 Come standard, ETCS definisce specifici livelli di \emph{compliance} che possiede un sistema di posizionamento rispetto ad ETCS, ed essi vanno dal livello \texttt{ETCS-0} al livello \texttt{ETCS-3}.\\*
 L'obiettivo \`e quello di sviluppare progressivamente un sistema di posizionamento completamente autonomo (\texttt{ETCS-3}), partendo da un sistema interamente \emph{non-compliant} con ETCS (\texttt{ETCS-0}).
 \\*
-Allo stato attuale, quasi tutti i sistemi di posizionamento sono \texttt{ETCS-2}. Nei livelli \texttt{ETCS-1} e \texttt{ETCS-2}, le traccie vengono suddivise in blocchi, e all'entrata di ciascun blocco viene posizionato un \emph{beacon} in grado di rilevare la presenza di un treno.\\*
+Allo stato attuale, quasi tutti i sistemi di posizionamento sono \texttt{ETCS-2}. Nei livelli \texttt{ETCS-1} e \texttt{ETCS-2}, le tracce vengono suddivise in blocchi, e all'entrata di ciascun blocco viene posizionato un \emph{beacon} in grado di rilevare la presenza di un treno.\\*
 L'autorizzazione all'ingresso in un blocco viene rilasciata se nessun altro treno sta occupando il blocco al quale si vuole accedere, mentre un sistema di \emph{odometria} installato a bordo, posiziona il treno rispetto all'ultimo \emph{beacon} incontrato.\\*
-Nel livello \texttt{ETCS-3}, non sono richiesti segnali provenienti dalla linea: un treno deve essere in grado di posizonarsi autonomamente. \cite{etcs3}\\*
+Nel livello \texttt{ETCS-3}, non sono richiesti segnali provenienti dalla linea: un treno deve essere in grado di posizionarsi autonomamente. \cite{etcs3}\\*
 In sintesi, i livelli ETCS possono essere descritti come segue:
 \begin{itemize}
 	\item \texttt{ETCS-0}: Sistema non conforme a ETCS;
@@ -251,7 +251,7 @@ Il \emph{target component} in esame \`e il modulo software che processa le misur
 	\caption{Schema dell'ambiente di \emph{fault injection}}
 	\label{fig:faultinjrtt}
 \end{figure}
-Il \emph{tool} si comporta come \emph{controller} in quanto \`e in grado di controllare il \emph{load generator}, l'\emph{injector} e il \emph{monitor}. Esso itera gli esperimenti un numero arbitrario di volte, stablito dall'osservatore, e fornisce un report riassuntivo della campagna sperimentale. Il modulo SFA \`e incluso nel \emph{tool} come libreria.
+Il \emph{tool} si comporta come \emph{controller} in quanto \`e in grado di controllare il \emph{load generator}, l'\emph{injector} e il \emph{monitor}. Esso itera gli esperimenti un numero arbitrario di volte, stabilito dall'osservatore, e fornisce un report riassuntivo della campagna sperimentale. Il modulo SFA \`e incluso nel \emph{tool} come libreria.
 \section{Cyber Physical Systems of Systems}
 Il sottosistema di posizionamento studiato rientra nella categoria dei \emph{Cyber Physical Systems of Systems} (CPSoS). \cite{cecca}\\*
 Un \emph{Cyber Physical System} (CPS) \`e un sistema composto da due parti:
@@ -259,7 +259,7 @@ Un \emph{Cyber Physical System} (CPS) \`e un sistema composto da due parti:
 	\item \emph{Cyber}: Elementi di computazione, comunicazione e controllo che operano in un tempo discreto;
 	\item \emph{Physical}: Sottosistema naturale o costruito dall'uomo che \`e governato dalle leggi della fisica e opera in un tempo continuo.
 \end{itemize}
-Un CPS \`e un sistema che consiste in un computer (il sistema \emph{cyber}) e un oggetto controllato (il sistema \emph{physical}), che include la possiblit\`a di interazione con gli esseri umani.\\*
+Un CPS \`e un sistema che consiste in un computer (il sistema \emph{cyber}) e un oggetto controllato (il sistema \emph{physical}) che include la possiblit\`a di interazione con gli esseri umani.\\*
 In talune applicazioni i sistemi sono integrati in un pi\`u ampio contesto al fine di fornire un \emph{servizio} che un sistema \emph{standalone} non sarebbe in grado di fornire. Si parla in questo caso di \emph{Systems of Systems} (SoS).\\*
 I SoS sono caratterizzati da una gerarchia multi-livello: una struttura ricorsiva in cui un sistema viene considerato \emph{il tutto} al pi\`u alto livello di interesse (\emph{macro-level}), e composto da un insieme di sottosistemi al livello sottostante (\emph{micro-level}). Ciascun sottosistema pu\`o essere considerato a sua volta come un sistema, e la ricorsione termina quando l'ulteriore suddivisione di un sottosistema perde di interesse.\\*
 Si definisce \emph{componente} un sottosistema al pi\`u basso livello di interesse.\\*
@@ -267,7 +267,7 @@ Un SoS composto da CPS prende il nome di CPSoS.\\*
 Gli elementi architetturali che compongono un CPSoS sono:
 \begin{itemize}
 	\item \emph{Itom}: costituiscono l'unit\`a minima di interazione. Sono elementi informativi composti da dati e metadati;
-	\item \emph{Constituent Systems} (CS): Entit\`a di tpo CPS che processano e scambiano gli \emph{itom};
+	\item \emph{Constituent Systems} (CS): Entit\`a di tipo CPS che processano e scambiano gli \emph{itom};
 	\item Ambiente: tutte le entit\`a con cui pu\`o interagire un CS.
 \end{itemize}
 I CS interagiscono fra di loro, o con l'ambiente, scambiandosi \emph{itom} attraverso le loro \emph{interfacce}.\\*Si distinguono le seguenti interfacce:

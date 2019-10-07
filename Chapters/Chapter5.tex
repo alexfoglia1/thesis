@@ -5,7 +5,7 @@ Nel seguito si illustrano gli esperimenti di \emph{fault injection} condotti sul
 La traccia ferrotramviaria scelta per l'analisi \`e un sottoinsieme della linea \texttt{T1} della Tramvia di Firenze, che si estende per $4.25044$ chilometri dal terminal di \emph{Villa Costanza}, nel comune di Scandicci. 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.7\linewidth]{"../Trainpositioning/linea test"}
+	\includegraphics[width=0.7\linewidth]{img/itrace}
 	\caption{Traccia di analisi}
 	\label{fig:linea-test}
 \end{figure}
@@ -27,7 +27,7 @@ Rispetto al sistema reale descritto nel capitolo 3, i guasti (1) e (3) simulano 
 Il guasto (2) simula un comportamento di \texttt{UDP} comunque preventivabile, data la natura \emph{best effort} del protocollo.\\*Quando si utilizza \texttt{UDP} \`e opportuno non fare mai assunzioni riguardo il corretto ordinamento e l'integrit\`a dei messaggi trasmessi.\\*
 \section{Esperimenti}
 Durante l'attivit\`a di analisi sono stati effettuati numerosi esperimenti. In questa sezione, si riportano in dettaglio solo i risultati ritenuti pi\`u interessanti, mentre i rimanenti vengono descritti a un livello pi\`u generico.\\*
-La soppressione del canale di comunicazione tra IMU e modulo SFA, quando protratta per un periodo superiore a $5$ secondi, ha prodotto un'interruzione del servizio. Questo fatto \`e in linea con le aspettative in quanto IMU \`e il sensore principale su cui si basa l'esecuzione di SFA, e senza di esso l'algoritmo non pu\`o funzionare.\\*
+La soppressione del canale di comunicazione tra IMU e modulo SFA, quando protratta per un periodo superiore a $5$ secondi, ha prodotto un'interruzione del servizio. Questo \`e in linea con le aspettative in quanto IMU \`e il sensore principale su cui si basa l'esecuzione di SFA, e senza di esso l'algoritmo non pu\`o funzionare.\\*
 Il valore limite di $5$ secondi trova giustificazione andando a osservare l'implementazione del modulo SFA. Quest'ultimo infatti \`e programmato in maniera tale che il massimo numero di campionamenti IMU che pu\`o predire attraverso regressione lineare \`e $500$.\\*
 La frequenza di campionamento di IMU \`e pari a:
 $$100\;Hz\;=\;100\; \frac{\mbox{campionamenti}}{\mbox{s}}$$ Pertanto:
@@ -155,7 +155,7 @@ Si sopprime il canale di comunicazione \textbf{per tutta la durata dell'esperime
 \end{figure}
 \FloatBarrier
 Alimentare SFA utilizzando esclusivamente le misurazioni di IMU conduce a una netta divergenza dell'errore, sia in termini di posizione che in termini di velocit\`a.\\*
-Questi risultati non sono accettabili. In questa fattispecie, tuttavia, \`e stato iniettato un importante \emph{faultload} altamente improbabile da osservare sul campo.\\*
+Questi risultati non sono accettabili. In questa fattispecie, tuttavia, \`e stato iniettato un importante \emph{faultload} altamente improbabile da osservare sul campo.
 \subsubsection{Esperimento 3.2}
 Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la prima met\`a della simulazione}.\\*
 \begin{table}[h]
@@ -234,7 +234,7 @@ Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la pri
 \end{figure}
 \FloatBarrier
 Si osserva un lieve degrado delle performance che influisce in maniera non particolarmente significativa ai fini del posizionamento.\\*
-La grandezza che appare pi\`u degradata \`e la velocit\`a, e questo fatto permane in linea con le aspettative, poich\`e l'odometro \`e il sensore preposto a fornire le misure di velocit\`a al sistema.
+La grandezza che appare pi\`u degradata \`e la velocit\`a, e questo permane in linea con le aspettative, poich\`e l'odometro \`e il sensore preposto a fornire le misure di velocit\`a al sistema.
 \subsubsection{Esperimento 3.3}
 Si sopprime il canale di comunicazione tra SFA e Odometro durante \textbf{la seconda met\`a della simulazione}.\\* 
 \begin{table}[h]
